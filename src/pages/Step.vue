@@ -106,15 +106,24 @@ function resetHunt() {
       // Pour s'assurer que tout est supprimé
       localStorage.clear();
       
-      // Log pour vérification
-      console.log('localStorage après nettoyage:', {...localStorage});
-      console.log('hasSeenSplash existe encore?', localStorage.getItem('hasSeenSplash'));
+      // Définir explicitement les valeurs comme false
+      localStorage.setItem('hasSeenSplash', 'false');
+      localStorage.setItem('hasSeenIntro', 'false');
       
-      // Petite pause pour s'assurer que tout est bien traité
+      // Log clairement visible
+      console.log('%c Réinitialisation des écrans en cours...', 'background: red; color: white; font-size: 20px');
+      console.log('localStorage après nettoyage:', {...localStorage});
+      console.log('hasSeenSplash =', localStorage.getItem('hasSeenSplash'));
+      
+      // Message visible dans l'interface
+      alert('Réinitialisation terminée. La page va être rechargée.');
+      
+      // Délai plus long pour voir les logs (3 secondes)
       setTimeout(() => {
         // Force une redirection complète (pas de routage interne)
+        console.log('Redirection vers la page d\'accueil...');
         window.location.replace('/');
-      }, 100);
+      }, 1000);
     } catch (error) {
       console.error('Erreur lors de la réinitialisation:', error);
       alert("Une erreur est survenue lors de la réinitialisation. Veuillez rafraîchir la page.");

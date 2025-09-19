@@ -71,6 +71,7 @@ export const useProgress = defineStore('progress', {
       this.currentIndex = 0
       this.done = new Set()
       this.stepValidation = new Map()
+      localStorage.clear()
       this.save()
     }
   }
