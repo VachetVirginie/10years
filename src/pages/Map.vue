@@ -91,11 +91,11 @@ onMounted(() => {
       
       // Créer un marqueur de PokéBall pour les étapes complétées
       const pokeBallIcon = L.divIcon({
-        html: `<div class="pokeball-marker completed"><img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" /></div>`,
+        html: `<div class="pokeball-marker completed"><img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" style="width: 60%; height: auto;" /></div>`,
         className: 'pokeball-icon-container',
         iconSize: [30, 30],
         iconAnchor: [15, 15],
-        popupAnchor: [0, -15]
+        popupAnchor: [0, -15],
       });
       
       // Utiliser un marqueur PokéBall pour les points complétés

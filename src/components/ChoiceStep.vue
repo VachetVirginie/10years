@@ -24,7 +24,7 @@ const playerInfo = {
 
 const opponentInfo = {
   name: 'Dresseur Rival',
-  avatar: 'https://archives.bulbagarden.net/media/upload/thumb/a/a4/Blue_FRLG.png/150px-Blue_FRLG.png',
+  avatar: 'https://png.pngtree.com/png-clipart/20250416/original/pngtree-bad-guy-character-with-a-villainous-look-png-image_20794838.png',
   pokemon: 'Blastoise',
   pokemonImage: 'https://archives.bulbagarden.net/media/upload/thumb/0/02/009Blastoise.png/250px-009Blastoise.png',
   hp: 100,
@@ -325,7 +325,7 @@ function toggleHint() {
 }
 
 .trainer-avatar {
-  width: 80px;
+  width: 100px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
