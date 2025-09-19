@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
@@ -8,6 +8,7 @@ import GeoStep from '../components/GeoStep.vue'
 import QrStep from '../components/QrStep.vue'
 import RiddleStep from '../components/RiddleStep.vue'
 import ChoiceStep from '../components/ChoiceStep.vue'
+import EnigmeSplash from '../components/EnigmeSplash.vue'
 
 // Activer le suivi de géolocalisation
 const { getCurrentPosition } = useGeolocation()
@@ -18,6 +19,10 @@ const router = useRouter()
 const { steps } = useHunt()
 const store = useProgress()
 store.load()
+
+// Gestion du splash d'énigme
+const showSplash = ref(true)
+const splashComplete = ref(false)
 
 const step = computed(() => {
   const id = route.params.id as string
@@ -67,6 +72,11 @@ function goNext() {
   const currentIndex = stepNumber.value - 1
   const nextStep = steps[currentIndex + 1]
   if (nextStep) {
+    // Réinitialiser l'état du splash avant la navigation
+    showSplash.value = true
+    splashComplete.value = false
+    
+    // Navigation vers l'étape suivante
     router.push(`/step/${nextStep.id}`)
   }
 }
@@ -126,6 +136,13 @@ function resetHunt() {
 </script>
 
 <template>
+  <!-- Splash d'énigme au chargement de l'étape -->
+  <EnigmeSplash 
+    v-if="step && showSplash && !splashComplete" 
+    :step="step" 
+    @complete="splashComplete = true; showSplash = false"
+  />
+  
   <main class="pokemon-step" v-if="step">
     <!-- En-tête de l'étape -->
     <div class="step-header pa-4">

@@ -1,5 +1,5 @@
 {
-  "title": "Chasse aux trésors romantique - Lyon",
+  "title": "Des énigmes, des lieux secrets, une surprise à partager.",
   "steps": [
     {
       "id": "1",
@@ -11,7 +11,8 @@
       "radius": 25,
       "answer": "Bellecour",
       "success": "Parfait ! Tu as trouvé la statue de Louis XIV. Direction la prochaine étape !",
-      "hint": "Cherche la statue équestre au centre de la plus grande place piétonne d'Europe."
+      "hint": "Cherche la statue équestre au centre de la plus grande place piétonne d'Europe.",
+      "splash": "Ou tout commence"
     },
     {
       "id": "2",
@@ -23,7 +24,8 @@
       "radius": 25,
       "answer": "Bocuse",
       "success": "Délicieux ! Tu es arrivé aux Halles Paul Bocuse. Savoure ce moment et récupère ta surprise gourmande !",
-      "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait."
+      "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait.",
+      "splash": "Le temple"
     },
     {
       "id": "3",
@@ -35,7 +37,8 @@
       "radius": 25,
       "answer": "Micromania",
       "success": "Bravo ! Tu as déchiffré l'énigme du gaming. Récupère ton indice et continue l'aventure !",
-      "hint": "Pense aux jeux vidéo et aux quêtes virtuelles."
+      "hint": "Pense aux jeux vidéo et aux quêtes virtuelles.",
+      "splash": "La voie"
     },
     {
       "id": "4",
@@ -47,7 +50,8 @@
       "radius": 25,
       "answer": "Tête d'Or",
       "success": "Magnifique ! Tu es dans la roseraie. Laisse-toi enivrer par le parfum des 30 000 rosiers !",
-      "hint": "Dans le parc, cherche le jardin aux 350 variétés de roses."
+      "hint": "Dans le parc, cherche le jardin aux 350 variétés de roses.",
+      "splash": "Test"
     },
     {
       "id": "5",
@@ -64,7 +68,8 @@
       "lng":4.851922988891602,
       "radius": 25,
       "success": "Parfait ! L'île aux cygnes avec son monument aux morts conçu par Tony Garnier. L'amour transcende le temps !",
-      "hint": "Cette île abrite un monument historique dédié à la mémoire."
+      "hint": "Cette île abrite un monument historique dédié à la mémoire.",
+      "splash": "Test"
     },
     {
       "id": "6",
@@ -76,7 +81,8 @@
       "lng":4.8529582023620605,
       "radius": 25,
       "success": "🎉 Félicitations ! Tu as terminé cette chasse aux trésors romantique. Le plus beau trésor, c'est notre amour ! 💕",
-      "hint": "Le sentiment le plus précieux qui unit deux cœurs."
+      "hint": "Le sentiment le plus précieux qui unit deux cœurs.",
+      "splash": "Dernière étape"
     }
   ]
 }
