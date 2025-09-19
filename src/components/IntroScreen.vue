@@ -29,6 +29,16 @@ Ta quête commence maintenant. Le destin de cette aventure est entre tes mains�
 
 // Effet de frappe progressive du texte
 onMounted(() => {
+  // Calculer la hauteur correcte pour les mobiles
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  
+  // Recalculer lors du redimensionnement ou changement d'orientation
+  window.addEventListener('resize', () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  });
+  
   const textArray = fullText.split('')
   let currentIndex = 0
   
@@ -60,9 +70,9 @@ const closeIntro = () => {
       <div class="intro-text-wrapper">
         <pre class="typing-text">{{ displayedText }}</pre>
         
-        <div v-if="displayedText.includes('Prépare-toi')" class="skip-button-container">
+        <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
           <button @click="closeIntro" class="skip-button">
-            COMMENCER LA MISSION
+            COMMENCER L'AVENTURE
           </button>
         </div>
       </div>
@@ -71,23 +81,39 @@ const closeIntro = () => {
 </template>
 
 <style scoped>
+/* Ajout d'un style global pour garantir la hauteur sur mobile */
+:root {
+  --vh: 1vh;
+}
+
 .intro-container {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
+  height: calc(var(--vh, 1vh) * 100); /* Hauteur adaptative pour mobile */
+  min-height: -webkit-fill-available; /* Pour iOS Safari */
   background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9998;
   padding: 20px;
+  overflow: hidden; /* Empêcher le défilement */
+  box-sizing: border-box;
 }
 
 .intro-text-wrapper {
   max-width: 600px;
   width: 90%;
+  max-height: calc(var(--vh, 1vh) * 80); /* Hauteur adaptative pour mobile */
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(227, 53, 13, 0.3);
 }
 
 .typing-text {

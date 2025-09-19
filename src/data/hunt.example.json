@@ -3,23 +3,25 @@
   "steps": [
     {
       "id": "1",
-      "type": "geo",
+      "type": "riddle",
       "title": "Place Bellecour - Le Roi et son Monument",
       "prompt": "Au centre de la soie et des lumières, Un roi de pierre veille, fier et solitaire.Son destrier d’airain, tour à tour feu et glace Désigne d’un sabot l’aube de notre trace. Cherche où son ombre danse au rythme du Rhône,Là où nos pas s’uniront, loin des couronnes.",
       "lat": 45.757198,
       "lng": 4.8312188,
       "radius": 25,
+      "answer": "Bellecour",
       "success": "Parfait ! Tu as trouvé la statue de Louis XIV. Direction la prochaine étape !",
       "hint": "Cherche la statue équestre au centre de la plus grande place piétonne d'Europe."
     },
     {
       "id": "2",
-      "type": "geo",
+      "type": "riddle",
       "title": "Halles Paul Bocuse - Temple de la Gastronomie",
       "prompt": "Les gourmands s'y régalent, les curieux s'y perdent, je t'y attends, le cœur ouvert.",
       "lat": 45.7636197,
       "lng": 4.8502016,
       "radius": 25,
+      "answer": "Bocuse",
       "success": "Délicieux ! Tu es arrivé aux Halles Paul Bocuse. Savoure ce moment et récupère ta surprise gourmande !",
       "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait."
     },
@@ -31,18 +33,19 @@
       "lat":45.76169967651367,
       "lng":4.8504961,
       "radius": 25,
-      "answer": "gaming",
+      "answer": "Micromania",
       "success": "Bravo ! Tu as déchiffré l'énigme du gaming. Récupère ton indice et continue l'aventure !",
       "hint": "Pense aux jeux vidéo et aux quêtes virtuelles."
     },
     {
       "id": "4",
-      "type": "geo",
+      "type": "riddle",
       "title": "Parc de la Tête d'Or - La Roseraie",
       "prompt": "Dans mes pétales rouges et blancs, cherche la trace de nos sentiments.",
       "lat": 45.77692794799805,
       "lng": 4.851922988891602,
       "radius": 25,
+      "answer": "Tête d'Or",
       "success": "Magnifique ! Tu es dans la roseraie. Laisse-toi enivrer par le parfum des 30 000 rosiers !",
       "hint": "Dans le parc, cherche le jardin aux 350 variétés de roses."
     },
