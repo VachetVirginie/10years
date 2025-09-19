@@ -16,19 +16,19 @@ const displayedText = ref('')
 
 // Texte complet de l'introduction
 const fullText = `
-ALERTE DE MISSION:
+Bonjour, Soso ! Enfin te voilà… Je savais que je pouvais compter sur toi.
+Une étrange énigme a surgi dans les rues de Lyon. Comme des Pokémon rares, des indices se sont éparpillés aux quatre coins de la ville.
 
-L'aventurier Soso est requis de toute urgence!
+Pour réussir ta mission, tu devras faire preuve de courage, de stratégie et d’un esprit affûté, comme lors d’un combat d’arène.
+Chaque indice que tu découvriras sera comme un Pokémon à capturer, et chaque énigme résolue te rapprochera du trésor caché.
 
-Une mystérieuse quête attend dans les rues de Lyon.
-Des indices sont dispersés dans toute la ville.
-Seul quelqu'un avec ton courage et ta détermination 
-pourra résoudre cette énigme.
+Souviens-toi, Soso :
+👉 Une grande dresseuse observe toujours son environnement.
+👉 Une aventurière déterminée ne recule jamais devant le défi.
 
-Ta mission, si tu l'acceptes, est de suivre les indices,
-résoudre les énigmes et découvrir le trésor caché.
+Ta quête commence maintenant. Le destin de cette aventure est entre tes mains… Et qui sait ? Peut-être qu’au bout de cette route se cache un Pokémon légendaire ! »
 
-Prépare-toi pour une aventure extraordinaire!
+⚡️ Alors, jeune dresseuse… es-tu prête à partir à l’aventure ?
 `
 
 // Effet de frappe progressive du texte
