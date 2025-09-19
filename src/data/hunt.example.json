@@ -14,6 +14,17 @@
     },
     {
       "id": "2",
+      "type": "geo",
+      "title": "Halles Paul Bocuse - Temple de la Gastronomie",
+      "prompt": "Les gourmands s'y régalent, les curieux s'y perdent, je t'y attends, le cœur ouvert.",
+      "lat": 45.7636197,
+      "lng": 4.8502016,
+      "radius": 25,
+      "success": "Délicieux ! Tu es arrivé aux Halles Paul Bocuse. Savoure ce moment et récupère ta surprise gourmande !",
+      "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait."
+    },
+    {
+      "id": "3",
       "type": "riddle",
       "title": "Micromania Part-Dieu - L'Univers du Gaming",
       "prompt": "Là où la ville s’élance, entre départs et retours, Un palais de verre veille sur nos toujours. J’ai couru après l’or, défié l’ombre et le temps, Mais c’est toi qui as trouvé le trésor en chemin. Cherche l’échoppe où les rêves s’achètent,Où les légendes s’offrent, où l’enfance renaît",
@@ -23,17 +34,6 @@
       "answer": "gaming",
       "success": "Bravo ! Tu as déchiffré l'énigme du gaming. Récupère ton indice et continue l'aventure !",
       "hint": "Pense aux jeux vidéo et aux quêtes virtuelles."
-    },
-    {
-      "id": "3",
-      "type": "geo",
-      "title": "Halles Paul Bocuse - Temple de la Gastronomie",
-      "prompt": "Les gourmands s'y régalent, les curieux s'y perdent, je t'y attends, le cœur ouvert.",
-      "lat": 45.7636197,
-      "lng": 4.8502016,
-      "radius": 25,
-      "success": "Délicieux ! Tu es arrivé aux Halles Paul Bocuse. Savoure ce moment et récupère ta surprise gourmande !",
-      "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait."
     },
     {
       "id": "4",

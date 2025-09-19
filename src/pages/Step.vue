@@ -220,16 +220,17 @@ function resetHunt() {
 
 <style scoped>
 .pokemon-step {
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  background: var(--pokemon-black);
   min-height: 100vh;
   position: relative;
+  color: var(--pokemon-white);
 }
 
 .step-header {
-  background: #ffffff;
+  background: var(--pokemon-gray-100);
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--pokemon-red);
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
   margin-bottom: 24px;
 }
 
@@ -240,10 +241,11 @@ function resetHunt() {
 }
 
 .step-badge {
-  background: #ffffff;
+  background: var(--pokemon-gray-200);
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 2px solid var(--pokemon-red);
   transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 61, 40, 0.3);
 }
 
 .step-badge:hover {
@@ -257,7 +259,7 @@ function resetHunt() {
 }
 
 .step-type {
-  color: #1e293b;
+  color: var(--pokemon-white);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -271,10 +273,10 @@ function resetHunt() {
 
 .content-card {
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
+  border: 2px solid var(--pokemon-red);
+  background: var(--pokemon-gray-100);
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
 }
 
 .content-card:hover {
@@ -287,9 +289,10 @@ function resetHunt() {
 }
 
 .nav-card {
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: var(--pokemon-gray-100);
   border-radius: 16px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--pokemon-red);
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
 }
 
 .nav-buttons {

@@ -71,7 +71,7 @@
 .quest-message-text {
   margin: 0;
   font-size: var(--font-size-md);
-  color: var(--pokemon-white);
+  color: var(--pokemon-black);
   line-height: 1.5;
 }
 
@@ -116,8 +116,8 @@
 
 /* Zone d'indice */
 .hint-box {
-  background: rgba(33, 150, 243, 0.2);
-  border: 1px solid rgba(33, 150, 243, 0.5);
+  background: var(--pokemon-gray-200);
+  border: 1px solid var(--pokemon-red);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
   margin-top: var(--spacing-md);
@@ -125,12 +125,12 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  border-left: 4px solid #2196F3;
+  border-left: 4px solid var(--pokemon-red);
 }
 
 .hint-icon {
   font-size: var(--font-size-lg);
-  color: #2196F3;
+  color: var(--pokemon-red);
 }
 
 .hint-text {

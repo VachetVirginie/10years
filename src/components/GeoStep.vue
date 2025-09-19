@@ -26,6 +26,7 @@ const showHint = ref(false);
 const showPokeballAnimation = ref(false);
 const animationComplete = ref(false);
 const distancePercentage = ref(100); // Plus c'est petit, plus on est proche
+const showManualConfirm = ref(false); // Pour confirmer la validation manuelle
 
 // Géolocalisation en temps réel
 const { position, error, startTracking } = useGeolocation();
@@ -98,9 +99,23 @@ const capturePokemon = () => {
   }, 2000);
 };
 
-// Afficher l'indice
-const toggleHint = () => {
+// Afficher/masquer l'indice
+function toggleHint() {
   showHint.value = !showHint.value;
+}
+
+// Fonction pour afficher la confirmation de validation manuelle
+function showManualValidation() {
+  showManualConfirm.value = true;
+}
+
+// Fonction pour valider manuellement l'étape
+function validateManually() {
+  status.value = 'caught';
+  store.markDone(props.step.id);
+  message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
+  showManualConfirm.value = false;
+  animationComplete.value = true;
 };
 
 onMounted(() => {
@@ -202,6 +217,31 @@ onMounted(() => {
         <div v-if="showHint && props.step.hint" class="hint-box">
           <div class="hint-icon">💡</div>
           <p class="hint-text">{{ props.step.hint }}</p>
+        </div>
+        
+        <!-- Bouton pour terminer manuellement l'étape -->
+        <div v-if="status !== 'caught'" class="manual-complete-section">
+          <v-btn 
+            color="var(--pokemon-gray-300)" 
+            @click="showManualValidation"
+            class="manual-complete-btn"
+            size="small"
+            variant="outlined"
+          >
+            Marquer comme terminé
+          </v-btn>
+        </div>
+        
+        <!-- Dialog de confirmation de validation manuelle -->
+        <div v-if="showManualConfirm" class="manual-confirm-overlay">
+          <div class="manual-confirm-dialog">
+            <h3 class="confirm-title">Confirmer</h3>
+            <p class="confirm-text">Es-tu sûr de vouloir marquer cette étape comme terminée sans être sur place ?</p>
+            <div class="confirm-actions">
+              <button @click="validateManually" class="confirm-btn">Oui, terminer</button>
+              <button @click="showManualConfirm = false" class="cancel-btn">Annuler</button>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -488,6 +528,97 @@ onMounted(() => {
 @keyframes floatUp {
   0% { transform: translateY(20px) rotate(45deg); opacity: 1; }
   100% { transform: translateY(-60px) rotate(45deg); opacity: 0; }
+}
+
+/* Dialog de validation manuelle */
+.manual-complete-section {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.manual-complete-btn {
+  border: 1px dashed var(--pokemon-gray-400) !important;
+  color: var(--pokemon-gray-800) !important;
+  font-size: 0.8rem !important;
+}
+
+.manual-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.manual-confirm-dialog {
+  background-color: var(--pokemon-gray-100);
+  border: 4px solid var(--pokemon-white);
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px var(--pokemon-black), 0 0 15px rgba(255, 61, 40, 0.5);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  padding: 20px;
+  animation: dialog-appear 0.3s ease-out;
+}
+
+.confirm-title {
+  color: var(--pokemon-red);
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
+  text-align: center;
+}
+
+.confirm-text {
+  color: var(--pokemon-white);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn {
+  background-color: var(--pokemon-red);
+  color: var(--pokemon-white);
+}
+
+.cancel-btn {
+  background-color: var(--pokemon-gray-300);
+  color: var(--pokemon-black);
+}
+
+.confirm-btn:hover, .cancel-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Animation du dialog */
+@keyframes dialog-appear {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 /* Responsive */
