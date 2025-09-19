@@ -1,0 +1,503 @@
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { withinRadius } from '../composables/useGeofence'
+import { useProgress } from '../store/progress'
+import { useGeolocation } from '../composables/useGeolocation'
+import '../assets/quest-components.css'
+
+const props = defineProps<{ step:{ id:string; prompt:string; lat:number; lng:number; radius:number; success?:string; hint?:string } }>();
+
+// Pokémon pour afficher dans le Safari
+const safariPokemonList = [
+  { name: 'Charizard', image: 'https://archives.bulbagarden.net/media/upload/thumb/7/7e/006Charizard.png/250px-006Charizard.png' },
+  { name: 'Gyarados', image: 'https://archives.bulbagarden.net/media/upload/thumb/4/41/130Gyarados.png/250px-130Gyarados.png' },
+  { name: 'Arcanine', image: 'https://archives.bulbagarden.net/media/upload/thumb/b/b8/059Arcanine.png/250px-059Arcanine.png' },
+  { name: 'Tyranitar', image: 'https://archives.bulbagarden.net/media/upload/thumb/8/82/248Tyranitar.png/250px-248Tyranitar.png' },
+  { name: 'Lucario', image: 'https://archives.bulbagarden.net/media/upload/thumb/d/d7/448Lucario.png/250px-448Lucario.png' }
+];
+
+// Choisir aléatoirement un Pokémon pour cette étape
+const randomIndex = Math.floor(Math.random() * safariPokemonList.length);
+const wildPokemon = ref(safariPokemonList[randomIndex]);
+
+const status = ref('searching'); // 'searching', 'found', 'caught', 'error'
+const message = ref('Un Pokémon sauvage est dans les parages... Rapproche-toi pour le trouver !');
+const showHint = ref(false);
+const showPokeballAnimation = ref(false);
+const animationComplete = ref(false);
+const distancePercentage = ref(100); // Plus c'est petit, plus on est proche
+
+// Géolocalisation en temps réel
+const { position, error, startTracking } = useGeolocation();
+const store = useProgress(); store.load();
+
+// Calcule la distance en pourcentage par rapport au rayon
+const calculateDistance = () => {
+  if (!position.value) return 100;
+  
+  const user = { lat: position.value.latitude, lng: position.value.longitude };
+  const target = { lat: props.step.lat, lng: props.step.lng };
+  
+  // Calculer la distance en mètres
+  const R = 6371000;
+  const toRad = (d:number) => d * Math.PI / 180;
+  const dLat = toRad(target.lat - user.lat);
+  const dLng = toRad(target.lng - user.lng);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(user.lat))*Math.cos(toRad(target.lat))*Math.sin(dLng/2)**2;
+  const distance = 2 * R * Math.asin(Math.sqrt(a));
+  
+  // Convertir en pourcentage par rapport au rayon (inversé)
+  const percentage = Math.max(0, Math.min(100, (distance / (props.step.radius * 2)) * 100));
+  return 100 - percentage; // Inversé pour que 100% = très proche
+};
+
+// Vérifier la position par rapport à la cible
+const checkPosition = () => {
+  if (!position.value) {
+    status.value = 'error';
+    message.value = 'Impossible de te localiser. Active la géolocalisation pour trouver le Pokémon d\'amour.';
+    return;
+  }
+  
+  const user = { lat: position.value.latitude, lng: position.value.longitude };
+  if (withinRadius(user, {lat: props.step.lat, lng: props.step.lng}, props.step.radius)) {
+    if (status.value !== 'found' && status.value !== 'caught') {
+      status.value = 'found';
+      message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
+    }
+  } else {
+    distancePercentage.value = calculateDistance();
+    status.value = 'searching';
+    
+    // Message basé sur la proximité
+    if (distancePercentage.value > 80) {
+      message.value = `${wildPokemon.value.name} est très proche ! Encore quelques pas...`;
+    } else if (distancePercentage.value > 50) {
+      message.value = `Tu te rapproches de ${wildPokemon.value.name}. Continue !`;
+    } else if (distancePercentage.value > 20) {
+      message.value = `${wildPokemon.value.name} est dans cette zone, mais tu es encore un peu loin.`;
+    } else {
+      message.value = `${wildPokemon.value.name} est très loin. Explore davantage.`;
+    }
+  }
+};
+
+// Fonction pour capturer le Pokémon
+const capturePokemon = () => {
+  if (status.value !== 'found') return;
+  
+  showPokeballAnimation.value = true;
+  status.value = 'catching';
+  
+  // Simuler la capture
+  setTimeout(() => {
+    status.value = 'caught';
+    store.markDone(props.step.id);
+    message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
+    animationComplete.value = true;
+  }, 2000);
+};
+
+// Afficher l'indice
+const toggleHint = () => {
+  showHint.value = !showHint.value;
+};
+
+onMounted(() => {
+  startTracking();
+  
+  // Vérifier la position régulièrement
+  const intervalId = setInterval(() => {
+    checkPosition();
+  }, 2000);
+  
+  // Nettoyer l'intervalle quand le composant est démonté
+  onUnmounted(() => {
+    clearInterval(intervalId);
+  });
+});
+</script>
+
+<template>
+  <div class="quest-container">
+    <!-- Entête du Safari Pokémon -->
+    <div class="quest-header">
+      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <h2 class="quest-title">Safari Pokémon</h2>
+      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+    </div>
+    
+    <!-- Carte de contenu principal -->
+    <v-card class="quest-card" elevation="8">
+      <!-- Zone de l'image du Pokémon -->
+      <div class="pokemon-area" :class="{ 'blurred': status === 'searching' }">
+        <img 
+          :src="wildPokemon.image" 
+          :alt="wildPokemon.name" 
+          class="pokemon-image" 
+          :class="{
+            'pokemon-visible': status === 'found' || status === 'caught',
+            'pokemon-hidden': status === 'searching',
+            'pokemon-captured': status === 'caught'
+          }" 
+        />
+        
+        <!-- Animation de Poké Ball -->
+        <div v-if="showPokeballAnimation" class="pokeball-animation">
+          <img 
+            src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" 
+            alt="Poké Ball Animation" 
+            class="throwing-pokeball" 
+            :class="{ 'catch-complete': animationComplete }" 
+          />
+        </div>
+      </div>
+      
+      <!-- Zone de message et d'interaction -->
+      <div class="safari-message-area">
+        <div class="quest-message">
+          <p class="quest-message-text">{{ message }}</p>
+          
+          <div v-if="status === 'found'" class="action-buttons">
+            <v-btn 
+              color="var(--pokemon-red)" 
+              @click="capturePokemon"
+              class="quest-button"
+              rounded="pill"
+            >
+              <span class="btn-text">Lancer une Poké Ball</span>
+            </v-btn>
+          </div>
+          
+          <div v-if="status === 'caught'" class="success-animation">
+            <div class="heart-container">
+              <div class="heart"></div>
+              <div class="heart"></div>
+              <div class="heart"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Indicateur de proximité -->
+        <div v-if="status === 'searching'" class="proximity-meter">
+          <div class="meter-label">Proximité:</div>
+          <div class="meter-container">
+            <div class="meter-fill" :style="{ width: distancePercentage + '%' }"></div>
+          </div>
+        </div>
+        
+        <!-- Bouton d'indice -->
+        <v-btn
+          v-if="props.step.hint && status !== 'caught'"
+          color="var(--pokemon-black)"
+          variant="text"
+          @click="toggleHint"
+          class="hint-btn"
+          size="small"
+        >
+          {{ showHint ? 'Cacher l\'indice' : 'Afficher un indice' }}
+        </v-btn>
+        
+        <!-- Zone d'indice -->
+        <div v-if="showHint && props.step.hint" class="hint-box">
+          <div class="hint-icon">💡</div>
+          <p class="hint-text">{{ props.step.hint }}</p>
+        </div>
+      </div>
+      
+      <!-- Prompt de l'étape (caché) -->
+      <div class="prompt-area">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>Voir l'indice original</v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <p>{{ props.step.prompt }}</p>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </div>
+    </v-card>
+  </div>
+</template>
+
+<style scoped>
+/* Seuls les styles spécifiques à ce composant sont conservés ici */
+/* Les styles communs sont dans le fichier quest-components.css */
+
+/* Zone de l'image du Pokémon */
+.pokemon-area {
+  height: 200px;
+  background: var(--pokemon-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid var(--pokemon-red);
+}
+
+.pokemon-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23E3350D10" d="M30,50 C30,40 40,30 50,30 C60,30 70,40 70,50 C70,60 60,70 50,70 C40,70 30,60 30,50 Z M50,47 C51.7,47 53,48.3 53,50 C53,51.7 51.7,53 50,53 C48.3,53 47,51.7 47,50 C47,48.3 48.3,47 50,47 Z"></path></svg>');
+  background-size: 100px 100px;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.blurred::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1;
+}
+
+.pokemon-image {
+  max-height: 150px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.5s ease;
+}
+
+.pokemon-hidden {
+  opacity: 0.3;
+  filter: blur(10px) brightness(0.7);
+  transform: scale(0.8);
+}
+
+.pokemon-visible {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.2);
+  animation: bounce 2s infinite alternate ease-in-out;
+}
+
+.pokemon-captured {
+  filter: drop-shadow(0 0 10px var(--pokemon-red));
+  animation: glow 1.5s infinite alternate ease-in-out;
+}
+
+.pokeball-animation {
+  position: absolute;
+  z-index: 2;
+}
+
+.throwing-pokeball {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 150px;
+  left: calc(50% - 30px);
+  animation: throwBall 2s forwards;
+  z-index: 2;
+}
+
+.catch-complete {
+  animation: catchShake 1s ease-in-out;
+}
+
+.safari-message-area {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Styles de message déjà définis dans quest-components.css */
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.capture-btn {
+  background: linear-gradient(135deg, #FF1493, #FF69B4) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 0 25px !important;
+  box-shadow: 0 4px 8px rgba(255, 20, 147, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.capture-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 20, 147, 0.4) !important;
+}
+
+.btn-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proximity-meter {
+  width: 100%;
+  margin: 15px 0;
+}
+
+.meter-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.meter-container {
+  height: 10px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pokemon-red-light), var(--pokemon-red));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.hint-btn {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.hint-box {
+  background: rgba(79, 195, 247, 0.1);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.hint-icon {
+  font-size: 1.2rem;
+}
+
+.hint-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  font-style: italic;
+}
+
+.prompt-area {
+  padding: 0 20px 20px;
+}
+
+.success-animation {
+  margin-top: 15px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.heart-container {
+  position: relative;
+  height: 40px;
+  width: 200px;
+}
+
+.heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--pokemon-red);
+  transform: rotate(45deg);
+  animation: floatUp 3s forwards;
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--pokemon-red);
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -10px;
+  left: 0;
+}
+
+.heart::after {
+  left: -10px;
+  top: 0;
+}
+
+.heart:nth-child(1) {
+  left: 30%;
+  animation-delay: 0.2s;
+}
+
+.heart:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.5s;
+}
+
+.heart:nth-child(3) {
+  left: 70%;
+  animation-delay: 0.8s;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0) scale(1.2); }
+  100% { transform: translateY(-10px) scale(1.2); }
+}
+
+@keyframes throwBall {
+  0% { transform: translateY(100px) scale(1); }
+  50% { transform: translateY(-40px) scale(1.2); }
+  80% { transform: translateY(-15px) scale(0.8); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes catchShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+@keyframes glow {
+  0% { filter: drop-shadow(0 0 5px var(--pokemon-red)); }
+  100% { filter: drop-shadow(0 0 15px var(--pokemon-red)); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(20px) rotate(45deg); opacity: 1; }
+  100% { transform: translateY(-60px) rotate(45deg); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .pokemon-area {
+    height: 180px;
+  }
+  
+  .pokemon-image {
+    max-height: 120px;
+  }
+}
+</style>

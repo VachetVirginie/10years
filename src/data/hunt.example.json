@@ -1,0 +1,79 @@
+{
+  "title": "Chasse aux trésors romantique - Lyon",
+  "steps": [
+    {
+      "id": "1",
+      "type": "geo",
+      "title": "Place Bellecour - Le Roi et son Monument",
+      "prompt": "Au centre de la soie et des lumières, Un roi de pierre veille, fier et solitaire.Son destrier d’airain, tour à tour feu et glace Désigne d’un sabot l’aube de notre trace. Cherche où son ombre danse au rythme du Rhône,Là où nos pas s’uniront, loin des couronnes.",
+      "lat": 45.757198,
+      "lng": 4.8312188,
+      "radius": 25,
+      "success": "Parfait ! Tu as trouvé la statue de Louis XIV. Direction la prochaine étape !",
+      "hint": "Cherche la statue équestre au centre de la plus grande place piétonne d'Europe."
+    },
+    {
+      "id": "2",
+      "type": "riddle",
+      "title": "Micromania Part-Dieu - L'Univers du Gaming",
+      "prompt": "Là où la ville s’élance, entre départs et retours, Un palais de verre veille sur nos toujours. J’ai couru après l’or, défié l’ombre et le temps, Mais c’est toi qui as trouvé le trésor en chemin. Cherche l’échoppe où les rêves s’achètent,Où les légendes s’offrent, où l’enfance renaît",
+      "lat":45.76169967651367,
+      "lng":4.8504961,
+      "radius": 25,
+      "answer": "gaming",
+      "success": "Bravo ! Tu as déchiffré l'énigme du gaming. Récupère ton indice et continue l'aventure !",
+      "hint": "Pense aux jeux vidéo et aux quêtes virtuelles."
+    },
+    {
+      "id": "3",
+      "type": "geo",
+      "title": "Halles Paul Bocuse - Temple de la Gastronomie",
+      "prompt": "Les gourmands s'y régalent, les curieux s'y perdent, je t'y attends, le cœur ouvert.",
+      "lat": 45.7636197,
+      "lng": 4.8502016,
+      "radius": 25,
+      "success": "Délicieux ! Tu es arrivé aux Halles Paul Bocuse. Savoure ce moment et récupère ta surprise gourmande !",
+      "hint": "Le temple de la gastronomie lyonnaise, là où Paul Bocuse s'approvisionnait."
+    },
+    {
+      "id": "4",
+      "type": "geo",
+      "title": "Parc de la Tête d'Or - La Roseraie",
+      "prompt": "Dans mes pétales rouges et blancs, cherche la trace de nos sentiments.",
+      "lat": 45.77692794799805,
+      "lng": 4.851922988891602,
+      "radius": 25,
+      "success": "Magnifique ! Tu es dans la roseraie. Laisse-toi enivrer par le parfum des 30 000 rosiers !",
+      "hint": "Dans le parc, cherche le jardin aux 350 variétés de roses."
+    },
+    {
+      "id": "5",
+      "type": "choice",
+      "title": "Parc de la Tête d'Or - Le Lac",
+      "prompt": "Tu n'as pas besoin de rames pour m'emmener loin, il suffit de ta main dans la mienne. Que trouve-t-on au centre du lac ?",
+      "choices": [
+        "Une fontaine",
+        "L'île aux cygnes",
+        "Un phare"
+      ],
+      "correctIndex": 1,
+      "lat": 45.77692794799805,
+      "lng":4.851922988891602,
+      "radius": 25,
+      "success": "Parfait ! L'île aux cygnes avec son monument aux morts conçu par Tony Garnier. L'amour transcende le temps !",
+      "hint": "Cette île abrite un monument historique dédié à la mémoire."
+    },
+    {
+      "id": "6",
+      "type": "riddle",
+      "title": "Casino Le Pharaon - Le Trésor Final",
+      "prompt": "Les cartes sont posées, la roue tourne, mais le vrai trésor, c'est toi qui illumines mes jours.",
+      "answer": "amour",
+      "lat": 45.784820556640625,
+      "lng":4.8529582023620605,
+      "radius": 25,
+      "success": "🎉 Félicitations ! Tu as terminé cette chasse aux trésors romantique. Le plus beau trésor, c'est notre amour ! 💕",
+      "hint": "Le sentiment le plus précieux qui unit deux cœurs."
+    }
+  ]
+}

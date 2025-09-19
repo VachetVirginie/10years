@@ -1,0 +1,9 @@
+{
+  "name": "Chasse au tr\u00e9sor",
+  "short_name": "Treasure",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1976D2",
+  "icons": []
+}
