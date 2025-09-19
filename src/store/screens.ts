@@ -29,7 +29,6 @@ export const useScreensStore = defineStore('screens', {
     },
     
     reset() {
-        console.log('Réinitialisation des écrans')
       // Réinitialiser l'état des écrans
       this.hasSeenSplash = false
       this.hasSeenIntro = false
@@ -40,13 +39,11 @@ export const useScreensStore = defineStore('screens', {
       
       // Vérification pour s'assurer de la suppression
       if (localStorage.getItem('hasSeenSplash')) {
-        console.warn('Impossible de supprimer hasSeenSplash')
         // Forcer la mise à jour
         window.localStorage.setItem('hasSeenSplash', '')
         window.localStorage.removeItem('hasSeenSplash')
       }
       
-      console.log('Écrans réinitialisés avec succès')
     }
   }
 })

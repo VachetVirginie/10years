@@ -91,7 +91,6 @@ function resetHunt() {
       
       // Supprimer explicitement chaque élément du localStorage
       for (const key of Object.keys(localStorage)) {
-        console.log(`Suppression de ${key} du localStorage`);
         localStorage.removeItem(key);
       }
       
@@ -110,10 +109,6 @@ function resetHunt() {
       localStorage.setItem('hasSeenSplash', 'false');
       localStorage.setItem('hasSeenIntro', 'false');
       
-      // Log clairement visible
-      console.log('%c Réinitialisation des écrans en cours...', 'background: red; color: white; font-size: 20px');
-      console.log('localStorage après nettoyage:', {...localStorage});
-      console.log('hasSeenSplash =', localStorage.getItem('hasSeenSplash'));
       
       // Message visible dans l'interface
       alert('Réinitialisation terminée. La page va être rechargée.');
@@ -121,11 +116,9 @@ function resetHunt() {
       // Délai plus long pour voir les logs (3 secondes)
       setTimeout(() => {
         // Force une redirection complète (pas de routage interne)
-        console.log('Redirection vers la page d\'accueil...');
         window.location.replace('/');
       }, 1000);
     } catch (error) {
-      console.error('Erreur lors de la réinitialisation:', error);
       alert("Une erreur est survenue lors de la réinitialisation. Veuillez rafraîchir la page.");
     }
   }

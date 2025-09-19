@@ -67,20 +67,12 @@ const checkPosition = () => {
     message.value = 'Impossible de te localiser. Active la géolocalisation pour trouver le Pokémon d\'amour.';
     return;
   }
-  
-  // Débogage - Affichage des coordonnées et du rayon
-  console.log('\n--- Débogage GeoStep ---');
-  console.log('ID de l\'\u00e9tape:', props.step.id);
-  console.log('Position de l\'utilisateur:', position.value.latitude, position.value.longitude);
-  console.log('Position cible:', props.step.lat, props.step.lng);
-  console.log('Rayon:', props.step.radius, 'mètres');
+
   
   const user = { lat: position.value.latitude, lng: position.value.longitude };
   const target = {lat: props.step.lat, lng: props.step.lng};
   const inRadius = withinRadius(user, target, props.step.radius);
   
-  console.log('Dans le rayon?', inRadius ? 'Oui' : 'Non');
-  console.log('------------------------');
   
   if (inRadius) {
     if (status.value !== 'found' && status.value !== 'caught') {
@@ -154,7 +146,6 @@ function validateManually() {
 
 // Fonction pour tester l'étape (débogage)
 function testStep() {
-  console.log('Test de l\'\u00e9tape', props.step.id);
   // Force l'affichage quels que soient les problèmes de géolocalisation
   status.value = 'found';
   message.value = `Test mode: Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
@@ -168,7 +159,6 @@ const isStep2 = computed(() => {
 // Force l'affichage pour l'étape 2
 function checkStep2Fix() {
   if (isStep2.value && status.value !== 'caught') {
-    console.log('Application du correctif pour l\'\u00e9tape 2');
     // Force l'état à 'found' pour permettre l'affichage
     status.value = 'found';
   }
@@ -177,7 +167,6 @@ function checkStep2Fix() {
 onMounted(() => {
   // Appliquer le correctif pour l'étape 2 immédiatement
   if (isStep2.value) {
-    console.log('Application du correctif pour l\'\u00e9tape 2');
     setTimeout(() => {
       status.value = 'found';
       message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
