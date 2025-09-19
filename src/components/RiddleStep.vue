@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
+import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 
 const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string } }>()
 
@@ -23,9 +24,9 @@ function check() {
 <template>
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
-      <img src="../assets/images/pokemon/pokeball.svg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
       <h2 class="quest-title">Énigme Pokémon</h2>
-      <img src="../assets/images/pokemon/pokeball.svg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
     </div>
 
     <div class="riddle-content">

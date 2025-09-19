@@ -2,6 +2,14 @@
 import { ref, computed } from 'vue'
 import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
+
+// Importer correctement les images
+import charizardImg from '../assets/images/pokemon/charizard-player.svg'
+import blastoiseImg from '../assets/images/pokemon/blastoise.svg'
+import trainerRedImg from '../assets/images/pokemon/trainer-red.svg'
+import trainerVillainImg from '../assets/images/pokemon/trainer-villain.svg'
+import pokeballImg from '../assets/images/pokemon/pokeball.svg'
+
 const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string } }>()
 
 // État du combat Pokémon
@@ -12,21 +20,21 @@ const showHint = ref(false);
 const animationInProgress = ref(false);
 const store = useProgress(); store.load();
 
-// Informations des dresseurs et Pokémon
+// Informations des dresseurs et Pokémon avec images locales
 const playerInfo = {
   name: 'Toi',
-  avatar: 'https://archives.bulbagarden.net/media/upload/thumb/0/05/Red_FRLG.png/150px-Red_FRLG.png',
+  avatar: trainerRedImg,
   pokemon: 'Charizard',
-  pokemonImage: 'https://archives.bulbagarden.net/media/upload/thumb/7/7e/006Charizard.png/250px-006Charizard.png',
+  pokemonImage: charizardImg,
   hp: 100,
   level: 50
 };
 
 const opponentInfo = {
   name: 'Dresseur Rival',
-  avatar: 'https://png.pngtree.com/png-clipart/20250416/original/pngtree-bad-guy-character-with-a-villainous-look-png-image_20794838.png',
+  avatar: trainerVillainImg,
   pokemon: 'Blastoise',
-  pokemonImage: 'https://archives.bulbagarden.net/media/upload/thumb/0/02/009Blastoise.png/250px-009Blastoise.png',
+  pokemonImage: blastoiseImg,
   hp: 100,
   level: 50
 };

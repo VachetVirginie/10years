@@ -3,17 +3,25 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { withinRadius } from '../composables/useGeofence'
 import { useProgress } from '../store/progress'
 import { useGeolocation } from '../composables/useGeolocation'
+import charizardImg from '../assets/images/pokemon/charizard.svg';
+import gyaradosImg from '../assets/images/pokemon/gyarados.svg';
+import arcanineImg from '../assets/images/pokemon/arcanine.svg';
+import tyranitarImg from '../assets/images/pokemon/tyranitar.svg';
+import lucarioImg from '../assets/images/pokemon/lucario.svg';
+import pokeballImg from '../assets/images/pokemon/pokeball.svg';
 import '../assets/quest-components.css'
 
 const props = defineProps<{ step:{ id:string; prompt:string; lat:number; lng:number; radius:number; success?:string; hint?:string } }>();
 
 // Pokémon pour afficher dans le Safari
+// Images locales pour éviter les problèmes avec Netlify
+
 const safariPokemonList = [
-  { name: 'Charizard', image: 'https://archives.bulbagarden.net/media/upload/thumb/7/7e/006Charizard.png/250px-006Charizard.png' },
-  { name: 'Gyarados', image: 'https://archives.bulbagarden.net/media/upload/thumb/4/41/130Gyarados.png/250px-130Gyarados.png' },
-  { name: 'Arcanine', image: 'https://archives.bulbagarden.net/media/upload/thumb/b/b8/059Arcanine.png/250px-059Arcanine.png' },
-  { name: 'Tyranitar', image: 'https://archives.bulbagarden.net/media/upload/thumb/8/82/248Tyranitar.png/250px-248Tyranitar.png' },
-  { name: 'Lucario', image: 'https://archives.bulbagarden.net/media/upload/thumb/d/d7/448Lucario.png/250px-448Lucario.png' }
+  { name: 'Charizard', image: charizardImg },
+  { name: 'Gyarados', image: gyaradosImg },
+  { name: 'Arcanine', image: arcanineImg },
+  { name: 'Tyranitar', image: tyranitarImg },
+  { name: 'Lucario', image: lucarioImg }
 ];
 
 // Choisir aléatoirement un Pokémon pour cette étape
@@ -202,9 +210,9 @@ onMounted(() => {
 
     <!-- Entête du Safari Pokémon -->
     <div class="quest-header">
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
       <h2 class="quest-title">Safari Pokémon</h2>
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
     </div>
     
     <!-- Carte de contenu principal -->
@@ -225,7 +233,7 @@ onMounted(() => {
         <!-- Animation de Poké Ball -->
         <div v-if="showPokeballAnimation" class="pokeball-animation">
           <img 
-            src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" 
+            :src="pokeballImg" 
             alt="Poké Ball Animation" 
             class="throwing-pokeball" 
             :class="{ 'catch-complete': animationComplete }" 
@@ -727,12 +735,40 @@ onMounted(() => {
 
 /* Responsive */
 @media (max-width: 600px) {
+  /* Ajuster la taille des éléments */
   .pokemon-area {
     height: 180px;
+    background: var(--pokemon-gray-100);
   }
   
   .pokemon-image {
     max-height: 120px;
+  }
+  
+  /* S'assurer que les couleurs de fond sont correctes sur mobile */
+  .quest-header {
+    background-color: var(--pokemon-gray-100);
+  }
+  
+  .quest-card {
+    background-color: var(--pokemon-gray-100);
+  }
+  
+  .safari-message-area {
+    background-color: var(--pokemon-gray-100);
+  }
+  
+  /* Améliorer la visibilité du texte */
+  .quest-message-text {
+    color: var(--pokemon-white);
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  }
+  
+  /* Améliorer le contraste de l'indicateur de proximité */
+  .proximity-meter {
+    background-color: var(--pokemon-gray-200);
+    padding: 10px;
+    border-radius: 8px;
   }
 }
 </style>
