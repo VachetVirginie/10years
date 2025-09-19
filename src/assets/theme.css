@@ -162,7 +162,7 @@
 }
 
 .pokemon-card-red {
-  border-color: var(--pokemon-red);
+  /* border-color: var(--pokemon-red); */
   box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
 }
 

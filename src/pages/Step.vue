@@ -190,85 +190,7 @@ function resetHunt() {
                      :step="step as any" />
         </div>
       </v-card>
-    </div>
-    
-    <!-- Navigation -->
-    <div class="step-navigation pa-4">
-      <v-card class="nav-card" elevation="4">
-        <v-card-text class="pa-4">
-          <div class="nav-buttons d-flex flex-wrap gap-3 justify-center">
-            <v-btn 
-              v-if="canGoPrevious"
-              @click="goPrevious"
-              color="#6b7280"
-              variant="outlined"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-arrow-left</v-icon>
-              Précédent
-            </v-btn>
-            
-            <v-btn 
-              v-if="canGoNext"
-              @click="goNext"
-              color="#fbbf24"
-              variant="elevated"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-arrow-right</v-icon>
-              Suivant
-            </v-btn>
-            
-            <v-btn 
-              v-if="!isCompleted"
-              disabled
-              color="#9ca3af"
-              variant="outlined"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-lock</v-icon>
-              Terminez cette étape
-            </v-btn>
-            
-            <v-btn 
-              to="/summary" 
-              color="#3b82f6"
-              variant="outlined"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-chart-line</v-icon>
-              Résumé
-            </v-btn>
-            
-            <v-btn 
-              to="/map" 
-              color="#10b981"
-              variant="outlined"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-map</v-icon>
-              Carte
-            </v-btn>
-            
-            <v-btn 
-              @click="resetHunt"
-              color="#ef4444"
-              variant="outlined"
-              size="large"
-              class="nav-btn"
-            >
-              <v-icon start>mdi-restart</v-icon>
-              Recommencer
-            </v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-    </div>
+    </div>    
   </main>
 </template>
 
@@ -281,9 +203,8 @@ function resetHunt() {
 }
 
 .step-header {
-  background: var(--pokemon-gray-100);
+  background: var(--pokemon-black);
   border-radius: 12px;
-  border: 2px solid var(--pokemon-red);
   box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
   margin-bottom: 24px;
 }
@@ -327,8 +248,7 @@ function resetHunt() {
 
 .content-card {
   border-radius: 12px;
-  border: 2px solid var(--pokemon-red);
-  background: var(--pokemon-gray-100);
+  background: var(--pokemon-black);
   transition: all 0.2s ease;
   box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
 }

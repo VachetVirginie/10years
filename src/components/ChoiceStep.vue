@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
+import SuccessPopup from './SuccessPopup.vue'
 
 // Importer correctement les images
 import charizardImg from '../assets/images/pokemon/charizard-player.svg'
@@ -18,7 +20,12 @@ const selected = ref<number|null>(null);
 const feedback = ref('');
 const showHint = ref(false);
 const animationInProgress = ref(false);
+const showSuccessPopup = ref(false);
+const router = useRouter();
 const store = useProgress(); store.load();
+
+// Déterminer si l'étape actuelle a une étape précédente
+const hasPreviousStep = Number(props.step.id) > 1;
 
 // Informations des dresseurs et Pokémon avec images locales
 const playerInfo = {
@@ -97,6 +104,10 @@ function useAttack() {
         feedback.value = props.step.success ?? 'Vous avez gagné ce combat d\'amour ! Votre lien est renforcé !';
         store.markDone(props.step.id);
         animationInProgress.value = false;
+        // Afficher le popup de succès après un court délai
+        setTimeout(() => {
+          showSuccessPopup.value = true;
+        }, 1000);
       }, 1500);
     } else {
       // Mauvaise attaque
@@ -132,6 +143,34 @@ function resetBattle() {
   selected.value = null;
   battleState.value = 'intro';
   battleMessage.value = `Un dresseur rival vous défie ! Répondez correctement pour gagner ce combat d'amour !`;
+}
+
+// Fonction pour passer à l'étape suivante
+function goToNextStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false;
+  
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
+  setTimeout(() => {
+    const currentId = Number(props.step.id);
+    const nextId = currentId + 1;
+    router.push(`/step/${nextId}`);
+  }, 300);
+}
+
+// Fonction pour revenir à l'étape précédente
+function goToPreviousStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false;
+  
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
+  setTimeout(() => {
+    const currentId = Number(props.step.id);
+    if (currentId > 1) {
+      const prevId = currentId - 1;
+      router.push(`/step/${prevId}`);
+    }
+  }, 300);
 }
 
 // Afficher/masquer l'indice
@@ -276,10 +315,21 @@ function toggleHint() {
           </div>
         </div>
         <div class="result-actions">
-          <v-btn color="var(--pokemon-black)" class="quest-button" rounded="pill" to="/map">
+          <v-btn color="var(--pokemon-black)" class="quest-button" rounded="pill" @click="goToNextStep">
             Continuer l'aventure
           </v-btn>
         </div>
+        
+        <!-- Pop-in de succès -->
+        <SuccessPopup 
+          :show="showSuccessPopup"
+          title="Combat gagné !"
+          :message="feedback"
+          :current-step-id="props.step.id"
+          :has-previous-step="hasPreviousStep"
+          @next="goToNextStep"
+          @previous="goToPreviousStep"
+        />
       </div>
       
       <!-- Écran de défaite -->

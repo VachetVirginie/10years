@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
-// Import d'une image Pokémon pour l'animation
-import charizardImg from '../assets/images/pokemon/charizard.svg'
+import SuccessPopup from './SuccessPopup.vue'
 
 const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string } }>()
 
@@ -12,42 +12,59 @@ const answer = ref('')
 const feedback = ref('')
 const showHint = ref(false)
 const isFeedbackSuccess = ref(false)
-const showSuccessAnimation = ref(false)
-const animationStep = ref(0) // 0: rien, 1: Pokémon apparaît, 2: Pokémon capturé
-const showPokeball = ref(false)
-const animationComplete = ref(false)
+const showSuccessPopup = ref(false)
+const router = useRouter()
 const store = useProgress()
 store.load()
+
+// Déterminer si l'étape actuelle a une étape précédente
+const hasPreviousStep = Number(props.step.id) > 1
 
 // Fonction pour vérifier la réponse
 function check() {
   const ok = answer.value.trim().toLowerCase() === props.step.answer.toLowerCase()
   
   if (ok) {
-    // Si la réponse est correcte, démarrer l'animation
+    // Si la réponse est correcte
     isFeedbackSuccess.value = true
-    showSuccessAnimation.value = true
-    animationStep.value = 1
-    feedback.value = 'Un Pokémon sauvage apparaît!'
+    feedback.value = props.step.success ?? 'Bravo ! Tu as trouvé la bonne réponse !'
+    store.markDone(props.step.id)
     
-    // Après un délai, afficher la Poké Ball
-    setTimeout(() => {
-      showPokeball.value = true
-      animationStep.value = 2
-      
-      // Après un autre délai, afficher le message de succès
-      setTimeout(() => {
-        animationStep.value = 3
-        animationComplete.value = true
-        feedback.value = props.step.success ?? 'Bravo ! Tu as trouvé la bonne réponse !'
-        store.markDone(props.step.id)
-      }, 2000)
-    }, 1500)
+    // Afficher le pop-in de succès
+    showSuccessPopup.value = true
   } else {
     // Si la réponse est incorrecte
     isFeedbackSuccess.value = false
     feedback.value = 'Mauvaise réponse. Essaie encore.'
   }
+}
+
+// Fonction pour passer à l'étape suivante
+function goToNextStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false
+  
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
+  setTimeout(() => {
+    const currentId = Number(props.step.id)
+    const nextId = currentId + 1
+    router.push(`/step/${nextId}`)
+  }, 300)
+}
+
+// Fonction pour revenir à l'étape précédente
+function goToPreviousStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false
+  
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
+  setTimeout(() => {
+    const currentId = Number(props.step.id)
+    if (currentId > 1) {
+      const prevId = currentId - 1
+      router.push(`/step/${prevId}`)
+    }
+  }, 300)
 }
 </script>
 
@@ -114,22 +131,16 @@ function check() {
         <p id="hint" class="hint-text">{{ props.step.hint }}</p>
       </div>
       
-      <!-- Animation de succès avec Pokémon -->
-      <div v-if="showSuccessAnimation" class="success-animation-container">
-        <div class="pokemon-animation-area" :class="{'animation-complete': animationComplete}">
-          <img v-if="animationStep >= 1" :src="charizardImg" alt="Pokémon apparu" class="pokemon-appear" />
-          
-          <!-- Animation de Poké Ball -->
-          <div v-if="showPokeball" class="pokeball-animation">
-            <img 
-              :src="pokeballImg" 
-              alt="Poké Ball Animation" 
-              class="throwing-pokeball" 
-              :class="{ 'catch-complete': animationComplete }" 
-            />
-          </div>
-        </div>
-      </div>
+      <!-- Pop-in de succès -->
+      <SuccessPopup 
+        :show="showSuccessPopup"
+        title="Bravo !"
+        :message="feedback"
+        :current-step-id="props.step.id"
+        :has-previous-step="hasPreviousStep"
+        @next="goToNextStep"
+        @previous="goToPreviousStep"
+      />
       
       <!-- Feedback text -->
       <div v-if="feedback" class="feedback-container" :class="{ 'success-feedback': isFeedbackSuccess, 'error-feedback': !isFeedbackSuccess }">
@@ -150,7 +161,6 @@ function check() {
 
 .riddle-content {
   background: var(--pokemon-gray-100);
-  border: 2px solid var(--pokemon-red);
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
@@ -162,7 +172,6 @@ function check() {
   background: var(--pokemon-gray-200);
   border-radius: 8px;
   padding: 15px;
-  border-left: 4px solid var(--pokemon-red);
 }
 
 .riddle-prompt h3 {
@@ -209,7 +218,6 @@ function check() {
 
 .hint-box {
   background: var(--pokemon-gray-200);
-  border: 1px solid var(--pokemon-red);
   border-radius: 10px;
   padding: 12px 15px;
   margin: 15px 0;
@@ -267,7 +275,6 @@ function check() {
   overflow: hidden;
   background: var(--pokemon-gray-100);
   border-radius: 12px;
-  border: 2px solid var(--pokemon-red);
 }
 
 .pokemon-animation-area {

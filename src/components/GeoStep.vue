@@ -1,42 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { withinRadius } from '../composables/useGeofence'
 import { useProgress } from '../store/progress'
 import { useGeolocation } from '../composables/useGeolocation'
-import charizardImg from '../assets/images/pokemon/charizard.svg';
-import gyaradosImg from '../assets/images/pokemon/gyarados.svg';
-import arcanineImg from '../assets/images/pokemon/arcanine.svg';
-import tyranitarImg from '../assets/images/pokemon/tyranitar.svg';
-import lucarioImg from '../assets/images/pokemon/lucario.svg';
-import pokeballImg from '../assets/images/pokemon/pokeball.svg';
 import '../assets/quest-components.css'
+import SuccessPopup from './SuccessPopup.vue'
 
 const props = defineProps<{ step:{ id:string; prompt:string; lat:number; lng:number; radius:number; success?:string; hint?:string } }>();
 
-// Pokémon pour afficher dans le Safari
-// Images locales pour éviter les problèmes avec Netlify
-
-const safariPokemonList = [
-  { name: 'Charizard', image: charizardImg },
-  { name: 'Gyarados', image: gyaradosImg },
-  { name: 'Arcanine', image: arcanineImg },
-  { name: 'Tyranitar', image: tyranitarImg },
-  { name: 'Lucario', image: lucarioImg }
-];
-
-// Choisir aléatoirement un Pokémon pour cette étape
-const randomIndex = Math.floor(Math.random() * safariPokemonList.length);
-const wildPokemon = ref(safariPokemonList[randomIndex]);
-
-const status = ref('searching'); // 'searching', 'found', 'caught', 'error'
-const message = ref('Un Pokémon sauvage est dans les parages... Rapproche-toi pour le trouver !');
+const status = ref('searching'); // 'searching', 'found', 'completed'
+const message = ref('Cherche bien autour de toi...');
 const showHint = ref(false);
-const showPokeballAnimation = ref(false);
-const animationComplete = ref(false);
-const distancePercentage = ref(100); // Plus c'est petit, plus on est proche
-const showManualConfirm = ref(false); // Pour confirmer la validation manuelle
+const distancePercentage = ref(0);
+const showSuccessPopup = ref(false);
 
-// Géolocalisation en temps réel
+// Variables pour la confirmation manuelle
+const showManualConfirm = ref(false);
+
+// Déterminer si l'étape actuelle a une étape précédente
+const hasPreviousStep = Number(props.step.id) > 1;
+
+const router = useRouter();
 const { position, error, startTracking, getCurrentPosition } = useGeolocation();
 const store = useProgress(); store.load();
 
@@ -45,19 +30,29 @@ const calculateDistance = () => {
   if (!position.value) return 100;
   
   const user = { lat: position.value.latitude, lng: position.value.longitude };
-  const target = { lat: props.step.lat, lng: props.step.lng };
+  const target = {lat: props.step.lat, lng: props.step.lng};
   
-  // Calculer la distance en mètres
-  const R = 6371000;
-  const toRad = (d:number) => d * Math.PI / 180;
-  const dLat = toRad(target.lat - user.lat);
-  const dLng = toRad(target.lng - user.lng);
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(user.lat))*Math.cos(toRad(target.lat))*Math.sin(dLng/2)**2;
-  const distance = 2 * R * Math.asin(Math.sqrt(a));
+  // Calcul de la distance entre deux points GPS
+  const R = 6371e3; // Rayon de la Terre en mètres
+  const φ1 = user.lat * Math.PI/180; // φ, λ en radians
+  const φ2 = target.lat * Math.PI/180;
+  const Δφ = (target.lat-user.lat) * Math.PI/180;
+  const Δλ = (target.lng-user.lng) * Math.PI/180;
   
-  // Convertir en pourcentage par rapport au rayon (inversé)
-  const percentage = Math.max(0, Math.min(100, (distance / (props.step.radius * 2)) * 100));
-  return 100 - percentage; // Inversé pour que 100% = très proche
+  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distance = R * c; // en mètres
+  
+  // Convertir la distance en pourcentage de proximité
+  const proximityPercentage = Math.max(0, Math.min(100, (1 - distance / (props.step.radius * 4)) * 100));
+  
+  // Mettre à jour la valeur du pourcentage
+  distancePercentage.value = proximityPercentage;
+  
+  return proximityPercentage;
+  // 100% = très proche
 };
 
 // Vérifier la position par rapport à la cible
@@ -75,41 +70,69 @@ const checkPosition = () => {
   
   
   if (inRadius) {
-    if (status.value !== 'found' && status.value !== 'caught') {
+    if (status.value !== 'found') {
       status.value = 'found';
-      message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
+      message.value = `Tu as trouvé l'étape !`;
     }
   } else {
-    distancePercentage.value = calculateDistance();
+    const distancePercentage = calculateDistance();
     status.value = 'searching';
     
     // Message basé sur la proximité
-    if (distancePercentage.value > 80) {
-      message.value = `${wildPokemon.value.name} est très proche ! Encore quelques pas...`;
-    } else if (distancePercentage.value > 50) {
-      message.value = `Tu te rapproches de ${wildPokemon.value.name}. Continue !`;
-    } else if (distancePercentage.value > 20) {
-      message.value = `${wildPokemon.value.name} est dans cette zone, mais tu es encore un peu loin.`;
+    if (distancePercentage > 80) {
+      message.value = `L'étape est très proche ! Encore quelques pas...`;
+    } else if (distancePercentage > 50) {
+      message.value = `Tu te rapproches de l'étape. Continue !`;
+    } else if (distancePercentage > 20) {
+      message.value = `L'étape est dans cette zone, mais tu es encore un peu loin.`;
     } else {
-      message.value = `${wildPokemon.value.name} est très loin. Explore davantage.`;
+      message.value = `L'étape est très loin. Explore davantage.`;
     }
   }
 };
 
-// Fonction pour capturer le Pokémon
-const capturePokemon = () => {
+// Fonction pour valider l'étape
+const validateStep = () => {
   if (status.value !== 'found') return;
   
-  showPokeballAnimation.value = true;
-  status.value = 'catching';
+  status.value = 'completed';
+  store.markDone(props.step.id);
+  message.value = props.step.success || `Félicitations ! Tu as terminé cette étape !`;
+  showSuccessPopup.value = true;
+};
+
+// Fonction pour passer à l'étape suivante
+function goToNextStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false;
   
-  // Simuler la capture
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
-    status.value = 'caught';
-    store.markDone(props.step.id);
-    message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
-    animationComplete.value = true;
-  }, 2000);
+    const currentId = Number(props.step.id);
+    const nextId = currentId + 1;
+    router.push(`/step/${nextId}`);
+  }, 300);
+}
+
+// Fonction pour revenir à l'étape précédente
+function goToPreviousStep() {
+  // Fermer la pop-in avant de naviguer
+  showSuccessPopup.value = false;
+  
+  // Petit délai avant la navigation pour permettre à la transition de se terminer
+  setTimeout(() => {
+    const currentId = Number(props.step.id);
+    if (currentId > 1) {
+      const prevId = currentId - 1;
+      router.push(`/step/${prevId}`);
+    }
+  }, 300);
+}
+
+// Fonction pour valider manuellement l'étape
+function validateManually() {
+  showManualConfirm.value = false;
+  validateStep();
 };
 
 // Afficher/masquer l'indice
@@ -119,70 +142,22 @@ function toggleHint() {
 
 // Fonction pour afficher la confirmation de validation manuelle
 function showManualValidation() {
-  showManualConfirm.value = true;
-}
-
-// Fonction pour valider manuellement l'étape
-function validateManually() {
-  // D'abord montrer le Pokémon
+  // D'abord montrer le message de validation
   status.value = 'found';
-  showManualConfirm.value = false;
-  message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
+  message.value = `Tu as trouvé l'étape !`;
   
-  // Après un court délai, lancer automatiquement la capture
+  // Après un court délai, lancer automatiquement la validation
   setTimeout(() => {
-    showPokeballAnimation.value = true;
-    status.value = 'catching';
-    
-    // Simuler la capture comme dans la fonction capturePokemon
-    setTimeout(() => {
-      status.value = 'caught';
-      store.markDone(props.step.id);
-      message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
-      animationComplete.value = true;
-    }, 2000);
-  }, 1500); // Délai pour voir le Pokémon avant la capture
+    validateStep();
+  }, 1500); // Délai pour voir le message avant la validation
 };
 
-// Fonction pour tester l'étape (débogage)
-function testStep() {
-  // Force l'affichage quels que soient les problèmes de géolocalisation
-  status.value = 'found';
-  message.value = `Test mode: Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
-}
-
-// Vérifie si l'étape est l'étape #2 qui pose problème
-const isStep2 = computed(() => {
-  return props.step.id === '2';
-});
-
-// Force l'affichage pour l'étape 2
-function checkStep2Fix() {
-  if (isStep2.value && status.value !== 'caught') {
-    // Force l'état à 'found' pour permettre l'affichage
-    status.value = 'found';
-  }
-}
-
 onMounted(() => {
-  // Appliquer le correctif pour l'étape 2 immédiatement
-  if (isStep2.value) {
-    setTimeout(() => {
-      status.value = 'found';
-      message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
-    }, 500);
-  }
-  
   startTracking();
   
   // Vérifier la position régulièrement
   const intervalId = setInterval(() => {
     checkPosition();
-    
-    // Réappliquer le correctif pour l'étape 2 après chaque vérification
-    if (isStep2.value && status.value === 'searching') {
-      checkStep2Fix();
-    }
   }, 2000);
   
   // Nettoyer l'intervalle quand le composant est démonté
@@ -201,47 +176,20 @@ onMounted(() => {
         <div>ID: {{ props.step.id }} | Type: Geo</div>
         <div>Target: {{ props.step.lat }}, {{ props.step.lng }}</div>
         <div>Position: {{ position?.latitude || 'N/A' }}, {{ position?.longitude || 'N/A' }}</div>
-        <div>Distance %: {{ distancePercentage }}</div>
         <div>Status: {{ status }}</div>
         <div class="debug-actions">
-          <button @click="testStep" class="debug-button">Test étape</button>
           <button @click="getCurrentPosition" class="debug-button">Update position</button>
         </div>
       </div>
     </div>
 
-    <!-- Entête du Safari Pokémon -->
+    <!-- Entête de la mission -->
     <div class="quest-header">
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
-      <h2 class="quest-title">Safari Pokémon</h2>
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <h2 class="quest-title">Mission Géolocalisation</h2>
     </div>
     
     <!-- Carte de contenu principal -->
     <v-card class="quest-card" elevation="8">
-      <!-- Zone de l'image du Pokémon -->
-      <div class="pokemon-area" :class="{ 'blurred': status === 'searching' }">
-        <img 
-          :src="wildPokemon.image" 
-          :alt="wildPokemon.name" 
-          class="pokemon-image" 
-          :class="{
-            'pokemon-visible': status === 'found' || status === 'caught',
-            'pokemon-hidden': status === 'searching',
-            'pokemon-captured': status === 'caught'
-          }" 
-        />
-        
-        <!-- Animation de Poké Ball -->
-        <div v-if="showPokeballAnimation" class="pokeball-animation">
-          <img 
-            :src="pokeballImg" 
-            alt="Poké Ball Animation" 
-            class="throwing-pokeball" 
-            :class="{ 'catch-complete': animationComplete }" 
-          />
-        </div>
-      </div>
       
       <!-- Zone de message et d'interaction -->
       <div class="safari-message-area">
@@ -251,20 +199,12 @@ onMounted(() => {
           <div v-if="status === 'found'" class="action-buttons">
             <v-btn 
               color="var(--pokemon-red)" 
-              @click="capturePokemon"
-              class="quest-button"
-              rounded="pill"
+              @click="validateStep"
+              class="safari-btn"
             >
-              <span class="btn-text">Lancer une Poké Ball</span>
+              <v-icon>mdi-check-circle</v-icon>
+              Valider
             </v-btn>
-          </div>
-          
-          <div v-if="status === 'caught'" class="success-animation">
-            <div class="heart-container">
-              <div class="heart"></div>
-              <div class="heart"></div>
-              <div class="heart"></div>
-            </div>
           </div>
         </div>
         
@@ -275,6 +215,17 @@ onMounted(() => {
             <div class="meter-fill" :style="{ width: distancePercentage + '%' }"></div>
           </div>
         </div>
+        
+        <!-- Pop-in de succès -->
+        <SuccessPopup 
+          :show="showSuccessPopup"
+          title="Étape validée !"
+          :message="message"
+          :current-step-id="props.step.id"
+          :has-previous-step="hasPreviousStep"
+          @next="goToNextStep"
+          @previous="goToPreviousStep"
+        />
         
         <!-- Bouton d'indice -->
         <v-btn
