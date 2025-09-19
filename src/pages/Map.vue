@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
 import { useHunt } from '../composables/useHunt'
 import { useProgress } from '../store/progress'
 import { useGeolocation } from '../composables/useGeolocation'
@@ -9,10 +9,13 @@ import 'leaflet/dist/leaflet.css'
 const { steps } = useHunt()
 const store = useProgress()
 store.load()
-const { position } = useGeolocation()
+// Activer le suivi de géolocalisation avec mise à jour fréquente
+const { position, getCurrentPosition, startTracking, stopTracking } = useGeolocation()
 const mapEl = ref<HTMLDivElement|null>(null)
 let map: any = null
 let userMarker: any = null
+let rangeCircle: any = null
+let positionUpdateInterval: number | null = null
 
 const geoSteps = computed(() => steps.filter(s => s.type === 'geo'))
 const completedSteps = computed(() => geoSteps.value.filter(s => store.done.has(s.id)).length)
@@ -41,7 +44,7 @@ const updateUserPosition = () => {
   }).addTo(map).bindPopup('👨‍🏭 Votre position')
   
   // Cercle de portée autour de la position du dresseur
-  const rangeCircle = L.circle([position.value.latitude, position.value.longitude], { 
+  rangeCircle = L.circle([position.value.latitude, position.value.longitude], { 
     radius: 100, // Rayon en mètres
     color: 'var(--pokemon-red)',
     fillColor: 'var(--pokemon-red)',
@@ -52,6 +55,16 @@ const updateUserPosition = () => {
 }
 
 onMounted(() => {
+  // Force une mise à jour immédiate de la position
+  getCurrentPosition()
+  
+  // Démarrer le suivi fréquent de la position pour la carte
+  // Mise à jour plus fréquente que celle par défaut (toutes les 5 secondes au lieu de 10)
+  startTracking()
+  positionUpdateInterval = window.setInterval(() => {
+    getCurrentPosition()
+  }, 5000) // Intervalle plus court que celui par défaut
+  
   if (!mapEl.value) return
   const geoStepsArray = geoSteps.value as any[]
   
@@ -98,8 +111,23 @@ onMounted(() => {
 
 // Surveiller les changements de position
 watch(position, () => {
-  updateUserPosition()
+  if (position.value) {
+    updateUserPosition()
+    
+    // Centrer la carte sur la position de l'utilisateur
+    if (map && userMarker) {
+      map.setView([position.value.latitude, position.value.longitude], map.getZoom())
+    }
+  }
 }, { deep: true })
+
+// Arrêter le suivi de position lorsque le composant est démonté
+onUnmounted(() => {
+  stopTracking()
+  if (positionUpdateInterval) {
+    clearInterval(positionUpdateInterval)
+  }
+})
 </script>
 
 <template>
@@ -149,13 +177,13 @@ watch(position, () => {
             <div class="legend-icon">
               <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="PokéBall" class="legend-img" />
             </div>
-            <span class="text-caption ml-2">Pokémon capturé</span>
+            <span class="text-caption ml-2 text-pokemon-white">Pokémon capturé</span>
           </div>
           <div class="legend-item d-flex align-center">
             <div class="legend-icon">
-              <img src="https://archives.bulbagarden.net/media/upload/a/a7/Spr_5b_Red.png" alt="Dresseur" class="legend-img" />
+              <img src="../assets/images/pokeMarker.png" alt="Dresseur" class="legend-img" />
             </div>
-            <span class="text-caption ml-2">Votre position</span>
+            <span class="text-caption ml-2 text-pokemon-white">Votre position</span>
           </div>
         </div>
       </v-card-text>

@@ -82,6 +82,16 @@ function resetProgress() {
   // Mettre à jour l'interface
   router.go(0) // Équivalent à refresh mais utilise le router
 }
+
+// Fonction pour réinitialiser le splash screen et l'intro
+function resetIntro() {
+  // Supprimer les entrées dans le localStorage
+  localStorage.removeItem('hasSeenSplash')
+  localStorage.removeItem('hasSeenIntro')
+  showIntroConfirmation.value = false
+  // Rafraîchir la page pour montrer le splash screen
+  router.go(0)
+}
 </script>
 
 <template>
@@ -174,6 +184,20 @@ function resetProgress() {
           <div class="dialog-actions">
             <button @click="resetProgress" class="confirm-btn">Oui, réinitialiser</button>
             <button @click="showResetConfirmation = false" class="cancel-btn">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dialogue de confirmation pour revoir l'intro -->
+    <div v-if="showIntroConfirmation" class="reset-confirmation-overlay">
+      <div class="reset-confirmation-dialog">
+        <div class="dialog-content">
+          <h3 class="dialog-title">Revoir l'intro</h3>
+          <p class="dialog-message">{{ introConfirmationMessage }}</p>
+          <div class="dialog-actions">
+            <button @click="resetIntro" class="confirm-btn">Oui, revoir</button>
+            <button @click="showIntroConfirmation = false" class="cancel-btn">Annuler</button>
           </div>
         </div>
       </div>
