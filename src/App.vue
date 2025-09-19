@@ -11,16 +11,37 @@ const { steps, title } = useHunt()
 const drawer = ref(false)
 
 // Gestion du splash screen et de l'intro
-const showSplashScreen = ref(true)
+const showSplashScreen = ref(false)
 const showIntroScreen = ref(false)
+
+// Vérifier si c'est la première visite
+onMounted(() => {
+  const hasSeenSplash = localStorage.getItem('hasSeenSplash')
+  const hasSeenIntro = localStorage.getItem('hasSeenIntro')
+  
+  if (!hasSeenSplash) {
+    showSplashScreen.value = true
+  }
+})
 
 function onSplashComplete() {
   showSplashScreen.value = false
-  showIntroScreen.value = true
+  
+  // Après le splash, vérifier pour l'intro
+  const hasSeenIntro = localStorage.getItem('hasSeenIntro')
+  if (!hasSeenIntro) {
+    showIntroScreen.value = true
+  }
+  
+  // Marquer le splash comme vu
+  localStorage.setItem('hasSeenSplash', 'true')
 }
 
 function onIntroComplete() {
   showIntroScreen.value = false
+  
+  // Marquer l'intro comme vue
+  localStorage.setItem('hasSeenIntro', 'true')
 }
 
 // Anniversaire: 10 ans ensemble

@@ -3,10 +3,14 @@ import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import PokemonDialog from '../components/PokemonDialog.vue'
 import PokemonHealthBar from '../components/PokemonHealthBar.vue'
 import PokemonBadges from '../components/PokemonBadges.vue'
 import PokemonMenu from '../components/PokemonMenu.vue'
+
+// Router pour la navigation
+const router = useRouter()
 
 // Activer le suivi de géolocalisation
 useGeolocation()
@@ -54,9 +58,9 @@ const resetConfirmationMessage = "Es-tu sûr de vouloir réinitialiser ta progre
 
 function handleMenuSelect(item: MenuItem) {
   if (item.id === 'start') {
-    window.location.href = store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`
+    router.push(store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`)
   } else if (item.id === 'map') {
-    window.location.href = '/map'
+    router.push('/map')
   } else if (item.id === 'badges') {
     showBadges.value = true
   } else if (item.id === 'reset') {
@@ -68,8 +72,8 @@ function handleMenuSelect(item: MenuItem) {
 function resetProgress() {
   store.reset()
   showResetConfirmation.value = false
-  // Rafraîchir la page pour mettre à jour l'interface
-  window.location.reload()
+  // Mettre à jour l'interface
+  router.go(0) // Équivalent à refresh mais utilise le router
 }
 </script>
 
@@ -109,7 +113,7 @@ function resetProgress() {
             <PokemonDialog
               :text="welcomeMessage"
               speaker="PROFESSEUR"
-              avatar="https://archives.bulbagarden.net/media/upload/3/3e/Lets_Go_Professor_Oak.png"
+              avatar="https://archives.bulbagarden.net/media/upload/thumb/4/44/Professor_Cerise_anime.png/180px-Professor_Cerise_anime.png"
               @complete="dialogDone = true"
             />
           </v-col>
@@ -142,6 +146,13 @@ function resetProgress() {
               :total="steps.length > 8 ? 8 : steps.length"
               :showAnimation="true"
             />
+            
+            <!-- Bouton pour revenir au menu principal -->
+            <div class="back-button-container">
+              <button @click="showBadges = false" class="back-button">
+                Retour au menu
+              </button>
+            </div>
           </v-col>
         </v-row>
       </v-container>
@@ -353,5 +364,36 @@ function resetProgress() {
 @keyframes dialog-appear {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* Styles pour le bouton de retour dans la section badges */
+.back-button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.back-button {
+  background-color: var(--pokemon-red);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 0 var(--pokemon-red-dark), 0 0 10px rgba(255, 61, 40, 0.3);
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--pokemon-red-dark), 0 0 15px rgba(255, 61, 40, 0.5);
+}
+
+.back-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--pokemon-red-dark), 0 0 5px rgba(255, 61, 40, 0.3);
 }
 </style>

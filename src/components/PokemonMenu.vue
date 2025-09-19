@@ -102,6 +102,14 @@ function selectItem() {
   }
 }
 
+// Gérer le clic sur un élément du menu
+function handleItemClick(item: MenuItem, index: number) {
+  if (!item.disabled) {
+    selectedIndex.value = index;
+    emit('select', item);
+  }
+}
+
 // S'assurer que l'élément initial sélectionné est actif
 navigateFirst();
 </script>
@@ -126,7 +134,7 @@ navigateFirst();
             'item-selected': index === selectedIndex,
             'item-disabled': item.disabled
           }"
-          @click="!item.disabled && (selectedIndex = index) && selectItem()"
+          @click="handleItemClick(item, index)"
           @mouseover="!item.disabled && (selectedIndex = index)"
         >
           <div class="item-selector" v-if="index === selectedIndex">▶</div>
