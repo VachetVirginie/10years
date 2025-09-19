@@ -82,22 +82,43 @@ function goPrevious() {
 
 function resetHunt() {
   if (confirm('Êtes-vous sûr de vouloir recommencer la chasse au trésor ? Toutes les données seront supprimées.')) {
-    // Réinitialiser le store
-    store.reset()
-    
-    // Supprimer explicitement chaque élément du localStorage
-    localStorage.removeItem('progress')
-    localStorage.removeItem('hasSeenSplash')
-    localStorage.removeItem('hasSeenIntro')
-    
-    // Pour s'assurer que tout est supprimé
-    localStorage.clear()
-    
-    // Log pour vérification
-    console.log('localStorage nettoyé:', localStorage)
-    
-    // Rediriger vers la page d'accueil et forcer un rafraîchissement complet
-    window.location.href = '/'
+    try {
+      // Réinitialiser le store en premier
+      store.reset()
+      
+      // Forcer l'expiration de session avant suppression
+      document.cookie = 'vue-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
+      // Supprimer explicitement chaque élément du localStorage
+      for (const key of Object.keys(localStorage)) {
+        console.log(`Suppression de ${key} du localStorage`);
+        localStorage.removeItem(key);
+      }
+      
+      // Assurer spécifiquement la suppression de hasSeenSplash
+      localStorage.removeItem('hasSeenSplash');
+      
+      // Vérifier que hasSeenSplash est bien supprimé
+      if (localStorage.getItem('hasSeenSplash')) {
+        console.error("Impossible de supprimer hasSeenSplash!");
+      }
+      
+      // Pour s'assurer que tout est supprimé
+      localStorage.clear();
+      
+      // Log pour vérification
+      console.log('localStorage après nettoyage:', {...localStorage});
+      console.log('hasSeenSplash existe encore?', localStorage.getItem('hasSeenSplash'));
+      
+      // Petite pause pour s'assurer que tout est bien traité
+      setTimeout(() => {
+        // Force une redirection complète (pas de routage interne)
+        window.location.replace('/');
+      }, 100);
+    } catch (error) {
+      console.error('Erreur lors de la réinitialisation:', error);
+      alert("Une erreur est survenue lors de la réinitialisation. Veuillez rafraîchir la page.");
+    }
   }
 }
 </script>
