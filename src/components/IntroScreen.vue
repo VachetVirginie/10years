@@ -22,10 +22,6 @@ Une étrange énigme a surgi dans les rues de Lyon. Comme des Pokémon rares, de
 Pour réussir ta mission, tu devras faire preuve de courage, de stratégie et d’un esprit affûté, comme lors d’un combat d’arène.
 Chaque indice que tu découvriras sera comme un Pokémon à capturer, et chaque énigme résolue te rapprochera du trésor caché.
 
-Souviens-toi, Soso :
-👉 Une grande dresseuse observe toujours son environnement.
-👉 Une aventurière déterminée ne recule jamais devant le défi.
-
 Ta quête commence maintenant. Le destin de cette aventure est entre tes mains… Et qui sait ? Peut-être qu’au bout de cette route se cache un Pokémon légendaire ! »
 
 ⚡️ Alors, jeune dresseuse… es-tu prête à partir à l’aventure ?
