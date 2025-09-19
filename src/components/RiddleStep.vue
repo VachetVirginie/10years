@@ -23,9 +23,9 @@ function check() {
 <template>
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img src="../assets/images/pokemon/pokeball.svg" alt="Poké Ball" class="pokeball-icon animate-float" />
       <h2 class="quest-title">Énigme Pokémon</h2>
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img src="../assets/images/pokemon/pokeball.svg" alt="Poké Ball" class="pokeball-icon animate-float" />
     </div>
 
     <div class="riddle-content">
