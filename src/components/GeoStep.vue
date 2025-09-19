@@ -132,11 +132,24 @@ function showManualValidation() {
 
 // Fonction pour valider manuellement l'étape
 function validateManually() {
-  status.value = 'caught';
-  store.markDone(props.step.id);
-  message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
+  // D'abord montrer le Pokémon
+  status.value = 'found';
   showManualConfirm.value = false;
-  animationComplete.value = true;
+  message.value = `Tu as trouvé ${wildPokemon.value.name} ! Lance une Poké Ball pour le capturer !`;
+  
+  // Après un court délai, lancer automatiquement la capture
+  setTimeout(() => {
+    showPokeballAnimation.value = true;
+    status.value = 'catching';
+    
+    // Simuler la capture comme dans la fonction capturePokemon
+    setTimeout(() => {
+      status.value = 'caught';
+      store.markDone(props.step.id);
+      message.value = props.step.success || `Félicitations ! Tu as capturé ${wildPokemon.value.name} !`;
+      animationComplete.value = true;
+    }, 2000);
+  }, 1500); // Délai pour voir le Pokémon avant la capture
 };
 
 // Fonction pour tester l'étape (débogage)
