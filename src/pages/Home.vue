@@ -2,7 +2,11 @@
 import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import PokemonDialog from '../components/PokemonDialog.vue'
+import PokemonHealthBar from '../components/PokemonHealthBar.vue'
+import PokemonBadges from '../components/PokemonBadges.vue'
+import PokemonMenu from '../components/PokemonMenu.vue'
 
 // Activer le suivi de géolocalisation
 useGeolocation()
@@ -14,6 +18,59 @@ store.load()
 const progressPercent = computed(() => {
   return Math.round((store.done.size / steps.length) * 100)
 })
+
+// Message de bienvenue pour le dialog Pokémon
+const welcomeMessage = computed(() => {
+  if (store.done.size === 0) {
+    return "Bienvenue aventurier! Une quête épique t'attend à travers la ville. Es-tu prêt à relever le défi?"
+  } else {
+    return `Content de te revoir! Tu as déjà complété ${store.done.size} étapes sur ${steps.length}. Continue l'aventure!`
+  }
+})
+
+// Menu items pour navigation
+const menuItems = [
+  { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
+  { id: 'map', label: 'Voir la carte', icon: '🗺️' },
+  { id: 'badges', label: 'Voir les badges', icon: '🏆' },
+  { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
+]
+
+// Interface pour les items du menu
+interface MenuItem {
+  id: string;
+  label: string;
+  icon?: string;
+  disabled?: boolean;
+}
+
+// Gestion des sélections du menu
+const showBadges = ref(false)
+const dialogDone = ref(false)
+
+// Dialog de confirmation pour la réinitialisation
+const showResetConfirmation = ref(false)
+const resetConfirmationMessage = "Es-tu sûr de vouloir réinitialiser ta progression ? Toutes tes étapes complétées seront perdues."
+
+function handleMenuSelect(item: MenuItem) {
+  if (item.id === 'start') {
+    window.location.href = store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`
+  } else if (item.id === 'map') {
+    window.location.href = '/map'
+  } else if (item.id === 'badges') {
+    showBadges.value = true
+  } else if (item.id === 'reset') {
+    showResetConfirmation.value = true
+  }
+}
+
+// Fonction pour réinitialiser la progression
+function resetProgress() {
+  store.reset()
+  showResetConfirmation.value = false
+  // Rafraîchir la page pour mettre à jour l'interface
+  window.location.reload()
+}
 </script>
 
 <template>
@@ -27,71 +84,81 @@ const progressPercent = computed(() => {
     </div>
 
     <!-- Progress Bar -->
+    <!-- Barre de santé Pokémon montrant la progression -->
     <div class="progress-section">
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
-            <div class="progress-info">
-              <div class="progress-text">Progression: {{ store.done.size }}/{{ steps.length }}</div>
-              <v-progress-linear
-                v-model="progressPercent"
-                height="10"
-                rounded
-                color="var(--pokemon-red)"
-                background-color="var(--pokemon-gray-200)"
-              ></v-progress-linear>
-            </div>
+            <PokemonHealthBar
+              :current="store.done.size"
+              :max="steps.length"
+              :level="progressPercent"
+              name="AVENTURIER"
+              label="XP"
+            />
           </v-col>
         </v-row>
       </v-container>
     </div>
 
-    <!-- Action Section -->
-    <div class="action-section">
+    <!-- Dialog de bienvenue Pokémon -->
+    <div class="dialog-section">
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
-            <div class="action-card">
-              <v-btn
-                :to="store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`"
-                class="start-btn"
-                size="large"
-                block
-              >
-                {{ store.done.size === 0 ? 'Commencer' : 'Continuer' }}
-              </v-btn>
-              
-              <v-btn
-                to="/map"
-                class="map-btn"
-                size="large"
-                block
-                variant="outlined"
-              >
-                Voir la carte
-              </v-btn>
-            </div>
+            <PokemonDialog
+              :text="welcomeMessage"
+              speaker="PROFESSEUR"
+              avatar="https://archives.bulbagarden.net/media/upload/3/3e/Lets_Go_Professor_Oak.png"
+              @complete="dialogDone = true"
+            />
           </v-col>
         </v-row>
       </v-container>
     </div>
 
-    <!-- Instructions -->
-    <div class="instructions-section">
+    <!-- Menu de navigation style Pokémon -->
+    <div class="menu-section" v-if="dialogDone">
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
-            <div class="instruction-card">
-              <h3>Comment jouer</h3>
-              <ol>
-                <li>Suis les indices pour trouver chaque lieu</li>
-                <li>Résous les énigmes sur place</li>
-                <li>Débloque de nouvelles étapes en avançant</li>
-              </ol>
-            </div>
+            <PokemonMenu
+              :items="menuItems"
+              title="MENU PRINCIPAL"
+              @select="handleMenuSelect"
+            />
           </v-col>
         </v-row>
       </v-container>
+    </div>
+
+    <!-- Badges Pokémon (affichés conditionnellement) -->
+    <div class="badges-section" v-if="showBadges">
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="12">
+            <PokemonBadges
+              :earned="store.done.size"
+              :total="steps.length > 8 ? 8 : steps.length"
+              :showAnimation="true"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
+
+    <!-- Dialogue de confirmation pour la réinitialisation -->
+    <div v-if="showResetConfirmation" class="reset-confirmation-overlay">
+      <div class="reset-confirmation-dialog">
+        <div class="dialog-content">
+          <h3 class="dialog-title">Attention!</h3>
+          <p class="dialog-message">{{ resetConfirmationMessage }}</p>
+          <div class="dialog-actions">
+            <button @click="resetProgress" class="confirm-btn">Oui, réinitialiser</button>
+            <button @click="showResetConfirmation = false" class="cancel-btn">Annuler</button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
@@ -199,5 +266,92 @@ const progressPercent = computed(() => {
 
 .instruction-card li:last-child {
   margin-bottom: 0;
+}
+
+/* Dialog de confirmation de réinitialisation */
+.reset-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.reset-confirmation-dialog {
+  background-color: var(--pokemon-gray-100);
+  border: 4px solid var(--pokemon-white);
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px var(--pokemon-black), 0 0 15px rgba(255, 61, 40, 0.5);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: dialog-appear 0.3s ease-out;
+}
+
+.dialog-content {
+  padding: 20px;
+}
+
+.dialog-title {
+  color: var(--pokemon-red);
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
+  text-align: center;
+}
+
+.dialog-message {
+  color: var(--pokemon-white);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn {
+  background-color: var(--pokemon-red);
+  color: var(--pokemon-white);
+}
+
+.cancel-btn {
+  background-color: var(--pokemon-gray-300);
+  color: var(--pokemon-black);
+}
+
+.confirm-btn:hover {
+  background-color: var(--pokemon-red-dark);
+  transform: translateY(-2px);
+}
+
+.cancel-btn:hover {
+  background-color: var(--pokemon-gray-200);
+  transform: translateY(-2px);
+}
+
+@keyframes dialog-appear {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 </style>

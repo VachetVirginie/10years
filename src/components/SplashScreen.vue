@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 const props = defineProps({
   duration: {
     type: Number,
-    default: 5000 // 5 secondes par défaut
+    default: 3000 // 5 secondes par défaut
   }
 })
 
