@@ -37,6 +37,7 @@ const menuItems = [
   { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
   { id: 'map', label: 'Voir la carte', icon: '🗺️' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
+  { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
 ]
 
@@ -56,6 +57,10 @@ const dialogDone = ref(false)
 const showResetConfirmation = ref(false)
 const resetConfirmationMessage = "Es-tu sûr de vouloir réinitialiser ta progression ? Toutes tes étapes complétées seront perdues."
 
+// Dialog de confirmation pour revoir l'intro
+const showIntroConfirmation = ref(false)
+const introConfirmationMessage = "Voulez-vous revoir l'animation d'introduction et le splash screen ?"
+
 function handleMenuSelect(item: MenuItem) {
   if (item.id === 'start') {
     router.push(store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`)
@@ -65,6 +70,8 @@ function handleMenuSelect(item: MenuItem) {
     showBadges.value = true
   } else if (item.id === 'reset') {
     showResetConfirmation.value = true
+  } else if (item.id === 'intro') {
+    showIntroConfirmation.value = true
   }
 }
 
