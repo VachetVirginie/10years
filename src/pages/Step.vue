@@ -85,16 +85,19 @@ function resetHunt() {
     // Réinitialiser le store
     store.reset()
     
-    // Effacer toutes les données du localStorage
+    // Supprimer explicitement chaque élément du localStorage
+    localStorage.removeItem('progress')
+    localStorage.removeItem('hasSeenSplash')
+    localStorage.removeItem('hasSeenIntro')
+    
+    // Pour s'assurer que tout est supprimé
     localStorage.clear()
     
-    // Rediriger vers la page d'accueil
-    router.push('/')
+    // Log pour vérification
+    console.log('localStorage nettoyé:', localStorage)
     
-    // Rafraîchir la page pour montrer le splash screen et l'intro
-    setTimeout(() => {
-      router.go(0)
-    }, 100)
+    // Rediriger vers la page d'accueil et forcer un rafraîchissement complet
+    window.location.href = '/'
   }
 }
 </script>

@@ -14,6 +14,8 @@ import 'leaflet/dist/leaflet.css'
 
 // Thème personnalisé Pokémon
 import './assets/theme.css'
+// Styles globaux pour mobile
+import './assets/global-mobile.css'
 
 const vuetify = createVuetify({ components, directives })
 

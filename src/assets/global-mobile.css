@@ -1,0 +1,35 @@
+/* Styles globaux pour mobile */
+@media (max-width: 600px) {
+  body, html {
+    background-color: var(--pokemon-black) !important;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  .v-application {
+    background-color: var(--pokemon-black) !important;
+    color: var(--pokemon-white);
+    min-height: 100vh;
+  }
+  
+  .v-main {
+    background-color: var(--pokemon-black) !important;
+    min-height: 100vh;
+    padding-bottom: 30px !important;
+  }
+
+  /* S'assurer que tous les conteneurs ont la même couleur de fond */
+  .quest-container,
+  .pokemon-step,
+  .main-content,
+  .v-container {
+    background-color: var(--pokemon-black) !important;
+  }
+
+  /* S'assurer que le texte est toujours lisible */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    color: var(--pokemon-white);
+  }
+}
