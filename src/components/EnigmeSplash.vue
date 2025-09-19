@@ -11,7 +11,7 @@
           <img v-else src="/images/pokemon/pokeball.svg" alt="Étape" />
         </div>
         <h1 class="enigme-title">Énigme {{ step.id }}</h1>
-        <h2 class="enigme-subtitle">{{ step.title }}</h2>
+        <h2 class="enigme-subtitle">{{ step.splash }}</h2>
         <div class="progress-container">
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: progress + '%' }"></div>
