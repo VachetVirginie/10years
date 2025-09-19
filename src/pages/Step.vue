@@ -81,9 +81,20 @@ function goPrevious() {
 }
 
 function resetHunt() {
-  if (confirm('Êtes-vous sûr de vouloir recommencer la chasse au trésor ? Toute progression sera perdue.')) {
+  if (confirm('Êtes-vous sûr de vouloir recommencer la chasse au trésor ? Toutes les données seront supprimées.')) {
+    // Réinitialiser le store
     store.reset()
+    
+    // Effacer toutes les données du localStorage
+    localStorage.clear()
+    
+    // Rediriger vers la page d'accueil
     router.push('/')
+    
+    // Rafraîchir la page pour montrer le splash screen et l'intro
+    setTimeout(() => {
+      router.go(0)
+    }, 100)
   }
 }
 </script>
