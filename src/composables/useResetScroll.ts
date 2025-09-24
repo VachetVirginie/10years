@@ -14,6 +14,10 @@ export function useResetScroll() {
     document.documentElement.classList.remove('no-scroll');
     document.body.classList.remove('no-scroll');
     
+    // Ajouter la classe qui force l'activation du scroll
+    document.documentElement.classList.add('enable-scroll');
+    document.body.classList.add('enable-scroll');
+    
     // Réinitialiser les styles inline qui bloquent le scroll
     document.body.style.height = '';
     document.documentElement.style.height = '';
@@ -25,6 +29,12 @@ export function useResetScroll() {
     document.documentElement.style.position = '';
     document.body.style.touchAction = '';
     document.documentElement.style.touchAction = '';
+    
+    // Forcer un petit délai pour s'assurer que tout est bien appliqué
+    setTimeout(() => {
+      window.scrollTo(0, window.scrollY + 1);
+      window.scrollTo(0, window.scrollY - 1);
+    }, 10);
   };
 
   return {

@@ -93,8 +93,27 @@ body.splash-active {
   animation: fade-out 0.5s ease-in;
 }
 
-/* Utilitaire pour bloquer le scroll */
+/* Utilitaires pour gérer le scroll */
 .no-scroll {
   overflow: hidden !important;
   touch-action: none !important;
+}
+
+/* Classe pour forcer la restauration du scroll */
+.enable-scroll {
+  overflow: auto !important;
+  touch-action: auto !important;
+  position: static !important;
+  height: auto !important;
+  overscroll-behavior: auto !important;
+}
+
+/* Appliquer à l'ensemble du document pour réinitialiser le scroll */
+html.enable-scroll,
+body.enable-scroll {
+  overflow: auto !important;
+  touch-action: auto !important;
+  position: static !important;
+  height: auto !important;
+  overscroll-behavior: auto !important;
 }

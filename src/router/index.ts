@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
 import Step from '../pages/Step.vue'
 import Summary from '../pages/Summary.vue'
-import Map from '../pages/Map.vue'
 import OurStory from '../pages/OurStory.vue'
 import { useProgress } from '../store/progress'
 
@@ -29,5 +28,32 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 })
+
+// Ajout d'un hook global pour réinitialiser le scroll après chaque navigation
+router.afterEach(() => {
+  // S'assurer que le scroll est correctement restauré après chaque changement de route
+  setTimeout(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    
+    // Supprimer les classes qui bloquent le défilement
+    html.classList.remove('splash-active');
+    body.classList.remove('splash-active');
+    html.classList.remove('no-scroll');
+    body.classList.remove('no-scroll');
+    
+    // Forcer l'activation du scroll
+    html.classList.add('enable-scroll');
+    body.classList.add('enable-scroll');
+    
+    // Réinitialiser les styles inline qui pourraient bloquer le scroll
+    body.style.overflow = '';
+    html.style.overflow = '';
+    body.style.height = '';
+    html.style.height = '';
+    body.style.position = '';
+    html.style.position = '';
+  }, 300);
+});
 
 export default router

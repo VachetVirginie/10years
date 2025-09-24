@@ -71,6 +71,9 @@ function onIntroComplete() {
 // Utiliser le composable pour réinitialiser les restrictions de scroll
 const { resetScrollRestrictions } = useResetScroll()
 
+// Utiliser le watcher de scroll global pour s'assurer que le scroll est restauré
+useScrollWatcher()
+
 // Anniversaire: 10 ans ensemble
 const anniversaryYears = 10
 
