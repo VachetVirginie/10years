@@ -129,7 +129,6 @@ onUnmounted(() => {
 body, html {
   margin: 0;
   padding: 0;
-  height: 100% !important;
   overflow: hidden !important;
   overscroll-behavior: none;
 }

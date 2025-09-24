@@ -121,7 +121,7 @@ const closeIntro = () => {
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh; /* Hauteur de base */
+  height: 200vh; /* Hauteur de base */
   background-color: rgba(0, 0, 0, 1); /* Fond 100% opaque */
   display: flex;
   justify-content: center;
