@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
 import Step from '../pages/Step.vue'
 import Summary from '../pages/Summary.vue'
-import OurStory from '../pages/OurStory.vue'
 import { useProgress } from '../store/progress'
 
 const router = createRouter({
