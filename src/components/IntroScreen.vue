@@ -83,7 +83,7 @@ const closeIntro = () => {
 <template>
   <transition name="fade">
     <div v-if="visible" class="intro-container">
-      <div class="intro-text-wrapper scroll-no-bar" :class="{ 'animating': isAnimating }">
+      <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
         <pre class="typing-text">{{ displayedText }}</pre>
         
         <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
@@ -125,22 +125,20 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  overflow: auto; /* Permettre le défilement si nécessaire */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  touch-action: auto; /* Permettre les gestes tactiles */
   isolation: isolate;
   will-change: transform;
   
   /* Gestion multi-plateforme de la hauteur */
-  height: 90vh;
+  height: 120vh;
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
 @supports (height: 100vh) {
   .intro-container {
-    height: 100vh;
+    height: 120vh;
   }
 }
 
@@ -161,7 +159,6 @@ body, html {
   max-width: 600px;
   width: 90%;
   background-color: var(--pokemon-black);
-  overflow: hidden;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
