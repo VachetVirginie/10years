@@ -21,11 +21,11 @@ Bonjour, Soso ! Enfin te voilà… Je savais que je pouvais compter sur toi.
 Une étrange énigme a surgi dans les rues de Lyon. 
 Comme des Pokémon rares, des indices se sont éparpillés aux quatre coins de la ville.
 
-Pour réussir ta mission, tu devras faire preuve de courage, de stratégie et d’un esprit affûté, comme lors d’un combat d’arène.
+Pour réussir ta mission, tu devras faire preuve de courage, de stratégie et d'un esprit affûté, comme lors d'un combat d'arène.
 
 Ta quête commence maintenant. Le destin de cette aventure est entre tes mains… »
 
-⚡️ Alors, jeune dresseuse… es-tu prête à partir à l’aventure ?
+⚡️ Alors, jeune dresseuse… es-tu prête à partir à l'aventure ?
 `
 
 // Utiliser notre composable pour gérer l'affichage plein écran avec correction de hauteur
@@ -86,14 +86,24 @@ const closeIntro = () => {
 <template>
   <transition name="fade">
     <div v-if="visible" class="intro-container">
-      <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
-        <pre class="typing-text">{{ displayedText }}</pre>
+      <div class="intro-content">
+        <div class="pokeball-top"></div>
         
-        <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
-          <button @click="closeIntro" class="skip-button">
-            COMMENCER L'AVENTURE
-          </button>
+        <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
+          <div class="professor-image"></div>
+          <div class="dialogue-box">
+            <pre class="typing-text">{{ displayedText }}</pre>
+          </div>
+          
+          <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
+            <button @click="closeIntro" class="skip-button">
+              <span class="btn-text">COMMENCER L'AVENTURE</span>
+              <span class="btn-icon">→</span>
+            </button>
+          </div>
         </div>
+        
+        <div class="pokeball-bottom"></div>
       </div>
     </div>
   </transition>
@@ -103,19 +113,20 @@ const closeIntro = () => {
 /* Ces styles doivent être globaux pour affecter tout le document */
 :root {
   --vh: 1vh;
-  --pokemon-black: #000000;
-  --pokemon-red: #E3350D;
 }
 
-body, html {
+body.intro-active, html.intro-active {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overscroll-behavior: contain;
+  height: 100% !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
 }
 </style>
 
 <style scoped>
+/* Importation des variables du thème Pokémon */
+@import '../assets/splash-screens.css';
 
 .intro-container {
   position: fixed;
@@ -124,18 +135,18 @@ body, html {
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh; /* Hauteur de base */
-  background-color: rgba(0, 0, 0, 1); /* Fond 100% opaque */
+  height: 100vh;
+  background-color: #111;
+  background-image: radial-gradient(circle at center, #212121 0%, #111 70%);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Augmenter le z-index pour être sûr */
+  z-index: 9999;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  overflow: auto; /* Important pour iOS - permet le défilement */
-  -webkit-overflow-scrolling: touch; /* Crucial pour iOS - défilement fluide */
-  /* Retrait de touch-action: none et autres propriétés qui bloquent les interactions */
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
@@ -157,93 +168,266 @@ body, html {
   }
 }
 
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  padding: 20px;
+  position: relative;
+}
+
+/* Pokéball design elements */
+.pokeball-top {
+  position: absolute;
+  top: 5%;
+  width: 120px;
+  height: 60px;
+  background-color: var(--pokemon-red);
+  border-radius: 100px 100px 0 0;
+  border: 4px solid white;
+  border-bottom: none;
+  z-index: 1;
+  box-shadow: 0 0 15px rgba(227, 53, 13, 0.7);
+  animation: float 6s ease-in-out infinite;
+}
+
+.pokeball-bottom {
+  position: absolute;
+  bottom: 5%;
+  width: 120px;
+  height: 60px;
+  background-color: white;
+  border-radius: 0 0 100px 100px;
+  border: 4px solid white;
+  border-top: none;
+  z-index: 1;
+  animation: float-inverse 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-inverse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+}
+
 .intro-text-wrapper {
   position: relative;
+  width: 100%;
   max-width: 600px;
-  width: 90%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
-  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
-  background-color: rgba(0, 0, 0, 0.98); /* Fond très opaque */
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  
+  &.animating {
+    overflow: hidden;
+  }
+}
+
+.professor-image {
+  width: 120px;
+  height: 120px;
+  background-image: url('/public/images/prof.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  animation: professor-entrance 1s ease-out forwards;
+  transform-origin: center bottom;
+}
+
+@keyframes professor-entrance {
+  0% { 
+    transform: translateY(-50px) scale(0.7); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+.dialogue-box {
+  width: 100%;
+  background-color: var(--pokemon-gray-100);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
-  margin: 20px; /* Ajouter une marge pour éviter les bords de l'écran */
-  
-  /* Hauteur de base */
-  max-height: 80%;
-  z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
-  
-  /* Empêcher le scroll pendant l'animation */
-  &.animating {
-    overflow-y: hidden;
-    overflow: hidden !important;
+  box-shadow: 0 0 25px rgba(227, 53, 13, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--pokemon-red);
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 50vh;
+  backdrop-filter: blur(5px);
+  animation: dialogue-reveal 0.5s ease-out forwards;
+  transform-origin: top center;
+}
+
+@keyframes dialogue-reveal {
+  0% { 
+    transform: scaleY(0.1); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: scaleY(1); 
+    opacity: 1; 
   }
 }
 
-/* Ajustements de hauteur selon le support */
-@supports (max-height: 80vh) {
-  .intro-text-wrapper {
-    max-height: 80vh;
-  }
-}
-
-@supports (max-height: calc(var(--vh) * 80)) {
-  .intro-text-wrapper {
-    max-height: calc(var(--vh) * 80);
-  }
+.dialogue-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 12px;
+  pointer-events: none;
 }
 
 .typing-text {
-  color: var(--pokemon-red, #E3350D);
+  color: white;
   font-family: 'Courier New', monospace;
   font-size: 1.1rem;
   line-height: 1.6;
   white-space: pre-wrap;
   margin: 0;
-  text-shadow: 0 0 5px rgba(227, 53, 13, 0.5);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .skip-button-container {
-  margin-top: 40px; /* Plus d'espace au-dessus du bouton */
-  margin-bottom: 20px; /* Espace en dessous */
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 100%;
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding: 10px;
+  animation: button-appear 0.5s ease-out forwards;
+}
+
+@keyframes button-appear {
+  0% { 
+    transform: translateY(20px); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
 }
 
 .skip-button {
-  background-color: var(--pokemon-red, #E3350D);
+  background: linear-gradient(145deg, var(--pokemon-red) 0%, var(--pokemon-red-dark) 100%);
   color: white;
   border: none;
-  padding: 15px 30px; /* Bouton plus grand pour faciliter le clic sur mobile */
+  padding: 15px 30px;
   font-family: 'Courier New', monospace;
-  font-size: 16px; /* Texte plus grand */
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  animation: pulse 1.5s infinite;
-  border-radius: 5px; /* Coins arrondis */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour donner du relief */
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(227, 53, 13, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skip-button::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+  pointer-events: none;
 }
 
 .skip-button:hover {
-  background-color: var(--pokemon-red-dark, #B71C1C);
-  transform: scale(1.05);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 7px 20px rgba(227, 53, 13, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+.skip-button:hover::before {
+  transform: translateX(100%);
+}
+
+.skip-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(227, 53, 13, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-icon {
+  display: inline-block;
+  font-size: 20px;
+  animation: arrow-pulse 1.5s infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes arrow-pulse {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
 }
 
 /* Animation de transition */
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.fade-enter-from, .fade-leave-to {
+
+.fade-enter-from {
   opacity: 0;
+  transform: scale(0.98);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+/* Styles spécifiques pour mobile */
+@media (max-width: 600px) {
+  .intro-content {
+    padding: 15px;
+  }
+  
+  .dialogue-box {
+    padding: 15px;
+    max-height: 60vh;
+  }
+  
+  .typing-text {
+    font-size: 1rem;
+  }
+  
+  .pokeball-top, .pokeball-bottom {
+    width: 80px;
+    height: 40px;
+  }
+  
+  .professor-image {
+    width: 100px;
+    height: 100px;
+  }
 }
 </style>
