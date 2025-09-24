@@ -93,15 +93,14 @@ const closeIntro = () => {
           <div class="professor-image"></div>
           <div class="dialogue-box">
             <pre class="typing-text">{{ displayedText }}</pre>
-          </div>
-          
-          <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
+            <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
             <button @click="closeIntro" class="skip-button">
               <span class="btn-text">COMMENCER L'AVENTURE</span>
               <span class="btn-icon">→</span>
             </button>
           </div>
         </div>
+          </div>
         
         <div class="pokeball-bottom"></div>
       </div>
@@ -261,9 +260,11 @@ body.intro-active, html.intro-active {
   width: 100%;
   background-color: var(--pokemon-gray-100);
   border-radius: 12px;
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 0 25px rgba(227, 53, 13, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.6);
   border: 2px solid var(--pokemon-red);
+  scrollbar-color: var(--pokemon-black) var(--pokemon-black);
+  scrollbar-width: thin;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
