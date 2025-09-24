@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
+import { useResetScroll } from '../composables/useResetScroll';
 
 const props = defineProps({
   active: {
@@ -51,10 +52,15 @@ function startAnimation() {
     phase.value = 4;
   }, 1500);
   
+  // Utiliser le composable pour réinitialiser le scroll
+  const { resetScrollRestrictions } = useResetScroll();
+  
   // Fin de l'animation
   setTimeout(() => {
     isAnimating.value = false;
     emit('complete');
+    // S'assurer que les restrictions de scroll sont supprimées
+    resetScrollRestrictions();
   }, props.duration);
 }
 

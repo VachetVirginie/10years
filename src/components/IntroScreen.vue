@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useTypingAnimation } from '../composables/useTypingAnimation'
 import { useFullscreenViewport } from '../composables/useFullscreenViewport'
+import { useResetScroll } from '../composables/useResetScroll'
 
 const props = defineProps({
   duration: {
@@ -67,12 +68,18 @@ const {
 // Démarrer l'animation au montage du composant
 onMounted(startTyping)
 
+// Utiliser le composable pour réinitialiser le scroll
+const { resetScrollRestrictions } = useResetScroll()
+
 // Fonction pour fermer l'écran d'intro avec une transition fluide
 const closeIntro = () => {
   // Léger délai avant de masquer l'élément pour permettre une transition fluide
   setTimeout(() => {
     visible.value = false
     emit('complete')
+    
+    // S'assurer que les restrictions de scroll sont supprimées
+    resetScrollRestrictions()
   }, 300)
 }
 

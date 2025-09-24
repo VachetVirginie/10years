@@ -2,10 +2,8 @@
 import { computed } from 'vue'
 import { useHunt } from '../composables/useHunt'
 import { useProgress } from '../store/progress'
-import { useGeolocation } from '../composables/useGeolocation'
 
 // Activer le suivi de géolocalisation
-useGeolocation()
 const { steps } = useHunt()
 const store = useProgress(); store.load()
 

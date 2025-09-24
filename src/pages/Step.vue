@@ -2,15 +2,10 @@
 import { computed, ref, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHunt } from '../composables/useHunt'
-import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
 import RiddleStep from '../components/RiddleStep.vue'
 import ChoiceStep from '../components/ChoiceStep.vue'
 import EnigmeSplash from '../components/EnigmeSplash.vue'
-
-// Activer le suivi de géolocalisation
-const { getCurrentPosition } = useGeolocation()
-getCurrentPosition()
 
 const route = useRoute()
 const router = useRouter()

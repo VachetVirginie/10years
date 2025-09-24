@@ -39,7 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useResetScroll } from '../composables/useResetScroll';
 
 const props = defineProps<{
   show: boolean;
@@ -49,17 +50,29 @@ const props = defineProps<{
   hasPreviousStep: boolean; // S'il existe une étape précédente
 }>();
 
-// Debug pour vérifier la valeur de hasPreviousStep
-console.log('SuccessPopup - hasPreviousStep:', props.hasPreviousStep);
-
 const emit = defineEmits(['next', 'previous', 'close']);
+
+// Utiliser le composable pour réinitialiser le scroll
+const { resetScrollRestrictions } = useResetScroll();
+
+// Observer les changements de visibilité du popup
+watch(() => props.show, (isVisible) => {
+  // Si le popup est fermé, s'assurer que le scroll est restauré
+  if (!isVisible) {
+    resetScrollRestrictions();
+  }
+});
 
 const nextStep = () => {
   emit('next');
+  // S'assurer que le scroll est restauré après la navigation
+  resetScrollRestrictions();
 };
 
 const previousStep = () => {
   emit('previous');
+  // S'assurer que le scroll est restauré après la navigation
+  resetScrollRestrictions();
 };
 </script>
 

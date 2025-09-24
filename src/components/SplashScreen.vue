@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useResetScroll } from '../composables/useResetScroll'
 
 const props = defineProps({
   duration: {
@@ -45,9 +46,15 @@ onMounted(() => {
   // Et à nouveau après un délai plus long pour assurer la stabilité complète
   setTimeout(setViewportHeight, 500);
 
+  // Utiliser le composable pour réinitialiser le scroll
+  const { resetScrollRestrictions } = useResetScroll()
+  
   setTimeout(() => {
     visible.value = false
     emit('complete')
+    
+    // S'assurer que les restrictions de scroll sont supprimées
+    resetScrollRestrictions()
   }, props.duration)
 })
 

@@ -28,6 +28,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useFullscreenViewport } from '../composables/useFullscreenViewport';
+import { useResetScroll } from '../composables/useResetScroll';
 
 const props = defineProps<{
   step: {
@@ -48,6 +49,9 @@ const animationInterval = ref<number | null>(null);
 // Calcul de la durée (3 secondes par défaut)
 const actualDuration = computed(() => props.duration || 3000);
 
+// Utiliser le composable pour réinitialiser le scroll
+const { resetScrollRestrictions } = useResetScroll();
+
 // Fonction pour passer l'animation
 const skipAnimation = () => {
   // Arrêter l'intervalle s'il est en cours
@@ -59,6 +63,9 @@ const skipAnimation = () => {
   // Fermer le splash et émettre l'événement de fin
   visible.value = false;
   emit('complete');
+  
+  // S'assurer que les restrictions de scroll sont supprimées
+  resetScrollRestrictions();
 };
 
 // Utiliser le composable pour gérer l'affichage plein écran
@@ -87,6 +94,9 @@ onMounted(() => {
       setTimeout(() => {
         visible.value = false;
         emit('complete');
+        
+        // S'assurer que les restrictions de scroll sont supprimées
+        resetScrollRestrictions();
       }, 200);
     }
   }, stepDuration);

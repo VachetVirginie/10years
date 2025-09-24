@@ -4,6 +4,8 @@ import { useHunt } from './composables/useHunt'
 import { ref, computed, onMounted } from 'vue'
 import SplashScreen from './components/SplashScreen.vue'
 import IntroScreen from './components/IntroScreen.vue'
+import { useResetScroll } from './composables/useResetScroll'
+import { useScrollWatcher } from './composables/useScrollWatcher'
 const store = useProgress()
 store.load()
 const { steps, title } = useHunt()
@@ -21,7 +23,23 @@ onMounted(() => {
   
   if (!hasSeenSplash) {
     showSplashScreen.value = true
+  } else if (hasSeenSplash && hasSeenIntro) {
+    // Si les deux écrans ont été vus, s'assurer que les restrictions sont supprimées
+    resetScrollRestrictions()
   }
+  
+  // Ajouter un gestionnaire d'événement pour s'assurer de libérer le scroll au premier geste de l'utilisateur
+  const userInteractionHandler = () => {
+    if (!showSplashScreen.value && !showIntroScreen.value) {
+      resetScrollRestrictions()
+    }
+  }
+  
+  // Ajouter des écouteurs pour divers gestes de l'utilisateur
+  document.addEventListener('touchstart', userInteractionHandler, { once: true })
+  document.addEventListener('touchmove', userInteractionHandler, { once: true })
+  document.addEventListener('click', userInteractionHandler, { once: true })
+  document.addEventListener('scroll', userInteractionHandler, { once: true })
 })
 
 function onSplashComplete() {
@@ -31,6 +49,9 @@ function onSplashComplete() {
   const hasSeenIntro = localStorage.getItem('hasSeenIntro')
   if (!hasSeenIntro) {
     showIntroScreen.value = true
+  } else {
+    // S'assurer que les restrictions de scroll sont supprimées si pas d'intro
+    resetScrollRestrictions()
   }
   
   // Marquer le splash comme vu
@@ -42,7 +63,13 @@ function onIntroComplete() {
   
   // Marquer l'intro comme vue
   localStorage.setItem('hasSeenIntro', 'true')
+  
+  // S'assurer que les restrictions de scroll sont supprimées
+  resetScrollRestrictions()
 }
+
+// Utiliser le composable pour réinitialiser les restrictions de scroll
+const { resetScrollRestrictions } = useResetScroll()
 
 // Anniversaire: 10 ans ensemble
 const anniversaryYears = 10

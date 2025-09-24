@@ -25,20 +25,28 @@ export function useFullscreenViewport(options: UseFullscreenViewportOptions = {}
   /**
    * Calcule et applique la hauteur correcte pour les appareils mobiles
    * Utilise une variable CSS personnalisée --vh pour calculer correctement les hauteurs
-   * et ajoute des classes CSS pour contrôler le défilement
+   * et ajoute des classes CSS pour contrôler le défilement si nécessaire
    */
   const setViewportHeight = () => {
     // Calculer et définir la variable --vh basée sur la hauteur réelle de la fenêtre
     const vh = window.innerHeight * 0.01
     document.documentElement.style.setProperty('--vh', `${vh}px`)
     
-    // Ajouter des classes pour bloquer le défilement globalement
-    document.documentElement.classList.add('splash-active')
-    document.body.classList.add('splash-active')
-    
-    // Forcer une mise à jour immédiate des hauteurs
-    document.body.style.height = `${window.innerHeight}px`
-    document.documentElement.style.height = `${window.innerHeight}px`
+    // Ajouter des classes pour bloquer le défilement globalement SEULEMENT si preventScroll est activé
+    if (preventScroll) {
+      document.documentElement.classList.add('splash-active')
+      document.body.classList.add('splash-active')
+      // Forcer une mise à jour immédiate des hauteurs
+      document.body.style.height = `${window.innerHeight}px`
+      document.documentElement.style.height = `${window.innerHeight}px`
+    } else {
+      // Si le preventScroll n'est pas actif, s'assurer que les classes sont supprimées
+      document.documentElement.classList.remove('splash-active')
+      document.body.classList.remove('splash-active')
+      // Restaurer le comportement normal
+      document.body.style.height = ''
+      document.documentElement.style.height = ''
+    }
   }
   
   /**
@@ -86,9 +94,15 @@ export function useFullscreenViewport(options: UseFullscreenViewportOptions = {}
       window.removeEventListener('scroll', preventScrollHandler)
     }
     
-    // Retirer les classes CSS globales
+    // Retirer les classes CSS globales et s'assurer que le scroll est restauré
     document.documentElement.classList.remove('splash-active')
     document.body.classList.remove('splash-active')
+    // Restaurer les hauteurs normales
+    document.body.style.height = ''
+    document.documentElement.style.height = ''
+    // S'assurer que overflow est restauré
+    document.body.style.overflow = ''
+    document.documentElement.style.overflow = ''
   })
   
   return {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHunt } from '../composables/useHunt'
-import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -12,8 +11,6 @@ import PokemonMenu from '../components/PokemonMenu.vue'
 // Router pour la navigation
 const router = useRouter()
 
-// Activer le suivi de géolocalisation
-useGeolocation()
 const { title, steps } = useHunt()
 const store = useProgress()
 store.load()
