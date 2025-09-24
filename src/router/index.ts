@@ -9,7 +9,6 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: Home },
     { path: '/step/:id', name: 'step', component: Step, props: true },
-    { path: '/our-story', name: 'our-story', component: OurStory },
     { 
       path: '/summary', 
       name: 'summary', 
