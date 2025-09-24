@@ -87,7 +87,7 @@ const closeIntro = () => {
   <transition name="fade">
     <div v-if="visible" class="intro-container">
       <div class="intro-content">
-        <div class="pokeball-top"></div>
+        <!-- <div class="pokeball-top"></div> -->
         
         <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
           <div class="professor-image"></div>
@@ -102,7 +102,7 @@ const closeIntro = () => {
         </div>
           </div>
         
-        <div class="pokeball-bottom"></div>
+        <!-- <div class="pokeball-bottom"></div> -->
       </div>
     </div>
   </transition>
@@ -180,7 +180,7 @@ body.intro-active, html.intro-active {
 }
 
 /* Pokéball design elements */
-.pokeball-top {
+/* .pokeball-top {
   position: absolute;
   top: 5%;
   width: 120px;
@@ -205,7 +205,7 @@ body.intro-active, html.intro-active {
   border-top: none;
   z-index: 1;
   animation: float-inverse 6s ease-in-out infinite;
-}
+} */
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }

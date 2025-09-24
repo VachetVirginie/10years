@@ -287,6 +287,7 @@ const earnedBadges = computed(() => {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
   margin-bottom: 3px;
   overflow: visible;
+  margin-top: 5px;
 }
 
 .header-progress-fill {
