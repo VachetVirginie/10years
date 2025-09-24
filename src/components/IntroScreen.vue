@@ -119,20 +119,22 @@ body, html {
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh; /* Hauteur de base */
-  background-color: rgba(0, 0, 0, 1); /* Fond 100% opaque */
+  background-color: var(--pokemon-black, #000);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Augmenter le z-index pour être sûr */
+  z-index: 9999;
+  overflow: hidden !important; /* Empêcher tout défilement */
   padding: 0;
   margin: 0;
-  overflow: hidden !important; /* Empêcher le défilement - force importante */
   box-sizing: border-box;
   touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
-  pointer-events: auto !important; /* S'assurer que les événements sont capturés */
-  isolation: isolate; /* Créer un nouveau contexte d'empilement pour le z-index */
-  will-change: transform; /* Optimiser les performances de rendu */
+  pointer-events: auto !important;
+  isolation: isolate;
+  will-change: transform;
+  
+  /* Gestion multi-plateforme de la hauteur */
+  height: 100vh;
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
