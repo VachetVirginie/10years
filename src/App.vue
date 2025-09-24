@@ -153,7 +153,7 @@ const earnedBadges = computed(() => {
       </v-app-bar-nav-icon>
       
       <v-toolbar-title class="pokemon-title">
-        Chasse au trésor
+        Chasse au 10ans
       </v-toolbar-title>
       
       <v-spacer />
