@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useResetScroll } from '../composables/useResetScroll'
 
 const props = defineProps({
   duration: {
@@ -46,15 +45,13 @@ onMounted(() => {
   // Et à nouveau après un délai plus long pour assurer la stabilité complète
   setTimeout(setViewportHeight, 500);
 
-  // Utiliser le composable pour réinitialiser le scroll
-  const { resetScrollRestrictions } = useResetScroll()
-  
   setTimeout(() => {
     visible.value = false
     emit('complete')
     
-    // S'assurer que les restrictions de scroll sont supprimées
-    resetScrollRestrictions()
+    // Approche simple pour iOS
+    document.documentElement.classList.remove('splash-active')
+    document.body.classList.remove('splash-active')
   }, props.duration)
 })
 
@@ -68,7 +65,7 @@ onUnmounted(() => {
 
 <template>
   <transition name="fade">
-    <div v-if="visible" class="splash-container" @touchmove.prevent @wheel.prevent @scroll.prevent>
+    <div v-if="visible" class="splash-container">
       <div class="splash-image-wrapper">
         <img 
           src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" 
@@ -111,14 +108,13 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  overflow: hidden !important; /* Empêcher tout défilement */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
-  pointer-events: auto !important;
-  isolation: isolate;
-  will-change: transform;
+  
+  /* Pour iOS */
+  overflow: auto; /* Permettre le défilement si nécessaire */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS */
   
   /* Gestion multi-plateforme de la hauteur */
   height: 100vh;

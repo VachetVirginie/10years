@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { useTypingAnimation } from '../composables/useTypingAnimation'
 import { useFullscreenViewport } from '../composables/useFullscreenViewport'
-import { useResetScroll } from '../composables/useResetScroll'
 
 const props = defineProps({
   duration: {
@@ -68,9 +67,6 @@ const {
 // Démarrer l'animation au montage du composant
 onMounted(startTyping)
 
-// Utiliser le composable pour réinitialiser le scroll
-const { resetScrollRestrictions } = useResetScroll()
-
 // Fonction pour fermer l'écran d'intro avec une transition fluide
 const closeIntro = () => {
   // Léger délai avant de masquer l'élément pour permettre une transition fluide
@@ -78,8 +74,9 @@ const closeIntro = () => {
     visible.value = false
     emit('complete')
     
-    // S'assurer que les restrictions de scroll sont supprimées
-    resetScrollRestrictions()
+    // S'assurer que les restrictions de scroll sont supprimées (approche simple)
+    document.documentElement.classList.remove('splash-active')
+    document.body.classList.remove('splash-active')
   }, 300)
 }
 
@@ -88,7 +85,7 @@ const closeIntro = () => {
 
 <template>
   <transition name="fade">
-    <div v-if="visible" class="intro-container" @touchmove.prevent @wheel.prevent @scroll.prevent>
+    <div v-if="visible" class="intro-container">
       <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
         <pre class="typing-text">{{ displayedText }}</pre>
         
@@ -134,12 +131,10 @@ body, html {
   z-index: 9999; /* Augmenter le z-index pour être sûr */
   padding: 0;
   margin: 0;
-  overflow: hidden !important; /* Empêcher le défilement - force importante */
   box-sizing: border-box;
-  touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
-  pointer-events: auto !important; /* S'assurer que les événements sont capturés */
-  isolation: isolate; /* Créer un nouveau contexte d'empilement pour le z-index */
-  will-change: transform; /* Optimiser les performances de rendu */
+  overflow: auto; /* Important pour iOS - permet le défilement */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS - défilement fluide */
+  /* Retrait de touch-action: none et autres propriétés qui bloquent les interactions */
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
@@ -210,21 +205,27 @@ body, html {
 }
 
 .skip-button-container {
-  margin-top: 30px;
+  margin-top: 40px; /* Plus d'espace au-dessus du bouton */
+  margin-bottom: 20px; /* Espace en dessous */
   display: flex;
   justify-content: center;
+  width: 100%;
+  padding: 10px;
 }
 
 .skip-button {
   background-color: var(--pokemon-red, #E3350D);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 15px 30px; /* Bouton plus grand pour faciliter le clic sur mobile */
   font-family: 'Courier New', monospace;
+  font-size: 16px; /* Texte plus grand */
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   animation: pulse 1.5s infinite;
+  border-radius: 5px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour donner du relief */
 }
 
 .skip-button:hover {

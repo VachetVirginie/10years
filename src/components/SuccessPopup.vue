@@ -40,7 +40,6 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useResetScroll } from '../composables/useResetScroll';
 
 const props = defineProps<{
   show: boolean;
@@ -52,27 +51,21 @@ const props = defineProps<{
 
 const emit = defineEmits(['next', 'previous', 'close']);
 
-// Utiliser le composable pour réinitialiser le scroll
-const { resetScrollRestrictions } = useResetScroll();
-
 // Observer les changements de visibilité du popup
 watch(() => props.show, (isVisible) => {
   // Si le popup est fermé, s'assurer que le scroll est restauré
   if (!isVisible) {
-    resetScrollRestrictions();
+    document.documentElement.classList.remove('splash-active');
+    document.body.classList.remove('splash-active');
   }
 });
 
 const nextStep = () => {
   emit('next');
-  // S'assurer que le scroll est restauré après la navigation
-  resetScrollRestrictions();
 };
 
 const previousStep = () => {
   emit('previous');
-  // S'assurer que le scroll est restauré après la navigation
-  resetScrollRestrictions();
 };
 </script>
 
@@ -89,6 +82,8 @@ const previousStep = () => {
   align-items: center;
   z-index: 9999;
   padding: 20px;
+  overflow: auto; /* Important pour iOS */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS */
 }
 
 .success-popup {

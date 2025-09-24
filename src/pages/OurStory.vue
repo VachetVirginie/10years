@@ -10,7 +10,7 @@ const loveStory = ref([
     description: "Comme un dresseur novice découvrant son premier Pokémon, nous nous sommes rencontrés et avons commencé cette aventure ensemble.",
     pokemon: "Pichu",
     pokemonUrl: "https://archives.bulbagarden.net/media/upload/thumb/b/b9/172Pichu.png/250px-172Pichu.png",
-    memory: "Notre premier rendez-vous à..."
+    memory: "Notre premier rendez-vous à la gare de Lunel"
   },
   {
     year: 2,
@@ -89,7 +89,7 @@ const loveStory = ref([
 const activeYear = ref(1)
 
 // Fonction pour changer l'année active
-const setActiveYear = (year) => {
+const setActiveYear = (year: any) => {
   activeYear.value = year
 }
 </script>

@@ -1,0 +1,59 @@
+/* 
+ * Corrections spécifiques pour iOS
+ * Ce fichier contient des correctifs CSS pour améliorer l'expérience utilisateur sur iOS
+ */
+
+/* Identifier les appareils iOS avec une classe spéciale */
+.ios-device button,
+.ios-device .v-btn,
+.ios-device .skip-button,
+.ios-device a {
+  /* Éviter le comportement fantôme des boutons sur iOS */
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  /* Améliorer la zone tactile */
+  padding: 10px !important;
+  touch-action: manipulation;
+}
+
+/* Améliorer le rendu des éléments fixed sur iOS */
+.ios-device .splash-container,
+.ios-device .intro-container,
+.ios-device .enigme-splash,
+.ios-device .success-popup-overlay,
+.ios-device .battle-transition {
+  /* Utiliser -webkit-overflow-scrolling pour iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Permettre le défilement si nécessaire */
+  overflow: auto;
+  /* Éviter les problèmes avec la barre d'adresse Safari mobile */
+  height: 100%;
+  position: fixed;
+}
+
+/* Empêcher les problèmes de double tap sur iOS */
+.ios-device * {
+  touch-action: manipulation;
+}
+
+/* Agrandir la zone de clic pour les boutons */
+.ios-device .skip-button {
+  position: relative;
+  margin: 15px 0;
+  padding: 15px 25px !important;
+  font-size: 16px; /* Taille plus grande sur iOS */
+}
+
+/* S'assurer que le contenu ne déborde pas */
+.ios-device .intro-text-wrapper,
+.ios-device .enigme-content {
+  max-width: 90%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Améliorer le contraste pour les boutons */
+.ios-device .skip-button,
+.ios-device .nav-btn {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}

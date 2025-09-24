@@ -16,20 +16,20 @@
   --pokemon-gray-300: #505050;
 }
 
-/* Réinitialisations essentielles pour les écrans plein format */
+/* Réinitialisations essentielles pour les écrans plein format - adapté pour iOS */
 html.splash-active,
 body.splash-active {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100% !important;
-  overflow: hidden !important;
-  overscroll-behavior: none;
-  position: fixed; /* Bloquer tout le document */
-  touch-action: none; /* Désactiver les gestes de défilement et zoom */
+  height: 100%;
+  overflow: hidden;
+  /* Ne pas utiliser position: fixed sur iOS - cela cause des problèmes avec les boutons */
+  /* Ne pas utiliser touch-action: none - cela bloque les interactions tactiles sur iOS */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS */
 }
 
-/* Classes réutilisables */
+/* Classes réutilisables - simplifiée pour iOS */
 .fullscreen-overlay {
   position: fixed;
   top: 0;
@@ -47,11 +47,8 @@ body.splash-active {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  overflow: hidden !important;
-  touch-action: none;
-  pointer-events: auto !important;
-  isolation: isolate;
-  will-change: transform;
+  overflow: auto; /* Important pour iOS - permet le défilement si nécessaire */
+  -webkit-overflow-scrolling: touch; /* Important pour iOS - défilement fluide */
 }
 
 /* Support multi-navigateurs pour la hauteur */
@@ -93,27 +90,14 @@ body.splash-active {
   animation: fade-out 0.5s ease-in;
 }
 
-/* Utilitaires pour gérer le scroll */
+/* Utilitaire simple pour bloquer le scroll sur iOS sans casser les interactions */
 .no-scroll {
-  overflow: hidden !important;
-  touch-action: none !important;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Classe pour forcer la restauration du scroll */
-.enable-scroll {
-  overflow: auto !important;
-  touch-action: auto !important;
-  position: static !important;
-  height: auto !important;
-  overscroll-behavior: auto !important;
-}
-
-/* Appliquer à l'ensemble du document pour réinitialiser le scroll */
-html.enable-scroll,
-body.enable-scroll {
-  overflow: auto !important;
-  touch-action: auto !important;
-  position: static !important;
-  height: auto !important;
-  overscroll-behavior: auto !important;
+/* Classe simple pour iOS */
+.ios-scroll {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
 }

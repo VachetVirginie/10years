@@ -25,56 +25,44 @@ export function useFullscreenViewport(options: UseFullscreenViewportOptions = {}
   /**
    * Calcule et applique la hauteur correcte pour les appareils mobiles
    * Utilise une variable CSS personnalisée --vh pour calculer correctement les hauteurs
-   * et ajoute des classes CSS pour contrôler le défilement si nécessaire
    */
   const setViewportHeight = () => {
     // Calculer et définir la variable --vh basée sur la hauteur réelle de la fenêtre
     const vh = window.innerHeight * 0.01
     document.documentElement.style.setProperty('--vh', `${vh}px`)
     
-    // Ajouter des classes pour bloquer le défilement globalement SEULEMENT si preventScroll est activé
-    if (preventScroll) {
-      document.documentElement.classList.add('splash-active')
-      document.body.classList.add('splash-active')
-      // Forcer une mise à jour immédiate des hauteurs
-      document.body.style.height = `${window.innerHeight}px`
-      document.documentElement.style.height = `${window.innerHeight}px`
-    } else {
-      // Si le preventScroll n'est pas actif, s'assurer que les classes sont supprimées
-      document.documentElement.classList.remove('splash-active')
-      document.body.classList.remove('splash-active')
-      // Restaurer le comportement normal
-      document.body.style.height = ''
-      document.documentElement.style.height = ''
-    }
+    // Sur iOS, les hauteurs fixes causent des problèmes de défilement persistants
+    // Utiliser seulement la variable CSS --vh dans les règles CSS
   }
   
   /**
-   * Empêche le défilement pendant l'affichage plein écran
+   * Pour iOS, nous utilisons une approche plus simple et compatible
+   * au lieu d'empêcher complètement le défilement
    */
   const preventScrollHandler = (e: Event) => {
-    e.preventDefault()
+    // Ne rien faire pour iOS - bloquer les événements de défilement cause des problèmes
+    // sur iOS avec les interactions tactiles
+    if (!preventScroll) return;
+    
+    // En mode preventScroll, empêcher uniquement le scroll de propagation
+    e.stopPropagation();
   }
   
   /**
    * Configuration au montage du composant
    */
   onMounted(() => {
-    // Appliquer immédiatement
+    // Appliquer immédiatement le calcul de la hauteur
     setViewportHeight()
     
-    // Ajouter les écouteurs d'événements si nécessaire
+    // Ajouter les écouteurs pour le redimensionnement
     if (recalculateOnResize) {
       window.addEventListener('resize', setViewportHeight)
       window.addEventListener('orientationchange', setViewportHeight)
     }
     
-    // Bloquer le défilement si demandé
-    if (preventScroll) {
-      window.addEventListener('scroll', preventScrollHandler, { passive: false })
-    }
-    
     // Planifier des recalculs additionnels après des délais spécifiés
+    // C'est important pour iOS qui peut avoir des délais de rendu
     recalculateDelays.forEach(delay => {
       setTimeout(setViewportHeight, delay)
     })
@@ -84,25 +72,11 @@ export function useFullscreenViewport(options: UseFullscreenViewportOptions = {}
    * Nettoyage au démontage du composant
    */
   onUnmounted(() => {
-    // Retirer les événements
+    // Retirer les écouteurs d'événements
     if (recalculateOnResize) {
       window.removeEventListener('resize', setViewportHeight)
       window.removeEventListener('orientationchange', setViewportHeight)
     }
-    
-    if (preventScroll) {
-      window.removeEventListener('scroll', preventScrollHandler)
-    }
-    
-    // Retirer les classes CSS globales et s'assurer que le scroll est restauré
-    document.documentElement.classList.remove('splash-active')
-    document.body.classList.remove('splash-active')
-    // Restaurer les hauteurs normales
-    document.body.style.height = ''
-    document.documentElement.style.height = ''
-    // S'assurer que overflow est restauré
-    document.body.style.overflow = ''
-    document.documentElement.style.overflow = ''
   })
   
   return {

@@ -18,6 +18,10 @@ import './assets/theme.css'
 import './assets/global-mobile.css'
 // Styles pour les écrans splash et overlays
 import './assets/splash-screens.css'
+// Corrections CSS spécifiques pour iOS
+import './assets/ios-fixes.css'
+// Script pour améliorer la gestion tactile sur iOS
+import './assets/ios-touch-fix.js'
 
 const vuetify = createVuetify({ components, directives })
 

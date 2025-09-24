@@ -29,31 +29,13 @@ const router = createRouter({
   ]
 })
 
-// Ajout d'un hook global pour réinitialiser le scroll après chaque navigation
+// Ajout d'un hook simple pour iOS
 router.afterEach(() => {
-  // S'assurer que le scroll est correctement restauré après chaque changement de route
+  // S'assurer que les classes de splash sont supprimées
   setTimeout(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    
-    // Supprimer les classes qui bloquent le défilement
-    html.classList.remove('splash-active');
-    body.classList.remove('splash-active');
-    html.classList.remove('no-scroll');
-    body.classList.remove('no-scroll');
-    
-    // Forcer l'activation du scroll
-    html.classList.add('enable-scroll');
-    body.classList.add('enable-scroll');
-    
-    // Réinitialiser les styles inline qui pourraient bloquer le scroll
-    body.style.overflow = '';
-    html.style.overflow = '';
-    body.style.height = '';
-    html.style.height = '';
-    body.style.position = '';
-    html.style.position = '';
-  }, 300);
+    document.documentElement.classList.remove('splash-active');
+    document.body.classList.remove('splash-active');
+  }, 100);
 });
 
 export default router

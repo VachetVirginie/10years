@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { useResetScroll } from '../composables/useResetScroll';
 
 const props = defineProps({
   active: {
@@ -52,15 +51,13 @@ function startAnimation() {
     phase.value = 4;
   }, 1500);
   
-  // Utiliser le composable pour réinitialiser le scroll
-  const { resetScrollRestrictions } = useResetScroll();
-  
   // Fin de l'animation
   setTimeout(() => {
     isAnimating.value = false;
     emit('complete');
-    // S'assurer que les restrictions de scroll sont supprimées
-    resetScrollRestrictions();
+    // Approche simple pour iOS
+    document.documentElement.classList.remove('splash-active');
+    document.body.classList.remove('splash-active');
   }, props.duration);
 }
 
@@ -125,7 +122,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: auto; /* Important pour iOS */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS */
 }
 
 /* Transition d'entrée et de sortie */
