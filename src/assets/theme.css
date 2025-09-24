@@ -1,0 +1,187 @@
+/* Pokémon Theme - Rouge, Noir, Blanc (Dark Mode) */
+
+:root {
+  /* Couleurs primaires */
+  --pokemon-red: #FF3D28;        /* Rouge Pokéball plus lumineux */
+  --pokemon-black: #000000;      /* Noir pur */
+  --pokemon-white: #FFFFFF;      /* Blanc pur */
+  
+  /* Nuances de rouge */
+  --pokemon-red-light: #FF6E52;  /* Rouge clair plus lumineux */
+  --pokemon-red-dark: #CC2512;   /* Rouge foncé */
+  --pokemon-red-muted: #6D1B10;  /* Rouge foncé pour arrière-plans sur noir */
+  
+  /* Nuances de gris */
+  --pokemon-gray-100: #333333;   /* Gris foncé (fond) */
+  --pokemon-gray-200: #555555;   /* Gris moyen foncé */
+  --pokemon-gray-300: #888888;   /* Gris moyen */
+  --pokemon-gray-800: #CCCCCC;   /* Gris clair */
+  --pokemon-gray-900: #DDDDDD;   /* Gris très clair */
+  
+  /* Couleurs d'accentuation */
+  --pokemon-gold: #FFD700;       /* Pour les éléments de réussite/badges */
+  --pokemon-silver: #C0C0C0;     /* Pour les éléments secondaires */
+  
+  /* Couleurs fonctionnelles */
+  --color-success: #4CAF50;      /* Vert */
+  --color-error: #FF5252;        /* Rouge */
+  --color-warning: #FFC107;      /* Jaune */
+  --color-info: #2196F3;         /* Bleu */
+  
+  /* Styles communs */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  --transition-speed: 0.3s;
+  --transition-timing: ease;
+  
+  /* Définition pour l'espacement */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Typographie */
+  --font-family-main: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-3xl: 2.25rem;
+}
+
+/* Classes utilitaires pour utiliser le thème */
+.bg-pokemon-red { background-color: var(--pokemon-red); }
+.bg-pokemon-black { background-color: var(--pokemon-black); }
+.bg-pokemon-white { background-color: var(--pokemon-white); }
+
+.text-pokemon-red { color: var(--pokemon-red); }
+.text-pokemon-black { color: var(--pokemon-black); }
+.text-pokemon-white { color: var(--pokemon-white); }
+
+.border-pokemon-red { border-color: var(--pokemon-red); }
+.border-pokemon-black { border-color: var(--pokemon-black); }
+.border-pokemon-white { border-color: var(--pokemon-white); }
+
+/* Gradients prédéfinis */
+.gradient-red {
+  background: linear-gradient(135deg, var(--pokemon-red), var(--pokemon-red-dark)) !important;
+}
+
+.gradient-dark {
+  background: linear-gradient(135deg, var(--pokemon-gray-800), var(--pokemon-black)) !important;
+}
+
+/* Animations prédéfinies */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-float {
+  animation: float 3s infinite ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Styles de boutons thématiques */
+.pokemon-btn {
+  background: var(--pokemon-red) !important;
+  color: var(--pokemon-white) !important;
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  font-weight: var(--font-weight-bold) !important;
+  box-shadow: 0 0 8px rgba(255, 61, 40, 0.5);
+  transition: transform var(--transition-speed) var(--transition-timing),
+              box-shadow var(--transition-speed) var(--transition-timing);
+}
+
+.pokemon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(255, 61, 40, 0.8);
+  background: var(--pokemon-red-light) !important;
+}
+
+.pokemon-btn-outline {
+  background: transparent !important;
+  color: var(--pokemon-red) !important;
+  border: 2px solid var(--pokemon-red) !important;
+}
+
+.pokemon-btn-outline:hover {
+  background: rgba(227, 53, 13, 0.1) !important;
+}
+
+.pokemon-btn-dark {
+  background: var(--pokemon-black) !important;
+  color: var(--pokemon-white) !important;
+}
+
+.pokemon-btn-dark:hover {
+  background: var(--pokemon-gray-800) !important;
+}
+
+/* Styles de cartes thématiques */
+.pokemon-card {
+  background: var(--pokemon-gray-100);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  border: 1px solid var(--pokemon-gray-200);
+  color: var(--pokemon-white);
+}
+
+.pokemon-card-red {
+  /* border-color: var(--pokemon-red); */
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
+}
+
+.pokemon-card-dark {
+  border-color: var(--pokemon-gray-300);
+}
+
+/* Headers et titres thématiques */
+.pokemon-header {
+  color: var(--pokemon-red);
+  font-weight: var(--font-weight-bold);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Messages box */
+.pokemon-message-box {
+  background: var(--pokemon-white);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 2px solid var(--pokemon-gray-200);
+  box-shadow: var(--shadow-sm);
+}

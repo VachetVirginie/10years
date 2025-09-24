@@ -1,0 +1,207 @@
+/* Styles communs pour tous les composants de quête */
+
+/* Style pour les sauts de ligne dans les textes */
+.whitespace-pre-line {
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+/* Container de quête */
+.quest-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+/* En-tête de quête */
+.quest-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.pokeball-icon {
+  width: 30px;
+  height: 30px;
+  animation: float 3s infinite ease-in-out alternate;
+}
+
+.quest-title {
+  color: var(--pokemon-red);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+}
+
+/* Carte de quête */
+.quest-card {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background: var(--pokemon-gray-100);
+  border: 2px solid var(--pokemon-red);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: 0 0 15px rgba(227, 53, 13, 0.3);
+  color: var(--pokemon-white);
+}
+
+/* Zone de contenu de la quête */
+.quest-content {
+  padding: var(--spacing-lg);
+}
+
+/* Message de quête */
+.quest-message {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--pokemon-red);
+  position: relative;
+}
+
+.quest-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--pokemon-red);
+  border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+}
+
+.quest-message-text {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--pokemon-black);
+  line-height: 1.5;
+}
+
+/* Boutons de quête */
+.quest-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--pokemon-red);
+  color: var(--pokemon-white);
+  border-radius: var(--border-radius-md);
+  border: none;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: var(--transition-speed) var(--transition-timing);
+  box-shadow: var(--shadow-sm);
+  text-transform: none;
+  font-size: var(--font-size-md);
+}
+
+.quest-button:hover {
+  background: var(--pokemon-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quest-button:disabled {
+  background: var(--pokemon-gray-300);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quest-button-secondary {
+  background: var(--pokemon-gray-300);
+  color: var(--pokemon-black);
+}
+
+.quest-button-secondary:hover {
+  background: var(--pokemon-gray-200);
+}
+
+/* Zone d'indice */
+.hint-box {
+  background: var(--pokemon-gray-200);
+  border: 1px solid var(--pokemon-red);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  border-left: 4px solid var(--pokemon-red);
+}
+
+.hint-icon {
+  font-size: var(--font-size-lg);
+  color: var(--pokemon-red);
+}
+
+.hint-text {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--pokemon-white);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Classes d'animation */
+.animate-float {
+  animation: float 3s infinite ease-in-out alternate;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-spin {
+  animation: spin 2s linear infinite;
+}
+
+/* Effets visuel spécifiques */
+.pokemon-glow {
+  filter: drop-shadow(0 0 5px var(--pokemon-red));
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .quest-container {
+    padding: var(--spacing-md);
+  }
+  
+  .quest-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .quest-content {
+    padding: var(--spacing-md);
+  }
+}

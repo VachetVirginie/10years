@@ -1,0 +1,88 @@
+{
+  "title": "Lyon, nos pas et nos secrets : une chasse aux trésors pour deux",
+  "steps": [
+    {
+      "id": "1",
+      "type": "riddle",
+      "title": "Place Bellecour – Le Roi et l’Éternité",
+      "prompt": "Au cœur de la ville, \n\n Là où le vent danse avec les pavés, \nUn roi de bronze, immobile, garde nos secrets enfouis. \n\nSon cheval, tour à tour flamme et glace, pointe vers l'horizon, \nLà où nos destins s'entrelacent, loin des couronnes et des trônes. \n\nCherche l'ombre qui s'étire au rythme du Rhône, \nEt trouve le lieu où tout commence.",
+      "lat": 45.757198,
+      "lng": 4.8312188,
+      "radius": 25,
+      "answer": "Bellecour",
+      "success": "Tu as trouvé la statue de Louis XIV ! \n\nIci, sous son regard, nos histoires s'écrivent. \nPrends un instant pour admirer la vue… et prépare-toi pour la suite !",
+      "hint": "La plus grande place de Lyon, \noù les amoureux se donnent rendez-vous depuis des siècles.",
+      "splash": "Là où tout commence"
+    },
+    {
+      "id": "2",
+      "type": "riddle",
+      "title": "Halles Paul Bocuse – Le Festin des Sens",
+      "prompt": "Entre les parfums de pain chaud et les éclats de rire, \nUn temple s’élève, dédié aux plaisirs éphémères. \n\nC’est ici que les saveurs s’épousent, que les souvenirs s’inventent, \nEt que nos cœurs, comme des bouchons, sautent de joie. \n\nTrouve l’endroit où Le chef du siècle, le magicien, a posé son chapeau.",
+      "lat": 45.7636197,
+      "lng": 4.8502016,
+      "radius": 25,
+      "answer": "Bocuse",
+      "success": "Bienvenue aux Halles Paul Bocuse ! \n\nGoûte à ce macaron, symbole de douceur partagée… \n\net garde l'emballage, il te servira plus tard !",
+      "hint": "Un marché couvert, \noù chaque stand est une ode à la gourmandise lyonnaise.",
+      "splash": "Le festin"
+    },
+    {
+      "id": "3",
+      "type": "riddle",
+      "title": "Micromania Part-Dieu – Le Jeu de Nos Vies",
+      "prompt": "Entre les rails et les départs, un palais de verre veille, \nOù les héros naissent, où les quêtes s'achèvent. \n\nJ'ai couru après des pixels, défié des dragons, \nMais c'est toi, mon vrai trésor, que j'ai trouvé en chemin. \n\nCherche l'échoppe où les rêves s'achètent, \nOù nos enfances se rencontrent, où nos futurs s'inventent.",
+      "lat": 45.76169967651367,
+      "lng": 4.8504961,
+      "radius": 25,
+      "answer": "Micromania",
+      "success": "Bravo ! Tu as trouvé Micromania. \n\nPrends ce ticket à gratter… \nil cache un indice pour la suite !",
+      "hint": "Un magasin où les manettes remplacent les épées, \net où les écrans illuminent les sourires.",
+      "splash": "Le jeu"
+    },
+    {
+      "id": "4",
+      "type": "riddle",
+      "title": "Parc de la Tête d'Or – La Roseraie des Souvenirs",
+      "prompt": "Dans un écrin de verdure, là où le temps s'arrête, \nDes milliers de pétales chuchotent des mots d'amour. \n\nCherche la rose qui porte ton prénom, \nEt cueille-la… elle est à toi, comme mon cœur l'est aussi.",
+      "lat": 45.77692794799805,
+      "lng": 4.851922988891602,
+      "radius": 25,
+      "answer": "Tête d'Or",
+      "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
+      "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
+      "splash": "Les souvenirs"
+    },
+    {
+      "id": "5",
+      "type": "choice",
+      "title": "Parc de la Tête d'Or – Le Lac et ses Mystères",
+      "prompt": "Sur ce miroir d'eau, où les cygnes glissent en silence, \nQue trouve-t-on au centre, comme un cœur dans la balance ?",
+      "choices": [
+        "Une fontaine",
+        "L’île aux cygnes",
+        "Un phare"
+      ],
+      "correctIndex": 1,
+      "lat": 45.77692794799805,
+      "lng": 4.851922988891602,
+      "radius": 25,
+      "success": "L'île aux cygnes, bien sûr ! \n\nC'est ici que Tony Garnier a sculpté l'amour et le souvenir. \nPrends ce caillou blanc… il te guidera vers la dernière étape.",
+      "hint": "Un lieu de mémoire, \noù l'art et la nature s'unissent.",
+      "splash": "Le mystère"
+    },
+    {
+      "id": "6",
+      "type": "riddle",
+      "title": "Casino Le Pharaon – Le Trésor Ultime",
+      "prompt": "Les dés sont lancés, les cartes distribuées, \nMais le vrai jackpot, c'est toi, c'est nous. \n\nCherche le mot qui résume cette chasse, \nCelui qui fait battre nos cœurs à l'unisson.",
+      "answer": "amour",
+      "lat": 45.784820556640625,
+      "lng": 4.8529582023620605,
+      "radius": 25,
+      "success": "🎉 Félicitations ! Tu as trouvé le trésor le plus précieux : notre amour. \n\nOuvre ce coffret… \nil contient une clé, celle de notre futur. 💖",
+      "hint": "Le sentiment le plus précieux \nqui unit deux cœurs.",
+      "splash": "Le trésor"
+    }
+  ]
+}

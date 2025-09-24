@@ -1,0 +1,100 @@
+/* Styles globaux pour les écrans splash et les overlays plein écran
+   Ce fichier contient les styles partagés entre IntroScreen, SplashScreen et EnigmeSplash
+*/
+
+:root {
+  /* Variable pour gérer la hauteur sur les appareils mobiles */
+  --vh: 1vh;
+  
+  /* Thème Pokémon */
+  --pokemon-black: #212121;
+  --pokemon-red: #E3350D;
+  --pokemon-red-dark: #B71C1C;
+  --pokemon-white: #FFFFFF;
+  --pokemon-gray-100: #2a2a2a;
+  --pokemon-gray-200: #3a3a3a;
+  --pokemon-gray-300: #505050;
+}
+
+/* Réinitialisations essentielles pour les écrans plein format */
+html.splash-active,
+body.splash-active {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100% !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  position: fixed; /* Bloquer tout le document */
+  touch-action: none; /* Désactiver les gestes de défilement et zoom */
+}
+
+/* Classes réutilisables */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: -webkit-fill-available; /* Support iOS */
+  background-color: var(--pokemon-black, #212121);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden !important;
+  touch-action: none;
+  pointer-events: auto !important;
+  isolation: isolate;
+  will-change: transform;
+}
+
+/* Support multi-navigateurs pour la hauteur */
+@supports (height: 100vh) {
+  .fullscreen-overlay {
+    height: 100vh;
+  }
+}
+
+@supports (height: -webkit-fill-available) {
+  .fullscreen-overlay {
+    height: -webkit-fill-available;
+  }
+}
+
+@supports (height: calc(var(--vh) * 100)) {
+  .fullscreen-overlay {
+    height: calc(var(--vh) * 100);
+  }
+}
+
+/* Animations partagées */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Transitions */
+.fade-enter-active {
+  animation: fade-in 0.5s ease-out;
+}
+
+.fade-leave-active {
+  animation: fade-out 0.5s ease-in;
+}
+
+/* Utilitaire pour bloquer le scroll */
+.no-scroll {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
