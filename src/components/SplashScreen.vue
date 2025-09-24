@@ -23,11 +23,12 @@ const setViewportHeight = () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
 };
 
-// Gestionnaire d'événement pour le scroll - bloque le défilement du corps
+// Gestionnaire d'événement pour le scroll - désactivé pour permettre le défilement
 const preventScroll = (e: Event) => {
-  if (visible.value) {
-    e.preventDefault();
-  }
+  // Nous ne bloquons plus le défilement
+  // if (visible.value) {
+  //   e.preventDefault();
+  // }
 };
 
 // Déclencher l'événement après la durée spécifiée
@@ -38,7 +39,8 @@ onMounted(() => {
   // Recalculer lors des événements qui peuvent changer la hauteur de l'écran
   window.addEventListener('resize', setViewportHeight);
   window.addEventListener('orientationchange', setViewportHeight);
-  window.addEventListener('scroll', preventScroll, { passive: false });
+  // Désactivé pour permettre le défilement
+  // window.addEventListener('scroll', preventScroll, { passive: false });
   
   // Forcer un recalcul après un court délai pour s'assurer que tout est correctement affiché
   setTimeout(setViewportHeight, 100);
@@ -55,13 +57,14 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', setViewportHeight);
   window.removeEventListener('orientationchange', setViewportHeight);
-  window.removeEventListener('scroll', preventScroll);
+  // Désactivé car nous n'ajoutons plus l'event listener
+  // window.removeEventListener('scroll', preventScroll);
 })
 </script>
 
 <template>
   <transition name="fade">
-    <div v-if="visible" class="splash-container" @touchmove.prevent @wheel.prevent @scroll.prevent>
+    <div v-if="visible" class="splash-container">
       <div class="splash-image-wrapper">
         <img 
           src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" 
@@ -84,9 +87,8 @@ onUnmounted(() => {
 body, html {
   margin: 0;
   padding: 0;
-  height: 100% !important;
-  overflow: hidden !important;
-  overscroll-behavior: none;
+  height: 100%;
+  overscroll-behavior: contain;
 }
 </style>
 
@@ -104,11 +106,11 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  overflow: hidden !important; /* Empêcher tout défilement */
+  overflow: auto; /* Permettre le défilement si nécessaire */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
+  touch-action: auto; /* Permettre les gestes tactiles */
   pointer-events: auto !important;
   isolation: isolate;
   will-change: transform;

@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="visible" class="enigme-splash" @touchmove.prevent @wheel.prevent @scroll.prevent>
+    <div v-if="visible" class="enigme-splash">
       <div class="enigme-content">
         <div class="enigme-image">
           <!-- Image d'illustration selon le type d'énigme depuis le dossier public -->
@@ -63,7 +63,7 @@ const skipAnimation = () => {
 
 // Utiliser le composable pour gérer l'affichage plein écran
 const { setViewportHeight } = useFullscreenViewport({
-  preventScroll: true,
+  preventScroll: false,
   recalculateOnResize: true,
   recalculateDelays: [100, 500]
 });
@@ -121,9 +121,8 @@ onUnmounted(() => {
 body, html {
   margin: 0;
   padding: 0;
-  height: 100% !important;
-  overflow: hidden !important;
-  overscroll-behavior: none;
+  height: 100%;
+  overscroll-behavior: contain;
 }
 </style>
 
@@ -146,8 +145,8 @@ body, html {
   z-index: 9999;
   padding: 0; /* Retirer le padding ici */
   box-sizing: border-box;
-  overflow: hidden !important; /* Empêcher tout défilement à l'intérieur du splash */
-  touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
+  overflow: auto; /* Permettre le défilement si nécessaire */
+  touch-action: auto; /* Permettre les gestes tactiles */
   pointer-events: auto !important;
   isolation: isolate;
   will-change: transform;

@@ -30,7 +30,7 @@ Ta quête commence maintenant. Le destin de cette aventure est entre tes mains�
 
 // Utiliser notre composable pour gérer l'affichage plein écran avec correction de hauteur
 const { setViewportHeight } = useFullscreenViewport({
-  preventScroll: true,            // Bloquer le scroll
+  preventScroll: false,           // Permettre le scroll
   recalculateOnResize: true,       // Recalculer sur redimensionnement/orientation
   recalculateDelays: [100, 500]    // Recalculer après des délais pour stabilité
 });
@@ -81,7 +81,7 @@ const closeIntro = () => {
 
 <template>
   <transition name="fade">
-    <div v-if="visible" class="intro-container" @touchmove.prevent @wheel.prevent @scroll.prevent>
+    <div v-if="visible" class="intro-container">
       <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
         <pre class="typing-text">{{ displayedText }}</pre>
         
@@ -104,9 +104,8 @@ const closeIntro = () => {
 body, html {
   margin: 0;
   padding: 0;
-  height: 100% !important;
-  overflow: hidden !important;
-  overscroll-behavior: none;
+  height: 100%;
+  overscroll-behavior: contain;
 }
 </style>
 
@@ -124,12 +123,11 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  overflow: hidden !important; /* Empêcher tout défilement */
+  overflow: auto; /* Permettre le défilement si nécessaire */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  touch-action: none; /* Désactiver les gestes tactiles comme le zoom */
-  pointer-events: auto !important;
+  touch-action: auto; /* Permettre les gestes tactiles */
   isolation: isolate;
   will-change: transform;
   
