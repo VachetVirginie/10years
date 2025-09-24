@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { useTypingAnimation } from '../composables/useTypingAnimation'
 import { useFullscreenViewport } from '../composables/useFullscreenViewport'
-import '../assets/splash-screens.css' // Importer les styles globaux
 
 const props = defineProps({
   duration: {
@@ -31,7 +30,7 @@ Ta quête commence maintenant. Le destin de cette aventure est entre tes mains�
 
 // Utiliser notre composable pour gérer l'affichage plein écran avec correction de hauteur
 const { setViewportHeight } = useFullscreenViewport({
-  preventScroll: false,           // Permettre le scroll
+  preventScroll: true,            // Bloquer le scroll
   recalculateOnResize: true,       // Recalculer sur redimensionnement/orientation
   recalculateDelays: [100, 500]    // Recalculer après des délais pour stabilité
 });
@@ -74,6 +73,10 @@ const closeIntro = () => {
   setTimeout(() => {
     visible.value = false
     emit('complete')
+    
+    // S'assurer que les restrictions de scroll sont supprimées (approche simple)
+    document.documentElement.classList.remove('splash-active')
+    document.body.classList.remove('splash-active')
   }, 300)
 }
 
@@ -100,13 +103,14 @@ const closeIntro = () => {
 /* Ces styles doivent être globaux pour affecter tout le document */
 :root {
   --vh: 1vh;
+  --pokemon-black: #000000;
+  --pokemon-red: #E3350D;
 }
 
 body, html {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  background-color: var(--pokemon-black);
+  height: 100%;
   overscroll-behavior: contain;
 }
 </style>
@@ -120,25 +124,24 @@ body, html {
   right: 0;
   bottom: 0;
   width: 100vw;
-  background-color: var(--pokemon-black);
+  height: 100vh; /* Hauteur de base */
+  background-color: rgba(0, 0, 0, 1); /* Fond 100% opaque */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 9999; /* Augmenter le z-index pour être sûr */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  isolation: isolate;
-  will-change: transform;
-  
-  /* Gestion multi-plateforme de la hauteur */
-  height: 120vh;
+  overflow: auto; /* Important pour iOS - permet le défilement */
+  -webkit-overflow-scrolling: touch; /* Crucial pour iOS - défilement fluide */
+  /* Retrait de touch-action: none et autres propriétés qui bloquent les interactions */
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
 @supports (height: 100vh) {
   .intro-container {
-    height: 120vh;
+    height: 100vh;
   }
 }
 
@@ -158,22 +161,31 @@ body, html {
   position: relative;
   max-width: 600px;
   width: 90%;
-  background-color: var(--pokemon-black);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
+  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
+  background-color: rgba(0, 0, 0, 0.98); /* Fond très opaque */
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
   margin: 20px; /* Ajouter une marge pour éviter les bords de l'écran */
   
   /* Hauteur de base */
-  max-height: 100%;
+  max-height: 80%;
   z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
   
+  /* Empêcher le scroll pendant l'animation */
+  &.animating {
+    overflow-y: hidden;
+    overflow: hidden !important;
+  }
 }
 
 /* Ajustements de hauteur selon le support */
 @supports (max-height: 80vh) {
   .intro-text-wrapper {
-    max-height: 100vh;
+    max-height: 80vh;
   }
 }
 
@@ -194,21 +206,27 @@ body, html {
 }
 
 .skip-button-container {
-  margin-top: 30px;
+  margin-top: 40px; /* Plus d'espace au-dessus du bouton */
+  margin-bottom: 20px; /* Espace en dessous */
   display: flex;
   justify-content: center;
+  width: 100%;
+  padding: 10px;
 }
 
 .skip-button {
   background-color: var(--pokemon-red, #E3350D);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 15px 30px; /* Bouton plus grand pour faciliter le clic sur mobile */
   font-family: 'Courier New', monospace;
+  font-size: 16px; /* Texte plus grand */
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   animation: pulse 1.5s infinite;
+  border-radius: 5px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour donner du relief */
 }
 
 .skip-button:hover {
