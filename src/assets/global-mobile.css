@@ -1,4 +1,19 @@
 /* Styles globaux pour mobile */
+/* Classe utilitaire pour permettre le défilement sans afficher la barre de défilement */
+.scroll-hidden {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE et Edge */
+}
+
+/* Masquer la barre de défilement pour Webkit (Chrome, Safari) */
+.scroll-hidden::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 @media (max-width: 600px) {
   body, html {
     background-color: var(--pokemon-black) !important;

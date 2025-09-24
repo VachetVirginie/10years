@@ -87,7 +87,7 @@ const closeIntro = () => {
 <template>
   <transition name="fade">
     <div v-if="visible" class="intro-container">
-      <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
+      <div class="intro-text-wrapper scroll-hidden" :class="{ 'animating': isAnimating }">
         <pre class="typing-text" v-html="displayedText"></pre>
         
         <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
@@ -169,21 +169,30 @@ const closeIntro = () => {
   transform: translate(-50%, -50%);
   z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
   
-  /* Empêcher les débordements qui causent des problèmes */
-  max-height: 80vh;
-  overflow: hidden;
+  /* Permettre le défilement mais masquer la barre de défilement */
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE et Edge */
+  
+  /* S'assurer que le contenu ne cause pas de sauts de layout pendant l'animation */
+  will-change: contents;
+  overscroll-behavior: contain;
+  -webkit-font-smoothing: antialiased;
+  transition: contents 0.1s ease-in-out;
 }
 
 /* Ajustements de hauteur selon le support */
 @supports (max-height: 80vh) {
   .intro-text-wrapper {
-    max-height: 80vh;
+    max-height: 70vh;
   }
 }
 
 @supports (max-height: calc(var(--vh) * 80)) {
   .intro-text-wrapper {
-    max-height: calc(var(--vh) * 80);
+    max-height: calc(var(--vh) * 70);
   }
 }
 
@@ -195,6 +204,16 @@ const closeIntro = () => {
   white-space: pre-wrap;
   margin: 0;
   text-shadow: 0 0 5px rgba(227, 53, 13, 0.5);
+  overflow-wrap: break-word;
+}
+
+/* Masquer la barre de défilement pour Webkit (Chrome, Safari, navigateurs iOS) */
+.intro-text-wrapper::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
 }
 
 .skip-button-container {
