@@ -118,7 +118,7 @@ body, html {
   right: 0;
   bottom: 0;
   width: 100vw;
-  background-color: var(--pokemon-black, #000);
+  background-color: var(--pokemon-black);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,7 +132,7 @@ body, html {
   will-change: transform;
   
   /* Gestion multi-plateforme de la hauteur */
-  height: 100vh;
+  height: 90vh;
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
