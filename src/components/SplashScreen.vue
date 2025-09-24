@@ -106,7 +106,7 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  overflow: auto; /* Permettre le défilement si nécessaire */
+  overflow: none; /* Permettre le défilement si nécessaire */
   padding: 0;
   margin: 0;
   box-sizing: border-box;

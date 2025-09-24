@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useTypingAnimation } from '../composables/useTypingAnimation'
 import { useFullscreenViewport } from '../composables/useFullscreenViewport'
+import '../assets/splash-screens.css' // Importer les styles globaux
 
 const props = defineProps({
   duration: {
@@ -82,7 +83,7 @@ const closeIntro = () => {
 <template>
   <transition name="fade">
     <div v-if="visible" class="intro-container">
-      <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
+      <div class="intro-text-wrapper scroll-no-bar" :class="{ 'animating': isAnimating }">
         <pre class="typing-text">{{ displayedText }}</pre>
         
         <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
@@ -104,7 +105,8 @@ const closeIntro = () => {
 body, html {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
+  background-color: var(--pokemon-black);
   overscroll-behavior: contain;
 }
 </style>
@@ -158,11 +160,8 @@ body, html {
   position: relative;
   max-width: 600px;
   width: 90%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
-  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
-  background-color: rgba(0, 0, 0, 0.98); /* Fond très opaque */
+  background-color: var(--pokemon-black);
+  overflow: hidden;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
@@ -172,9 +171,13 @@ body, html {
   max-height: 80%;
   z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
   
+  /* Comportement de défilement */
+  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
+  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
+  overflow-x: hidden;
+  
   /* Empêcher le scroll pendant l'animation */
   &.animating {
-    overflow-y: hidden;
     overflow: hidden !important;
   }
 }

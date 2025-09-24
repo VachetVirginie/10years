@@ -98,3 +98,14 @@ body.splash-active {
   overflow: hidden !important;
   touch-action: none !important;
 }
+
+/* Utilitaire pour permettre le défilement sans barre de défilement */
+.scroll-no-bar {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE et Edge */
+}
+
+.scroll-no-bar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari et Opera */
+}
