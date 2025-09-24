@@ -28,6 +28,9 @@ export function useTypingAnimation(text: string, options: UseTypingAnimationOpti
   let currentIndex = 0
   const textArray = text.split('')
   
+  // Pré-calculer la hauteur du contenu final pour éviter les sauts de layout
+  // qui peuvent causer des problèmes sur iOS
+  
   /**
    * Démarrer l'animation
    */
@@ -36,20 +39,30 @@ export function useTypingAnimation(text: string, options: UseTypingAnimationOpti
     
     isAnimating.value = true
     isPaused.value = false
-    displayedText.value = ''
+    
+    // Placer un espace réservé invisible de la même taille que le texte final
+    // pour éviter les sauts de layout sur iOS
+    displayedText.value = `<span style="opacity: 0; position: absolute; pointer-events: none;">${text}</span>`
+    
+    // Démarrer avec un texte vide visible
+    displayedText.value += ''
     currentIndex = 0
     
-    typingInterval = window.setInterval(() => {
-      if (isPaused.value) return
-      
-      if (currentIndex < textArray.length) {
-        displayedText.value += textArray[currentIndex]
-        currentIndex++
-      } else {
-        stop()
-        onComplete()
-      }
-    }, speed)
+    // Petit délai pour s'assurer que le contenu est stable
+    setTimeout(() => {
+      typingInterval = window.setInterval(() => {
+        if (isPaused.value) return
+        
+        if (currentIndex < textArray.length) {
+          // Ajouter seulement la partie visible du texte
+          displayedText.value = `<span style="opacity: 0; position: absolute; pointer-events: none;">${text}</span>${text.substring(0, currentIndex + 1)}`
+          currentIndex++
+        } else {
+          stop()
+          onComplete()
+        }
+      }, speed)
+    }, 100)
   }
   
   /**

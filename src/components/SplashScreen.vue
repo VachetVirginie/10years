@@ -46,12 +46,23 @@ onMounted(() => {
   setTimeout(setViewportHeight, 500);
 
   setTimeout(() => {
+    // D'abord retirer les classes qui bloquent le scroll
+    document.documentElement.classList.remove('splash-active', 'no-scroll')
+    document.body.classList.remove('splash-active', 'no-scroll')
+    document.documentElement.classList.add('ios-scroll')
+    document.body.classList.add('ios-scroll')
+    
+    // Réinitialiser tous les styles inline
+    document.documentElement.style.overflow = ''
+    document.documentElement.style.height = ''
+    document.body.style.overflow = ''
+    document.body.style.height = ''
+    document.body.style.position = ''
+    document.documentElement.style.position = ''
+    
+    // Ensuite masquer l'overlay après s'être assuré que le scroll est restauré
     visible.value = false
     emit('complete')
-    
-    // Approche simple pour iOS
-    document.documentElement.classList.remove('splash-active')
-    document.body.classList.remove('splash-active')
   }, props.duration)
 })
 

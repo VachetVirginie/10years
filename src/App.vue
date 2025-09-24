@@ -23,8 +23,29 @@ onMounted(() => {
     showSplashScreen.value = true
   }
   
-  // iOS Safari nécessite une approche plus légère - nous n'ajouterons pas d'écouteurs supplémentaires
-  // qui pourraient interférer avec les événements tactiles
+  // CODE DE SECOURS: vérifie périodiquement s'il y a des styles ou classes qui bloquent le défilement
+  // et les supprime si aucun écran splash/intro n'est visible
+  const periodicCleanup = setInterval(() => {
+    const hasVisibleOverlay = document.querySelector('.splash-container, .intro-container, .enigme-splash, .battle-transition')
+    
+    if (!hasVisibleOverlay) {
+      // Si pas d'overlay visible, nettoyer tous les blocages de scroll
+      const elements = [document.documentElement, document.body]
+      
+      elements.forEach(el => {
+        el.classList.remove('splash-active', 'no-scroll')
+        el.classList.add('ios-scroll')
+        
+        // Nettoyer les styles inline qui pourraient bloquer le scroll
+        if (el.style.overflow === 'hidden') el.style.overflow = ''
+        if (el.style.position === 'fixed') el.style.position = ''
+        if (el.style.height === '100%') el.style.height = ''
+      })
+    }
+  }, 2000) // Vérifier toutes les 2 secondes
+  
+  // Nettoyer l'intervalle quand le composant est démonté
+  return () => clearInterval(periodicCleanup)
 })
 
 function onSplashComplete() {

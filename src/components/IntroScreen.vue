@@ -29,27 +29,14 @@ Ta quête commence maintenant. Le destin de cette aventure est entre tes mains�
 `
 
 // Utiliser notre composable pour gérer l'affichage plein écran avec correction de hauteur
+// Ne PAS bloquer le scroll pour éviter les problèmes d'interaction
 const { setViewportHeight } = useFullscreenViewport({
-  preventScroll: true,            // Bloquer le scroll
+  preventScroll: false,           // Ne PAS bloquer le scroll
   recalculateOnResize: true,       // Recalculer sur redimensionnement/orientation
   recalculateDelays: [100, 500]    // Recalculer après des délais pour stabilité
 });
 
-// Observer les changements de texte pour recalculer la hauteur
-onMounted(() => {
-  // Délai pour permettre au DOM de se stabiliser
-  setTimeout(() => {
-    const textElement = document.querySelector('.typing-text');
-    if (textElement) {
-      const observer = new MutationObserver(setViewportHeight);
-      observer.observe(textElement, {
-        childList: true,
-        characterData: true,
-        subtree: true
-      });
-    }
-  }, 100);
-});
+// SUPPRESSION DE L'OBSERVER QUI CAUSE DES PROBLÈMES
 
 // Utiliser notre nouveau composable pour l'animation de texte
 const { 
@@ -69,15 +56,29 @@ onMounted(startTyping)
 
 // Fonction pour fermer l'écran d'intro avec une transition fluide
 const closeIntro = () => {
-  // Léger délai avant de masquer l'élément pour permettre une transition fluide
+  console.log('BOUTON CLIQUÉ - FERMETURE INTRO')
+  
+  // D'abord masquer l'écran pour empêcher toute interaction supplémentaire
+  visible.value = false
+  
+  // SUPER IMPORTANT: Débloquer le scroll immédiatement pour iOS
   setTimeout(() => {
-    visible.value = false
-    emit('complete')
+    // Réinitialiser TOUS les styles qui pourraient bloquer le scroll
+    const elements = [document.documentElement, document.body]
+    elements.forEach(el => {
+      el.classList.remove('splash-active', 'no-scroll')
+      el.style.overflow = ''
+      el.style.height = ''
+      el.style.position = ''
+      el.style.touchAction = ''
+      // Ne pas utiliser webkitOverflowScrolling qui n'est pas reconnu par TypeScript
+      // Utiliser une classe CSS à la place
+      el.classList.add('ios-scroll')
+    })
     
-    // S'assurer que les restrictions de scroll sont supprimées (approche simple)
-    document.documentElement.classList.remove('splash-active')
-    document.body.classList.remove('splash-active')
-  }, 300)
+    // Notifier l'application parent
+    emit('complete')
+  }, 10)
 }
 
 // Les nettoyages sont gérés automatiquement par les composables
@@ -87,10 +88,15 @@ const closeIntro = () => {
   <transition name="fade">
     <div v-if="visible" class="intro-container">
       <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
-        <pre class="typing-text">{{ displayedText }}</pre>
+        <pre class="typing-text" v-html="displayedText"></pre>
         
         <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
-          <button @click="closeIntro" class="skip-button">
+          <button 
+            @click="closeIntro" 
+            @touchend="closeIntro" 
+            class="skip-button"
+            style="z-index: 20000; position: relative;"
+          >
             COMMENCER L'AVENTURE
           </button>
         </div>
@@ -103,14 +109,6 @@ const closeIntro = () => {
 /* Ces styles doivent être globaux pour affecter tout le document */
 :root {
   --vh: 1vh;
-}
-
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100% !important;
-  overflow: hidden !important;
-  overscroll-behavior: none;
 }
 </style>
 
@@ -157,28 +155,23 @@ body, html {
 }
 
 .intro-text-wrapper {
-  position: relative;
+  position: fixed; /* Fixer la position pour éviter qu'elle remonte */
   max-width: 600px;
   width: 90%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
-  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
   background-color: rgba(0, 0, 0, 0.98); /* Fond très opaque */
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
-  margin: 20px; /* Ajouter une marge pour éviter les bords de l'écran */
   
-  /* Hauteur de base */
-  max-height: 80%;
+  /* Position bien centrée et fixe */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
   
-  /* Empêcher le scroll pendant l'animation */
-  &.animating {
-    overflow-y: hidden;
-    overflow: hidden !important;
-  }
+  /* Empêcher les débordements qui causent des problèmes */
+  max-height: 80vh;
+  overflow: hidden;
 }
 
 /* Ajustements de hauteur selon le support */
@@ -219,13 +212,17 @@ body, html {
   border: none;
   padding: 15px 30px; /* Bouton plus grand pour faciliter le clic sur mobile */
   font-family: 'Courier New', monospace;
-  font-size: 16px; /* Texte plus grand */
+  font-size: 18px; /* Texte encore plus grand */
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   animation: pulse 1.5s infinite;
-  border-radius: 5px; /* Coins arrondis */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour donner du relief */
+  border-radius: 10px; /* Coins plus arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Ombre plus prononcée */
+  -webkit-tap-highlight-color: transparent; /* Supprimer le highlight iOS */
+  margin: 15px auto; /* Marges supplémentaires */
+  width: 80%; /* Plus large */
+  max-width: 300px;
 }
 
 .skip-button:hover {

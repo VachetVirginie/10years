@@ -96,8 +96,11 @@ body.splash-active {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Classe simple pour iOS */
+/* Classe simple pour iOS - TRÈS IMPORTANTE pour réactiver le scroll */
 .ios-scroll {
-  -webkit-overflow-scrolling: touch;
-  overflow: auto;
+  -webkit-overflow-scrolling: touch !important;
+  overflow: auto !important;
+  height: auto !important;
+  position: static !important;
+  touch-action: auto !important;
 }
