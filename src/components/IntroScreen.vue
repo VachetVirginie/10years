@@ -168,24 +168,15 @@ body, html {
   margin: 20px; /* Ajouter une marge pour éviter les bords de l'écran */
   
   /* Hauteur de base */
-  max-height: 80%;
+  max-height: 100%;
   z-index: 10000; /* S'assurer qu'il est au-dessus de tout */
   
-  /* Comportement de défilement */
-  overscroll-behavior: contain; /* Empêcher le scroll en cascade */
-  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
-  overflow-x: hidden;
-  
-  /* Empêcher le scroll pendant l'animation */
-  &.animating {
-    overflow: hidden !important;
-  }
 }
 
 /* Ajustements de hauteur selon le support */
 @supports (max-height: 80vh) {
   .intro-text-wrapper {
-    max-height: 80vh;
+    max-height: 100vh;
   }
 }
 
