@@ -59,20 +59,6 @@
     },
     {
       "id": "5",
-      "type": "riddle",
-      "title": "Parc de la Tête d'Or – La Roseraie des Souvenirs",
-      "prompt": "Dans un écrin de verdure, là où le temps s'arrête, \nDes milliers de pétales chuchotent des mots d'amour. \n\nCherche la rose qui porte ton prénom, \nEt cueille-la… elle est à toi, comme mon cœur l'est aussi.",
-      "lat": 45.77692794799805,
-      "lng": 4.851922988891602,
-      "radius": 25,
-      "answer": "Tête d'Or",
-      "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
-      "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
-      "splash": "Les souvenirs",
-      "photo": "Faites une photo en flairant une rose ou en formant un cœur avec vos mains autour d’une fleur."
-    },
-    {
-      "id": "6",
       "type": "choice",
       "title": "Parc de la Tête d'Or – Le Lac et ses Mystères",
       "prompt": "Sur ce miroir d'eau, où les cygnes glissent en silence, \nQue trouve-t-on au centre, comme un cœur dans la balance ?",
@@ -89,6 +75,20 @@
       "hint": "Un lieu de mémoire, \noù l'art et la nature s'unissent.",
       "splash": "Le mystère",
       "photo": "Prenez une photo en sautant en l’air devant le lac, avec l’île en arrière-plan."
+    },
+    {
+      "id": "6",
+      "type": "riddle",
+      "title": "Parc de la Tête d'Or – La Roseraie des Souvenirs",
+      "prompt": "Dans un écrin de verdure, là où le temps s'arrête, \nDes milliers de pétales chuchotent des mots d'amour. \n\nCherche la rose qui porte ton prénom, \nEt cueille-la… elle est à toi, comme mon cœur l'est aussi.",
+      "lat": 45.77692794799805,
+      "lng": 4.851922988891602,
+      "radius": 25,
+      "answer": "Tête d'Or",
+      "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
+      "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
+      "splash": "Les souvenirs",
+      "photo": "Faites une photo en flairant une rose ou en formant un cœur avec vos mains autour d’une fleur."
     },
     {
       "id": "7",

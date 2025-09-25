@@ -5,8 +5,9 @@ import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 import SuccessPopup from './SuccessPopup.vue'
+import PhotoBonus from './PhotoBonus.vue'
 
-const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string } }>()
+const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string; photo?:string } }>()
 const emit = defineEmits(['navigate'])
 
 const answer = ref('')
@@ -14,6 +15,7 @@ const feedback = ref('')
 const showHint = ref(false)
 const isFeedbackSuccess = ref(false)
 const showSuccessPopup = ref(false)
+const showPhotoBonus = ref(false)
 const router = useRouter()
 const store = useProgress()
 store.load()
@@ -28,6 +30,7 @@ function resetStepData() {
   showHint.value = false
   isFeedbackSuccess.value = false
   showSuccessPopup.value = false
+  showPhotoBonus.value = false
 }
 
 // Réinitialiser les données au montage du composant
@@ -137,6 +140,26 @@ function goToNextStep() {
   }, 300)
 }
 
+// Fonction pour afficher le bonus photo
+function displayPhotoBonus() {
+  showSuccessPopup.value = false
+  showPhotoBonus.value = true
+}
+
+// Fonction appelée lorsque le bonus photo est terminé
+function onPhotoCompleted() {
+  showPhotoBonus.value = false
+  // Si l'utilisateur a pris une photo, on pourrait la sauvegarder ici
+  // Puis on continue vers l'étape suivante
+  goToNextStep()
+}
+
+// Fonction appelée lorsque le bonus photo est ignoré
+function onPhotoSkipped() {
+  showPhotoBonus.value = false
+  goToNextStep()
+}
+
 // Fonction pour revenir à l'étape précédente
 function goToPreviousStep() {
   // Fermer la pop-in avant de naviguer
@@ -230,8 +253,18 @@ function goToPreviousStep() {
         :message="feedback"
         :current-step-id="props.step.id"
         :hasPreviousStep="hasPreviousStep"
+        :photoInstruction="props.step.photo"
         @next="goToNextStep"
         @previous="goToPreviousStep"
+        @photo-bonus="displayPhotoBonus"
+      />
+      
+      <!-- Bonus photo -->
+      <PhotoBonus
+        :show="showPhotoBonus"
+        :photoInstruction="props.step.photo || 'Prenez une photo souvenir de cette étape !'"
+        @confirm="onPhotoCompleted"
+        @skip="onPhotoSkipped"
       />
       
       <!-- Feedback text -->

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useProgress } from '../store/progress'
 import '../assets/quest-components.css'
 import SuccessPopup from './SuccessPopup.vue'
+import PhotoBonus from './PhotoBonus.vue'
 
 // Importer correctement les images
 import charizardImg from '../assets/images/pokemon/cheval.png'
@@ -12,7 +13,7 @@ import trainerRedImg from '../assets/images/aaa.jpg'
 import trainerVillainImg from '../assets/images/woman.jpg'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 
-const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string } }>()
+const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string; photo?:string } }>()
 const emit = defineEmits(['navigate'])
 
 // État du combat Pokémon
@@ -22,6 +23,7 @@ const feedback = ref('');
 const showHint = ref(false);
 const animationInProgress = ref(false);
 const showSuccessPopup = ref(false);
+const showPhotoBonus = ref(false);
 const router = useRouter();
 const store = useProgress(); store.load();
 
@@ -166,6 +168,26 @@ function goToNextStep() {
     // Utiliser la fonction injectée pour naviguer avec le splash
     emit('navigate', nextId);
   }, 300);
+}
+
+// Fonction pour afficher le bonus photo
+function displayPhotoBonus() {
+  showSuccessPopup.value = false;
+  showPhotoBonus.value = true;
+}
+
+// Fonction appelée lorsque le bonus photo est terminé
+function onPhotoCompleted() {
+  showPhotoBonus.value = false;
+  // Si l'utilisateur a pris une photo, on pourrait la sauvegarder ici
+  // Puis on continue vers l'étape suivante
+  goToNextStep();
+}
+
+// Fonction appelée lorsque le bonus photo est ignoré
+function onPhotoSkipped() {
+  showPhotoBonus.value = false;
+  goToNextStep();
 }
 
 // Fonction pour revenir à l'étape précédente
@@ -339,8 +361,18 @@ function toggleHint() {
           :message="feedback"
           :current-step-id="props.step.id"
           :hasPreviousStep="hasPreviousStep"
+          :photoInstruction="props.step.photo"
           @next="goToNextStep"
           @previous="goToPreviousStep"
+          @photo-bonus="displayPhotoBonus"
+        />
+        
+        <!-- Bonus photo -->
+        <PhotoBonus
+          :show="showPhotoBonus"
+          :photoInstruction="props.step.photo || 'Prenez une photo souvenir de cette étape !'"
+          @confirm="onPhotoCompleted"
+          @skip="onPhotoSkipped"
         />
       </div>
       

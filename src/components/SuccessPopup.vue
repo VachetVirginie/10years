@@ -10,6 +10,19 @@
         <p class="success-message whitespace-pre-line">{{ message }}</p>
       </div>
       
+      <div v-if="photoInstruction" class="photo-bonus-button-container">
+        <v-btn
+          color="var(--pokemon-blue)"
+          variant="elevated"
+          @click="showPhotoBonus"
+          class="photo-bonus-btn"
+          rounded="pill"
+        >
+          <v-icon start>mdi-camera</v-icon>
+          Bonus photo
+        </v-btn>
+      </div>
+      
       <div class="success-popup-footer">
         <div class="nav-buttons">
           <v-btn 
@@ -47,12 +60,13 @@ const props = defineProps<{
   message: string;
   currentStepId: string; // ID de l'étape actuelle
   hasPreviousStep: boolean; // S'il existe une étape précédente
+  photoInstruction?: string; // Instruction pour le bonus photo (optionnel)
 }>();
 
 // Debug pour vérifier la valeur de hasPreviousStep
 console.log('SuccessPopup - hasPreviousStep:', props.hasPreviousStep);
 
-const emit = defineEmits(['next', 'previous', 'close']);
+const emit = defineEmits(['next', 'previous', 'close', 'photo-bonus']);
 
 const nextStep = () => {
   emit('next');
@@ -61,9 +75,18 @@ const nextStep = () => {
 const previousStep = () => {
   emit('previous');
 };
+
+const showPhotoBonus = () => {
+  emit('photo-bonus');
+};
 </script>
 
 <style scoped>
+/* Variables CSS pour le thème Pokémon */
+:root {
+  --pokemon-blue: #2196F3;
+}
+
 .success-popup-overlay {
   position: fixed;
   top: 0;
@@ -145,6 +168,26 @@ const previousStep = () => {
 
 .prev-btn {
   opacity: 0.8;
+}
+
+.photo-bonus-button-container {
+  padding: 0 20px 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.photo-bonus-btn {
+  width: 100%;
+  margin-bottom: 5px;
+  background-color: var(--pokemon-blue, #2196F3) !important;
+  color: white !important;
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.photo-bonus-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4) !important;
 }
 
 @keyframes popup-appear {

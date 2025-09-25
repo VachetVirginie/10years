@@ -1,5 +1,54 @@
 /* Styles communs pour tous les composants de quête */
 
+/* Variables CSS pour le thème Pokémon */
+:root {
+  /* Couleurs existantes */
+  --pokemon-red: #E3350D;
+  --pokemon-red-dark: #c02a0a;
+  --pokemon-black: #212121;
+  --pokemon-white: #FFFFFF;
+  --pokemon-gray-100: #2a2a2a;
+  --pokemon-gray-200: #3a3a3a;
+  --pokemon-gray-300: #505050;
+  --pokemon-gray-400: #707070;
+  --pokemon-gray-800: #c4c4c4;
+  
+  /* Nouvelle couleur pour le bonus photo */
+  --pokemon-blue: #2196F3;
+  --pokemon-blue-dark: #0c7cd5;
+  
+  /* Espacement */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Border-radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Typographie */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  /* Transitions */
+  --transition-speed: 0.2s;
+  --transition-timing: ease-in-out;
+  
+  /* Ombres */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
 /* Style pour les sauts de ligne dans les textes */
 .whitespace-pre-line {
   white-space: pre-line;
