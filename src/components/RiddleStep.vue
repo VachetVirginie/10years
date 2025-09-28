@@ -287,7 +287,6 @@ function goToPreviousStep() {
 .riddle-content {
   background: rgba(33, 33, 33, 0.7);
   border-radius: 20px;
-  padding: 25px;
   margin-top: 20px;
   box-shadow: 0 8px 32px var(--glass-shadow-strong);
   border: 1px solid var(--glass-border-light);

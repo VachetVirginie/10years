@@ -220,9 +220,9 @@ function resetHunt() {
     </div>
     
     <!-- Contenu de l'étape -->
-    <div class="step-content pa-4">
+    <div class="step-content">
       <v-card class="content-card glass-dialog" elevation="0">
-        <div class="pa-4">
+        <div class="">
           <component :is="step.type==='riddle' ? RiddleStep
                      : ChoiceStep"
                      :step="step as any"

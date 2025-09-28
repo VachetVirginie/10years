@@ -179,7 +179,7 @@ body, html {
   max-width: 500px;
   width: 90%;
   /* Limitation de hauteur avec fallback */
-  max-height: 90vh;
+  max-height: 100vh;
   overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
   -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
   scrollbar-width: none; /* Cacher la barre de défilement sur Firefox */
@@ -213,6 +213,7 @@ body, html {
 
 .enigme-image {
   margin-bottom: 30px;
+  margin-top: 30px;
   animation: bounce 1s infinite alternate ease-in-out;
   background: rgba(0, 0, 0, 0.3);
   width: 120px;
