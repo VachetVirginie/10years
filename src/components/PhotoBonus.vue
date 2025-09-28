@@ -280,23 +280,25 @@ function skipPhoto() {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  padding: 20px;
+  padding: 0; /* Suppression du padding pour plein écran */
 }
 
 .photo-bonus-container {
   background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
-  border: 2px solid var(--pokemon-red);
+  width: 100%; /* Prend toute la largeur */
+  height: 100%; /* Prend toute la hauteur */
+  max-width: 100%; /* Plus de limite max-width */
+  box-shadow: none; /* Pas besoin d'ombre en plein écran */
+  border: none; /* Pas besoin de bordure en plein écran */
   overflow: hidden;
   animation: popup-appear 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 
 .photo-bonus-header {
@@ -366,8 +368,7 @@ function skipPhoto() {
 .camera-view-container {
   position: relative;
   width: 100%;
-  height: 400px;
-  max-height: 60vh;
+  flex: 1; /* Prend tout l'espace disponible */
   overflow: hidden;
   background-color: #000;
 }
