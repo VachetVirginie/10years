@@ -23,6 +23,32 @@ export const useProgress = defineStore('progress', {
     },
     isStepCompleted: (state) => {
       return (stepId: string) => state.done.has(stepId)
+    },
+    // Nouvelle méthode pour obtenir l'ID de l'étape actuelle
+    currentStepId: (state) => {
+      const { steps } = useHunt()
+      return state.currentIndex < steps.length ? steps[state.currentIndex].id : '1'
+    },
+    // Nouvelle méthode pour obtenir l'ID de l'étape suivante (ou la même si c'est la dernière)
+    nextStepId: (state) => {
+      const { steps } = useHunt()
+      // Si c'est la dernière étape, on reste dessus
+      const nextIndex = state.currentIndex < steps.length - 1 ? state.currentIndex + 1 : state.currentIndex
+      return steps[nextIndex]?.id || '1'
+    },
+    // Indique l'index auquel reprendre la progression
+    resumeIndex: (state) => {
+      const { steps } = useHunt()
+      // Vérifier si l'étape actuelle est terminée
+      if (state.currentIndex < steps.length) {
+        const currentStep = steps[state.currentIndex]
+        // Si l'étape actuelle est déjà terminée, nous voulons passer à la suivante
+        if (currentStep && state.done.has(currentStep.id)) {
+          // Mais seulement s'il y a une étape suivante
+          return state.currentIndex < steps.length - 1 ? state.currentIndex + 1 : state.currentIndex
+        }
+      }
+      return state.currentIndex
     }
   },
   actions: {
@@ -45,6 +71,14 @@ export const useProgress = defineStore('progress', {
     markDone(id: string) {
       this.done.add(id)
       this.stepValidation.set(id, true)
+      
+      // Mettre à jour currentIndex pour correspondre à cette étape complétée
+      const { steps } = useHunt()
+      const stepIndex = steps.findIndex(s => s.id === id)
+      if (stepIndex !== -1) {
+        this.currentIndex = stepIndex
+      }
+      
       this.save()
     },
     goNext() {

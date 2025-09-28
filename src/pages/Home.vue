@@ -62,7 +62,31 @@ const introConfirmationMessage = "Voulez-vous revoir l'animation d'introduction 
 
 function handleMenuSelect(item: MenuItem) {
   if (item.id === 'start') {
-    router.push(store.done.size === 0 ? '/step/1' : `/step/${store.currentIndex + 1}`)
+    // Charger explicitement le store avant d'accéder aux valeurs
+    store.load()
+    
+    console.log('Débog - État actuel:', { 
+      currentIndex: store.currentIndex,
+      doneSize: store.done.size,
+      doneItems: Array.from(store.done),
+      stepCount: steps.length,
+      resumeIndex: store.resumeIndex,
+      currentStepId: store.currentStepId,
+      nextStepId: store.nextStepId
+    });
+    
+    if (store.done.size === 0) {
+      // Si aucune étape n'est terminée, commencer à la première étape
+      console.log('Débog - Début nouvelle partie');
+      router.push('/step/1')
+    } else {
+      // Déterminer l'ID de l'étape à laquelle reprendre en fonction de la progression
+      const resumeIndex = store.resumeIndex;
+      const resumeStepId = steps[resumeIndex]?.id || '1';
+      
+      console.log(`Débog - Reprise de l'aventure à l'étape ${resumeStepId} (index ${resumeIndex})`);
+      router.push(`/step/${resumeStepId}`)
+    }
   } else if (item.id === 'map') {
     router.push('/map')
   } else if (item.id === 'badges') {

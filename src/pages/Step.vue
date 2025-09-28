@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, provide } from 'vue'
+import { computed, ref, provide, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
@@ -28,6 +28,13 @@ function navigateToStep(stepId: string | number) {
   showSplash.value = true
   splashComplete.value = false
   
+  // Mettre à jour l'index courant dans le store
+  const stepIndex = steps.findIndex(s => s.id === stepId.toString())
+  if (stepIndex !== -1) {
+    // Mise à jour du currentIndex pour que la reprise fonctionne correctement
+    store.goToStep(stepIndex)
+  }
+  
   // Navigation vers l'étape suivante après un court délai pour permettre la mise à jour des refs
   setTimeout(() => {
     router.push(`/step/${stepId}`)
@@ -41,6 +48,16 @@ const step = computed(() => {
   const id = route.params.id as string
   return steps.find(s => s.id === id)
 })
+
+// Mettre à jour l'index courant lors du chargement d'une étape directement par URL
+watch(() => step.value, (newStep: any) => {
+  if (newStep) {
+    const stepIndex = steps.findIndex(s => s.id === newStep.id)
+    if (stepIndex !== -1) {
+      store.goToStep(stepIndex)
+    }
+  }
+}, { immediate: true })
 
 const stepNumber = computed(() => {
   if (!step.value) return 0
@@ -85,6 +102,9 @@ function goNext() {
     showSplash.value = true
     splashComplete.value = false
     
+    // Mise à jour du currentIndex dans le store
+    store.goToStep(currentIndex + 1)
+    
     // Navigation vers l'étape suivante
     router.push(`/step/${nextStep.id}`)
   }
@@ -95,6 +115,10 @@ function goPrevious() {
   const currentIndex = stepNumber.value - 1
   const prevStep = steps[currentIndex - 1]
   if (prevStep) {
+    // Mise à jour du currentIndex dans le store
+    store.goToStep(currentIndex - 1)
+    
+    // Navigation vers l'étape précédente
     router.push(`/step/${prevStep.id}`)
   }
 }
