@@ -12,7 +12,7 @@
       
       <div v-if="photoInstruction" class="photo-bonus-button-container">
         <v-btn
-          color="var(--pokemon-blue)"
+          color="var(--pokemon-black)"
           variant="elevated"
           @click="showPhotoBonus"
           class="photo-bonus-btn glass-button"
@@ -232,7 +232,8 @@ const showPhotoBonus = () => {
 .photo-bonus-btn {
   width: 100%;
   margin-bottom: 8px;
-  background: rgba(33, 150, 243, 0.7) !important;
+  padding: 10px;
+  background: var(--pokemon-black) !important;
   color: white !important;
   font-weight: bold;
   transition: var(--glass-transition);
@@ -240,14 +241,14 @@ const showPhotoBonus = () => {
   backdrop-filter: blur(var(--glass-blur-light)) !important;
   -webkit-backdrop-filter: blur(var(--glass-blur-light)) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(243, 40, 33, 0.3) !important;
   position: relative;
   overflow: hidden;
 }
 
 .photo-bonus-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5) !important;
+  box-shadow: 0 8px 20px rgba(243, 40, 33, 0.3) !important;
 }
 
 .photo-bonus-btn::before {
