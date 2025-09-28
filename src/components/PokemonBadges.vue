@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 
 const props = defineProps({
   earned: {
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'badge-click']);
 
 // Pour gérer l'état du dialog
 const dialogOpen = computed({
@@ -30,32 +30,131 @@ const dialogOpen = computed({
 
 // Liste des badges officiels Pokémon de Kanto
 const badgeImages = [
-  { name: 'Badge Roche', image: 'https://www.pokepedia.fr/images/a/ab/Badge_Roche_Kanto_LGPE.png' },
-  { name: 'Badge Cascade', image: 'https://www.pokepedia.fr/images/6/67/Badge_Cascade_Kanto_LGPE.png' },
-  { name: 'Badge Foudre', image: 'https://www.pokepedia.fr/images/9/97/Badge_Foudre_Kanto_LGPE.png' },
-  { name: 'Badge Prisme', image: 'https://www.pokepedia.fr/images/7/74/Badge_Prisme_Kanto_LGPE.png' },
-  { name: 'Badge Âme', image: 'https://www.pokepedia.fr/images/1/10/Badge_Marais_Kanto_LGPE.png' },
-  { name: 'Badge Marais', image: 'https://www.pokepedia.fr/images/3/33/Badge_Volcan_Kanto_LGPE.png' },
-  { name: 'Badge Volcan', image: 'https://www.pokepedia.fr/images/1/15/Badge_Terre_Kanto_LGPE.png' },
-  { name: 'Badge Terre', image: 'https://www.pokepedia.fr/images/e/eb/Badge_%C3%82me_Kanto_LGPE.png' }
+  { 
+    name: 'Badge Roche', 
+    image: 'https://www.pokepedia.fr/images/a/ab/Badge_Roche_Kanto_LGPE.png',
+    description: 'Pour avoir surmonté les premiers obstacles du parcours',
+    color: '#b69e31'
+  },
+  { 
+    name: 'Badge Cascade', 
+    image: 'https://www.pokepedia.fr/images/6/67/Badge_Cascade_Kanto_LGPE.png',
+    description: 'Pour avoir parcouru la ville avec fluidité',
+    color: '#5698c4'
+  },
+  { 
+    name: 'Badge Foudre', 
+    image: 'https://www.pokepedia.fr/images/9/97/Badge_Foudre_Kanto_LGPE.png',
+    description: 'Pour avoir résolu les énigmes avec un esprit éclair',
+    color: '#e0bb38'
+  },
+  { 
+    name: 'Badge Prisme', 
+    image: 'https://www.pokepedia.fr/images/7/74/Badge_Prisme_Kanto_LGPE.png',
+    description: 'Pour avoir découvert les multiples facettes de l\'aventure',
+    color: '#c46a97'
+  },
+  { 
+    name: 'Badge Âme', 
+    image: 'https://www.pokepedia.fr/images/1/10/Badge_Marais_Kanto_LGPE.png',
+    description: 'Pour avoir avancé avec passion et détermination',
+    color: '#8d58a3'
+  },
+  { 
+    name: 'Badge Marais', 
+    image: 'https://www.pokepedia.fr/images/3/33/Badge_Volcan_Kanto_LGPE.png',
+    description: 'Pour avoir traversé les moments difficiles',
+    color: '#5292a4'
+  },
+  { 
+    name: 'Badge Volcan', 
+    image: 'https://www.pokepedia.fr/images/1/15/Badge_Terre_Kanto_LGPE.png',
+    description: 'Pour avoir fait preuve d\'une énergie ardente',
+    color: '#e05c3d'
+  },
+  { 
+    name: 'Badge Terre', 
+    image: 'https://www.pokepedia.fr/images/e/eb/Badge_%C3%82me_Kanto_LGPE.png',
+    description: 'Pour avoir conquis tous les territoires de la chasse',
+    color: '#7ab255'
+  }
 ];
 
 // Animation de badge nouvellement obtenu
 const animateBadgeIndex = ref(-1);
+const selectedBadge = ref(-1);
+const showBadgeDetails = ref(false);
+const badgeAnimationPlaying = ref(false);
+const badgeObtainedSound = new Audio('https://www.myinstants.com/media/sounds/pokemon-level-up.mp3');
 
-// Démarrer l'animation pour le dernier badge gagné
-onMounted(() => {
-  if (props.showAnimation && props.earned > 0) {
-    animateBadgeIndex.value = props.earned - 1;
-    setTimeout(() => {
-      animateBadgeIndex.value = -1;
-    }, 3000);
+// Gérer les clics sur les badges
+function handleBadgeClick(index: number) {
+  // Seulement pour les badges déjà gagnés
+  if (index < props.earned) {
+    selectedBadge.value = index;
+    showBadgeDetails.value = true;
+    emit('badge-click', displayBadges.value[index]);
   }
-});
+}
+
+// Fermer les détails du badge
+function closeBadgeDetails() {
+  showBadgeDetails.value = false;
+  // Reset après une courte transition
+  setTimeout(() => {
+    selectedBadge.value = -1;
+  }, 300);
+}
+
+// Animation séquentielle pour les badges nouvellement obtenus
+function playBadgeObtainedAnimation() {
+  if (!props.showAnimation || props.earned === 0 || badgeAnimationPlaying.value) return;
+  
+  badgeAnimationPlaying.value = true;
+  animateBadgeIndex.value = props.earned - 1;
+  
+  // Jouer le son
+  try {
+    badgeObtainedSound.currentTime = 0;
+    badgeObtainedSound.play();
+  } catch (err) {
+    console.log('Audio playback error:', err);
+  }
+  
+  setTimeout(() => {
+    animateBadgeIndex.value = -1;
+    badgeAnimationPlaying.value = false;
+  }, 3000);
+}
 
 // Calculer les badges à afficher
 const displayBadges = computed(() => {
   return badgeImages.slice(0, props.total);
+});
+
+// Observer les changements de earned pour déclencher l'animation
+watch(() => props.earned, (newVal, oldVal) => {
+  if (newVal > oldVal && props.showAnimation && dialogOpen.value) {
+    playBadgeObtainedAnimation();
+  }
+});
+
+// Déclencher l'animation au montage
+onMounted(() => {
+  if (props.showAnimation && props.earned > 0) {
+    setTimeout(() => {
+      playBadgeObtainedAnimation();
+    }, 800); // Délai pour laisser le temps au dialog de s'ouvrir
+  }
+});
+
+// Observer l'ouverture du dialogue pour potentiellement jouer l'animation
+watch(() => dialogOpen.value, (isOpen) => {
+  if (isOpen && props.showAnimation && props.earned > 0 && !badgeAnimationPlaying.value) {
+    setTimeout(() => {
+      playBadgeObtainedAnimation();
+    }, 500);
+  }
 });
 </script>
 
@@ -73,25 +172,33 @@ const displayBadges = computed(() => {
       
       <v-card-text>
         <div class="badges-container">
-      <div 
-        v-for="(badge, index) in displayBadges" 
-        :key="index"
-        class="badge-item"
-        :class="{
-          'badge-earned': index < earned,
-          'badge-animate': index === animateBadgeIndex
-        }"
-      >
-        <div class="badge-wrapper">
-          <img 
-            :src="badge.image" 
-            :alt="badge.name" 
-            class="badge-image"
-          />
-          <div v-if="index === animateBadgeIndex" class="badge-shine"></div>
-        </div>
-        <span class="badge-name">{{ badge.name }}</span>
-      </div>
+          <div 
+            v-for="(badge, index) in displayBadges" 
+            :key="index"
+            class="badge-item"
+            :class="{
+              'badge-earned': index < earned,
+              'badge-animate': index === animateBadgeIndex,
+              'badge-selected': index === selectedBadge && showBadgeDetails
+            }"
+            @click="handleBadgeClick(index)"
+          >
+            <div class="badge-wrapper">
+              <img 
+                :src="badge.image" 
+                :alt="badge.name" 
+                class="badge-image"
+              />
+              <div v-if="index === animateBadgeIndex" class="badge-shine"></div>
+              <div v-if="index < earned" class="badge-glow" :style="{ '--badge-color': badge.color }"></div>
+            </div>
+            <span class="badge-name">{{ badge.name }}</span>
+            
+            <!-- Indicateur cliquable pour badges obtenus -->
+            <div v-if="index < earned" class="badge-click-indicator">
+              <v-icon size="x-small" color="white">mdi-information-outline</v-icon>
+            </div>
+          </div>
         </div>
         
         <div class="badges-progress">
@@ -117,6 +224,41 @@ const displayBadges = computed(() => {
           <div class="progress-percentage">{{ Math.round((earned / displayBadges.length) * 100) }}% complété</div>
         </div>
       </v-card-text>
+      
+      <!-- Détails du badge sélectionné -->
+      <v-dialog v-model="showBadgeDetails" max-width="400px" transition="dialog-bottom-transition" content-class="badge-detail-dialog">
+        <v-card v-if="selectedBadge >= 0" class="badge-detail-card" :style="{ '--badge-detail-color': displayBadges[selectedBadge].color }">
+          <div class="badge-detail-header" :style="{ backgroundColor: displayBadges[selectedBadge].color }">
+            <div class="badge-detail-image-container">
+              <img 
+                :src="displayBadges[selectedBadge].image" 
+                :alt="displayBadges[selectedBadge].name"
+                class="badge-detail-image"
+              />
+            </div>
+          </div>
+          
+          <v-card-title class="badge-detail-title text-center pt-4">
+            {{ displayBadges[selectedBadge].name }}
+          </v-card-title>
+          
+          <v-card-text class="badge-detail-text pa-4 text-center">
+            <p>« {{ displayBadges[selectedBadge].description }} »</p>
+            <div class="badge-achievement mt-4">
+              <v-icon color="amber" class="mr-2">mdi-trophy-award</v-icon>
+              <span>Badge obtenu !</span>
+            </div>
+          </v-card-text>
+          
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" variant="elevated" class="close-detail-button" @click="closeBadgeDetails">
+              Fermer
+            </v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -178,6 +320,11 @@ const displayBadges = computed(() => {
   animation: badge-obtained 3s ease-in-out;
 }
 
+.badge-selected {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
 .badge-wrapper {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
@@ -189,6 +336,58 @@ const displayBadges = computed(() => {
   position: relative;
   margin-bottom: 8px;
   border: 2px solid transparent;
+  cursor: default;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+}
+
+.badge-earned .badge-wrapper {
+  cursor: pointer;
+}
+
+.badge-earned .badge-wrapper:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.badge-click-indicator {
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  background-color: var(--pokemon-red);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: scale(0);
+  animation: pulse-indicator 2s infinite;
+  transition: all 0.3s ease;
+}
+
+.badge-earned:hover .badge-click-indicator {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Glow autour des badges gagnés */
+.badge-glow {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 10px var(--badge-color, var(--pokemon-red));
+  opacity: 0.7;
+  z-index: -1;
+  animation: glow-pulse 2s infinite;
 }
 
 .badge-earned .badge-wrapper {
@@ -338,6 +537,90 @@ const displayBadges = computed(() => {
   100% { transform: translateX(150%) rotate(45deg); }
 }
 
+/* Style pour le dialogue des détails du badge */
+.badge-detail-card {
+  background-color: var(--pokemon-gray-100);
+  border-radius: 12px;
+  border: 3px solid var(--badge-detail-color, var(--pokemon-red));
+  overflow: hidden;
+  box-shadow: 0 0 20px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+}
+
+.badge-detail-header {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge-detail-image-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.badge-detail-image {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  animation: float 3s infinite ease-in-out;
+}
+
+.badge-detail-title {
+  font-size: 1.4rem;
+  color: var(--badge-detail-color, var(--pokemon-red));
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.badge-detail-text {
+  color: var(--pokemon-white);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.badge-achievement {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: var(--pokemon-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+/* Animation pour l'indicateur de clic */
+@keyframes pulse-indicator {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+/* Animation pour les badges en détail */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Animation de pulsation pour la lueur */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 5px var(--badge-color, var(--pokemon-red)); }
+  50% { opacity: 1; box-shadow: 0 0 15px var(--badge-color, var(--pokemon-red)); }
+}
+
+/* Animation de pulsation pour l'accomplissement */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .badges-container {
@@ -352,6 +635,16 @@ const displayBadges = computed(() => {
   .badge-image {
     width: 30px;
     height: 30px;
+  }
+  
+  .badge-detail-image-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .badge-detail-image {
+    width: 50px;
+    height: 50px;
   }
 }
 </style>
