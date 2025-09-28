@@ -10,10 +10,10 @@
       "lng": 4.8312188,
       "radius": 25,
       "answer": "Bellecour",
-      "success": "Tu as trouvé la statue de Louis XIV ! \n\nIci, sous son regard, nos histoires s'écrivent. \nPrends un instant pour admirer la vue… et prépare-toi pour la suite !",
+      "success": "Tu as trouvé la statue de Louis XIV ! \n\nIci, sous son regard, nos histoires s'écrivent. \nTon aventure commence ici, prépare-toi pour la suite !",
       "hint": "La plus grande place de Lyon, \noù les amoureux se donnent rendez-vous depuis des siècles.",
       "splash": "Là où tout commence",
-      "photo": "Prenez une photo en tenant la main de la statue (ou en contre-plongée avec le cheval derrière vous)."
+      "photo": "Prenez une photo en mimant une pose de dresseur !"
     },
     {
       "id": "2",
@@ -24,10 +24,10 @@
       "lng": 4.8502016,
       "radius": 25,
       "answer": "Bocuse",
-      "success": "Bienvenue aux Halles Paul Bocuse ! \n\nGoûte à ce macaron, symbole de douceur partagée… \n\net garde l'emballage, il te servira plus tard !",
+      "success": "Cours aux Halles Paul Bocuse ! \n\nGoûte à ce macaron, symbole de douceur partagée !",
       "hint": "Un marché couvert, \noù chaque stand est une ode à la gourmandise lyonnaise.",
       "splash": "Le festin",
-      "photo": "Faites un selfie en trinquant avec une gourmandise (verre, macaron, café…)."
+      "photo": "Prenez une photo en tenant la main de la statue (ou en contre-plongée avec le cheval derrière vous)."
     },
     {
       "id": "3",
@@ -41,7 +41,7 @@
       "success": "Bravo ! Tu as trouvé Micromania. \n\nPrends ce ticket à gratter… \nil cache un indice pour la suite !",
       "hint": "Un magasin où les manettes remplacent les épées, \net où les écrans illuminent les sourires.",
       "splash": "Le jeu",
-      "photo": "Prenez une photo en mimant une pose de gamer (comme si vous jouiez avec une manette invisible)."
+      "photo": "Faites un selfie en trinquant avec une gourmandise (verre, macaron, café…)."
     },
     {
       "id": "4",
@@ -55,10 +55,24 @@
       "success": "Tu as trouvé L’Entrecôte, juste à côté de notre tout premier appartement ! 🏡❤️  \nIci, chaque bouchée est un retour dans le temps… et chaque souvenir nourrit encore notre histoire.",
       "hint": "Un restaurant de la Rue de la République, célèbre pour n’avoir qu’un seul plat au menu.",
       "splash": "Nos débuts",
-      "photo": "Prenez une photo main dans la main devant l’enseigne (comme un retour à vos débuts)."
+      "photo": "Prenez une photo en mimant une pose de gamer (comme si vous jouiez avec une manette invisible)."
     },
     {
       "id": "5",
+      "type": "riddle",
+      "title": "Parc de la Tête d'Or – La Roseraie des Souvenirs",
+      "prompt": "Dans un écrin de verdure, là où le temps s'arrête, \nDes milliers de pétales chuchotent des mots d'amour. \n\nCherche la rose qui porte ton prénom, \nEt cueille-la… elle est à toi, comme mon cœur l'est aussi.",
+      "lat": 45.77692794799805,
+      "lng": 4.851922988891602,
+      "radius": 25,
+      "answer": "Tête d'Or",
+      "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
+      "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
+      "splash": "Les souvenirs",
+      "photo": "Prenez une photo en sautant en l’air devant le lac, avec l’île en arrière-plan."
+    },
+    {
+      "id": "6",
       "type": "choice",
       "title": "Parc de la Tête d'Or – Le Lac et ses Mystères",
       "prompt": "Sur ce miroir d'eau, où les cygnes glissent en silence, \nQue trouve-t-on au centre, comme un cœur dans la balance ?",
@@ -74,21 +88,7 @@
       "success": "L'île aux cygnes, bien sûr ! \n\nC'est ici que Tony Garnier a sculpté l'amour et le souvenir. \nPrends ce caillou blanc… il te guidera vers la dernière étape.",
       "hint": "Un lieu de mémoire, \noù l'art et la nature s'unissent.",
       "splash": "Le mystère",
-      "photo": "Prenez une photo en sautant en l’air devant le lac, avec l’île en arrière-plan."
-    },
-    {
-      "id": "6",
-      "type": "riddle",
-      "title": "Parc de la Tête d'Or – La Roseraie des Souvenirs",
-      "prompt": "Dans un écrin de verdure, là où le temps s'arrête, \nDes milliers de pétales chuchotent des mots d'amour. \n\nCherche la rose qui porte ton prénom, \nEt cueille-la… elle est à toi, comme mon cœur l'est aussi.",
-      "lat": 45.77692794799805,
-      "lng": 4.851922988891602,
-      "radius": 25,
-      "answer": "Tête d'Or",
-      "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
-      "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
-      "splash": "Les souvenirs",
-      "photo": "Faites une photo en flairant une rose ou en formant un cœur avec vos mains autour d’une fleur."
+      "photo": "Prenez une photo main dans la main devant l’enseigne (comme un retour à vos débuts)."
     },
     {
       "id": "7",
@@ -102,7 +102,7 @@
       "success": "🎉 Félicitations ! Tu as trouvé le trésor le plus précieux : notre amour. \n\nOuvre ce coffret… \nil contient une clé, celle de notre futur. 💖",
       "hint": "Le sentiment le plus précieux \nqui unit deux cœurs.",
       "splash": "Le trésor",
-      "photo": "Prenez une photo comme si vous lanciez les dés ensemble, main dans la main."
+      "photo": "Faites une photo en flairant une rose ou en formant un cœur avec vos mains autour d’une fleur."
     }
   ]
 }
