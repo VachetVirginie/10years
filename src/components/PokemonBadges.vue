@@ -165,7 +165,7 @@ watch(() => dialogOpen.value, (isOpen) => {
     content-class="badge-dialog"
     transition="dialog-bottom-transition"
   >
-    <v-card class="pokemon-badges">
+    <v-card class="pokemon-badges glass-card">
       <v-card-title>
         <h3 class="badges-title">Badges</h3>
       </v-card-title>
@@ -227,7 +227,7 @@ watch(() => dialogOpen.value, (isOpen) => {
       
       <!-- Détails du badge sélectionné -->
       <v-dialog v-model="showBadgeDetails" max-width="400px" transition="dialog-bottom-transition" content-class="badge-detail-dialog">
-        <v-card v-if="selectedBadge >= 0" class="badge-detail-card" :style="{ '--badge-detail-color': displayBadges[selectedBadge].color }">
+        <v-card v-if="selectedBadge >= 0" class="badge-detail-card glass-dialog" :style="{ '--badge-detail-color': displayBadges[selectedBadge].color }">
           <div class="badge-detail-header" :style="{ backgroundColor: displayBadges[selectedBadge].color }">
             <div class="badge-detail-image-container">
               <img 
@@ -252,7 +252,7 @@ watch(() => dialogOpen.value, (isOpen) => {
           
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" variant="elevated" class="close-detail-button" @click="closeBadgeDetails">
+            <v-btn variant="elevated" class="close-detail-button glass-button" @click="closeBadgeDetails">
               Fermer
             </v-btn>
             <v-spacer></v-spacer>
@@ -263,9 +263,8 @@ watch(() => dialogOpen.value, (isOpen) => {
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="red-darken-1"
           variant="elevated"
-          class="close-button"
+          class="close-button glass-button"
           @click="dialogOpen = false"
         >
           Fermer
@@ -277,12 +276,15 @@ watch(() => dialogOpen.value, (isOpen) => {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .pokemon-badges {
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
-  padding: 16px;
-  border: 2px solid var(--pokemon-red);
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.2);
+  background-color: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .badges-title {
@@ -326,19 +328,21 @@ watch(() => dialogOpen.value, (isOpen) => {
 }
 
 .badge-wrapper {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 65px;
+  height: 65px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: 8px;
-  border: 2px solid transparent;
+  margin-bottom: 10px;
+  border: 1px solid var(--glass-border-light);
   cursor: default;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .badge-earned .badge-wrapper {
@@ -354,20 +358,23 @@ watch(() => dialogOpen.value, (isOpen) => {
   position: absolute;
   bottom: 15px;
   right: 0;
-  background-color: var(--pokemon-red);
+  background-color: var(--glass-pokemon-red);
   color: white;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   opacity: 0;
   transform: scale(0);
   animation: pulse-indicator 2s infinite;
   transition: all 0.3s ease;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .badge-earned:hover .badge-click-indicator {
@@ -391,8 +398,9 @@ watch(() => dialogOpen.value, (isOpen) => {
 }
 
 .badge-earned .badge-wrapper {
-  background-color: var(--pokemon-black);
-  border-color: var(--pokemon-red);
+  background-color: rgba(20, 20, 20, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px var(--badge-color, rgba(255, 61, 40, 0.5));
 }
 
 .badge-image {
@@ -426,10 +434,19 @@ watch(() => dialogOpen.value, (isOpen) => {
 
 .badges-progress {
   margin-top: 24px;
-  background-color: var(--pokemon-gray-200);
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: rgba(40, 40, 40, 0.5);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  transition: var(--glass-transition);
+}
+
+.badges-progress:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
 }
 
 .progress-header {
@@ -459,22 +476,24 @@ watch(() => dialogOpen.value, (isOpen) => {
 
 .progress-bar {
   height: 12px;
-  background-color: var(--pokemon-gray-300);
-  border-radius: 10px;
+  background-color: rgba(30, 30, 30, 0.6);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border-light);
   position: relative;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #ff6b6b, var(--pokemon-red));
+  background: linear-gradient(to right, rgba(255, 107, 107, 0.9), var(--glass-pokemon-red));
   border-radius: 10px;
   transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 8px var(--pokemon-red);
+  box-shadow: 0 0 10px rgba(255, 61, 40, 0.7);
 }
 
 .progress-shine {
@@ -539,11 +558,13 @@ watch(() => dialogOpen.value, (isOpen) => {
 
 /* Style pour le dialogue des détails du badge */
 .badge-detail-card {
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
-  border: 3px solid var(--badge-detail-color, var(--pokemon-red));
+  background-color: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-light);
   overflow: hidden;
-  box-shadow: 0 0 20px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+  box-shadow: 0 8px 32px var(--glass-shadow-strong), 0 0 15px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .badge-detail-header {
@@ -554,15 +575,17 @@ watch(() => dialogOpen.value, (isOpen) => {
 }
 
 .badge-detail-image-container {
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 3px solid white;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--glass-border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .badge-detail-image {
@@ -588,12 +611,15 @@ watch(() => dialogOpen.value, (isOpen) => {
 .badge-achievement {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 8px 16px;
-  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  border-radius: 30px;
   color: var(--pokemon-white);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   animation: pulse 2s infinite;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
 }
 
 /* Animation pour l'indicateur de clic */

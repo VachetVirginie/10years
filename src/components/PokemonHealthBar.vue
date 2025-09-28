@@ -48,7 +48,7 @@ const animationClass = computed(() => {
 </script>
 
 <template>
-  <div class="health-bar-container">
+  <div class="health-bar-container glass-card">
     <div class="health-bar-header">
       <span class="pokemon-name">{{ name }}</span>
       <span class="pokemon-level">Nv.{{ level }}</span>
@@ -56,12 +56,14 @@ const animationClass = computed(() => {
     
     <div class="health-bar-row">
       <div class="health-bar-label">{{ label }}</div>
-      <div class="health-bar-track">
+      <div class="health-bar-track glass-progress-bar">
         <div 
           class="health-bar-fill" 
           :class="[barColor, animationClass]" 
           :style="{ width: `${healthPercent}%` }"
-        ></div>
+        >
+          <div class="health-bar-shine"></div>
+        </div>
       </div>
     </div>
     
@@ -72,16 +74,25 @@ const animationClass = computed(() => {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .health-bar-container {
-  background-color: var(--pokemon-gray-100);
-  border: 2px solid var(--pokemon-white);
-  border-radius: 8px;
-  padding: 12px;
+  background-color: rgba(33, 33, 33, 0.7);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
+  padding: 15px;
   width: 100%;
   max-width: 300px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
   position: relative;
   font-family: 'Press Start 2P', 'Courier New', monospace;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
+}
+
+.health-bar-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px var(--glass-shadow-strong);
 }
 
 .health-bar-header {
@@ -95,6 +106,7 @@ const animationClass = computed(() => {
   font-weight: bold;
   font-size: 0.9rem;
   text-transform: uppercase;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
 .pokemon-level {
@@ -114,36 +126,68 @@ const animationClass = computed(() => {
   font-size: 0.8rem;
   width: 30px;
   text-align: center;
-  background-color: var(--pokemon-gray-200);
-  border-radius: 4px;
-  padding: 2px;
+  background-color: rgba(60, 60, 60, 0.6);
+  border-radius: 8px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .health-bar-track {
   flex: 1;
   height: 12px;
-  background-color: #333;
-  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
   overflow: hidden;
-  border: 1px solid var(--pokemon-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  position: relative;
 }
 
 .health-bar-fill {
   height: 100%;
   transition: width 0.5s ease-out;
-  border-radius: 3px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.health-bar-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: health-shine 2s infinite;
+}
+
+@keyframes health-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .health-bar-fill.green {
-  background-color: #3ADF00;
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.8), rgba(120, 255, 60, 0.8));
+  box-shadow: 0 0 10px rgba(58, 223, 0, 0.5);
 }
 
 .health-bar-fill.orange {
-  background-color: #FFA500;
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.8), rgba(255, 200, 0, 0.8));
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
 }
 
 .health-bar-fill.red {
-  background-color: #FF0000;
+  background: linear-gradient(to right, rgba(255, 0, 0, 0.8), rgba(255, 70, 70, 0.8));
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 }
 
 .health-bar-fill.health-critical {

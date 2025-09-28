@@ -92,8 +92,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pokemon-dialog" @click="showAllText">
-    <div class="dialog-frame">
+  <div class="pokemon-dialog glass-card" @click="showAllText">
+    <div class="dialog-frame glass-dialogue-box">
       <!-- Avatar si fourni -->
       <div v-if="avatar" class="dialog-avatar">
         <img :src="avatar" :alt="speaker" class="avatar-image">
@@ -120,22 +120,31 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .pokemon-dialog {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   cursor: pointer;
+  transition: var(--glass-transition);
+}
+
+.pokemon-dialog:hover {
+  transform: translateY(-3px);
 }
 
 .dialog-frame {
-  background-color: var(--pokemon-gray-100);
-  border: 4px solid var(--pokemon-white);
-  border-radius: 10px;
-  padding: 16px;
+  background-color: rgba(33, 33, 33, 0.7);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
+  padding: 20px;
   position: relative;
   display: flex;
   min-height: 120px;
-  box-shadow: 0 0 0 4px var(--pokemon-black), 0 0 15px rgba(255, 61, 40, 0.5);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  transition: var(--glass-transition);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .dialog-avatar {
@@ -143,10 +152,18 @@ onMounted(() => {
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid var(--pokemon-red);
+  border: 2px solid var(--glass-border-light);
   margin-right: 16px;
-  background: var(--pokemon-black);
+  background: rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
+  box-shadow: 0 4px 12px var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  transform: translateZ(0);
+}
+
+.dialog-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px var(--glass-shadow-strong);
 }
 
 .avatar-image {
@@ -162,15 +179,20 @@ onMounted(() => {
 }
 
 .dialog-speaker {
-  background-color: var(--pokemon-red);
+  background: var(--glass-pokemon-red);
   color: var(--pokemon-white);
   font-weight: bold;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 1rem;
   align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(255, 0, 0, 0.2);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  letter-spacing: 0.02em;
 }
 
 .dialog-text {
@@ -190,12 +212,14 @@ onMounted(() => {
 }
 
 .dialog-continue-indicator {
-  color: var(--pokemon-red);
+  color: white;
   font-size: 1.2rem;
   position: absolute;
-  bottom: 8px;
-  right: 16px;
+  bottom: 10px;
+  right: 20px;
   animation: bounce 1s infinite;
+  opacity: 0.8;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 @keyframes blink {

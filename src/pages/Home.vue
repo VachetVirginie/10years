@@ -120,8 +120,14 @@ function resetIntro() {
 <template>
   <main class="pokemon-home">
     <!-- Hero Section -->
-    <div class="pokemon-hero">
+    <div class="pokemon-hero glass-card">
       <div class="pokemon-hero-content">
+        <div class="hero-particles">
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+        </div>
         <h1 class="pokemon-main-title">{{ title }}</h1>
         <div class="pokemon-subtitle">Une chasse au trésor à travers Lyon</div>
       </div>
@@ -215,6 +221,7 @@ function resetIntro() {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .pokemon-home {
   background: var(--pokemon-black);
   min-height: 100vh;
@@ -223,25 +230,70 @@ function resetIntro() {
 }
 
 .pokemon-hero {
-  padding: 40px 16px 20px;
+  padding: 40px 20px 30px;
   text-align: center;
+  background: rgba(33, 33, 33, 0.6);
+  border-radius: 20px;
+  margin: 10px 10px 20px;
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
+}
+
+.pokemon-hero:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .pokemon-hero-content {
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .pokemon-main-title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--pokemon-red);
-  margin-bottom: 10px;
-  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+  color: white;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px var(--glass-pokemon-red), 0 0 20px rgba(255, 61, 40, 0.5);
+  position: relative;
+  display: inline-block;
+}
+
+.pokemon-main-title::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--glass-pokemon-red), transparent);
+  border-radius: 3px;
 }
 
 .pokemon-subtitle {
-  font-size: 1rem;
-  color: var(--pokemon-white);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+  margin-top: 5px;
+  position: relative;
 }
 
 /* Progress bar styles */
@@ -335,27 +387,47 @@ function resetIntro() {
 }
 
 .reset-confirmation-dialog {
-  background-color: var(--pokemon-gray-100);
-  border: 4px solid var(--pokemon-white);
-  border-radius: 10px;
-  box-shadow: 0 0 0 4px var(--pokemon-black), 0 0 15px rgba(255, 61, 40, 0.5);
+  background-color: rgba(33, 33, 33, 0.8);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   width: 100%;
   max-width: 400px;
   overflow: hidden;
   animation: dialog-appear 0.3s ease-out;
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
 }
 
 .dialog-content {
-  padding: 20px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dialog-title {
-  color: var(--pokemon-red);
-  font-size: 1.2rem;
+  color: white;
+  font-size: 1.3rem;
   margin-top: 0;
-  margin-bottom: 16px;
-  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px var(--glass-pokemon-red);
   text-align: center;
+  letter-spacing: 0.5px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.dialog-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, white, transparent);
 }
 
 .dialog-message {
@@ -373,32 +445,55 @@ function resetIntro() {
 }
 
 .confirm-btn, .cancel-btn {
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 30px;
   font-weight: bold;
   cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
+  border: 1px solid var(--glass-border-light);
+  transition: var(--glass-transition);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .confirm-btn {
-  background-color: var(--pokemon-red);
-  color: var(--pokemon-white);
+  background-color: var(--glass-pokemon-red);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirm-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.confirm-btn:hover::before {
+  opacity: 1;
 }
 
 .cancel-btn {
-  background-color: var(--pokemon-gray-300);
-  color: var(--pokemon-black);
+  background-color: rgba(60, 60, 60, 0.6);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .confirm-btn:hover {
-  background-color: var(--pokemon-red-dark);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
 }
 
 .cancel-btn:hover {
-  background-color: var(--pokemon-gray-200);
-  transform: translateY(-2px);
+  background-color: rgba(80, 80, 80, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes dialog-appear {

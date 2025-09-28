@@ -84,7 +84,7 @@ const earnedBadges = computed(() => {
       v-model="drawer"
       app
       temporary
-      class="pokemon-drawer gradient-dark"
+      class="pokemon-drawer gradient-dark glass-drawer"
     >
       <div class="drawer-header">
         <h3 class="text-white">Menu</h3>
@@ -129,9 +129,8 @@ const earnedBadges = computed(() => {
     <!-- App Bar - Thème Pokémon (Version Mobile) -->
     <v-app-bar
       app
-      class="pokemon-header"
-      color="var(--pokemon-red)"
-      elevation="2"
+      class="pokemon-header glass-header"
+      elevation="0"
       height="56"
     >
       <v-app-bar-nav-icon
@@ -153,9 +152,9 @@ const earnedBadges = computed(() => {
       
       <!-- Barre de progression stylisée -->
       <div class="header-progress" v-if="steps && steps.length > 0">
-        <div class="progress-bar header-progress-bar">
+        <div class="progress-bar header-progress-bar glass-progress-bar">
           <div 
-            class="progress-fill header-progress-fill"
+            class="progress-fill header-progress-fill glass-progress-fill"
             :style="{ width: `${(store.done.size / steps.length) * 100}%` }"
           >
             <div class="progress-shine"></div>
@@ -164,7 +163,7 @@ const earnedBadges = computed(() => {
             v-for="index in Math.min(steps.length, 8)" 
             :key="index"
             class="progress-step header-progress-step"
-            :class="{ 'step-completed': index <= earnedBadges }"
+            :class="{ 'step-completed glass-badge-earned': index <= earnedBadges }"
             :style="{ left: `${((index - 1) / (Math.min(steps.length, 8) - 1)) * 100}%` }"
           ></div>
         </div>
@@ -183,7 +182,18 @@ const earnedBadges = computed(() => {
 
     <!-- Main Content -->
     <v-main class="pokemon-main">
-      <div class="pokemon-background">
+      <div class="pokemon-background glass-screen-container">
+        <!-- Particules d'ambiance -->
+        <div class="glass-particles">
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+        </div>
         <router-view />
       </div>
     </v-main>
@@ -191,6 +201,7 @@ const earnedBadges = computed(() => {
 </template>
 
 <style scoped>
+@import './assets/glassmorphism.css';
 /* Animation pour les coeurs et pétales qui tombent */
 @keyframes floating {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -223,11 +234,13 @@ const earnedBadges = computed(() => {
 
 /* Header Pokémon */
 .pokemon-header {
-  background: var(--pokemon-red) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
-  border-bottom: 1px solid var(--pokemon-red-dark);
+  background: var(--glass-pokemon-red) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur-medium)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium)) !important;
 }
 
 /* Effet de particules flottantes dans le header */
@@ -274,8 +287,12 @@ const earnedBadges = computed(() => {
   max-width: 240px;
   width: 30vw;
   background: rgba(0, 0, 0, 0.2);
-  padding: 6px 10px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .header-progress-bar {
@@ -366,8 +383,11 @@ const earnedBadges = computed(() => {
 
 /* Drawer avec thème Pokémon */
 .pokemon-drawer {
-  border-right: none;
+  border-right: 1px solid var(--glass-border-light);
   position: relative;
+  background: rgba(33, 33, 33, 0.8) !important;
+  backdrop-filter: blur(var(--glass-blur-strong)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) !important;
 }
 
 .pokemon-drawer::after {
@@ -404,15 +424,20 @@ const earnedBadges = computed(() => {
 }
 
 .nav-item {
-  border-radius: 0 !important;
+  border-radius: 10px !important;
   height: 48px;
-  margin: 0 !important;
+  margin: 4px var(--spacing-sm) !important;
   padding: 0 var(--spacing-md) !important;
   color: var(--pokemon-white) !important;
+  transition: var(--glass-transition);
+  border: 1px solid transparent;
 }
 
 .nav-item:hover {
-  background: var(--pokemon-red) !important;
+  background: var(--glass-pokemon-red) !important;
+  border: 1px solid var(--glass-border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .nav-item .v-icon {
@@ -429,14 +454,19 @@ const earnedBadges = computed(() => {
 }
 
 .pokemon-background {
-  background: var(--pokemon-black);
+  background: rgba(18, 18, 18, 0.7);
   min-height: 100vh;
   position: relative;
-  border-radius: 0;
+  border-radius: 20px;
+  margin: 10px;
   overflow: hidden;
   z-index: 1;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
   color: var(--pokemon-white);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 /* Background d'amour */
