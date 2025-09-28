@@ -258,18 +258,19 @@ body.intro-active, html.intro-active {
 
 .dialogue-box {
   width: 100%;
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.7), rgba(40, 40, 40, 0.7));
+  border-radius: var(--border-radius-xl);
   padding: 40px;
-  box-shadow: 0 0 25px rgba(227, 53, 13, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.6);
-  border: 2px solid var(--pokemon-red);
+  box-shadow: var(--shadow-xl), 0 0 25px rgba(227, 53, 13, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   scrollbar-color: var(--pokemon-black) var(--pokemon-black);
   scrollbar-width: thin;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 50vh;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   animation: dialogue-reveal 0.5s ease-out forwards;
   transform-origin: top center;
 }
@@ -328,22 +329,25 @@ body.intro-active, html.intro-active {
 }
 
 .skip-button {
-  background: linear-gradient(145deg, var(--pokemon-red) 0%, var(--pokemon-red-dark) 100%);
+  background: linear-gradient(145deg, rgba(255, 61, 40, 0.8) 0%, rgba(204, 37, 18, 0.9) 100%);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 15px 30px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 30px;
-  box-shadow: 0 4px 15px rgba(227, 53, 13, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s var(--transition-bounce);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 61, 40, 0.4);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   gap: 10px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  letter-spacing: -0.01em;
 }
 
 .skip-button::before {
@@ -361,7 +365,9 @@ body.intro-active, html.intro-active {
 
 .skip-button:hover {
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 7px 20px rgba(227, 53, 13, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(227, 53, 13, 0.7), 0 0 30px rgba(255, 61, 40, 0.5);
+  background: linear-gradient(145deg, rgba(255, 61, 40, 0.9) 0%, rgba(204, 37, 18, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .skip-button:hover::before {
@@ -370,7 +376,8 @@ body.intro-active, html.intro-active {
 
 .skip-button:active {
   transform: translateY(1px);
-  box-shadow: 0 3px 10px rgba(227, 53, 13, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 5px 15px rgba(227, 53, 13, 0.6), 0 0 20px rgba(255, 61, 40, 0.4);
+  transition: all 0.1s ease;
 }
 
 .btn-text {

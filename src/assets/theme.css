@@ -1,10 +1,11 @@
-/* Pokémon Theme - Rouge, Noir, Blanc (Dark Mode) */
+/* Pokémon Theme - Rouge, Noir, Blanc (Dark Mode) - with Modern Glassmorphism */
 
 :root {
   /* Couleurs primaires */
   --pokemon-red: #FF3D28;        /* Rouge Pokéball plus lumineux */
   --pokemon-black: #000000;      /* Noir pur */
   --pokemon-white: #FFFFFF;      /* Blanc pur */
+  --pokemon-blue: #2196F3;       /* Bleu pour variété */
   
   /* Nuances de rouge */
   --pokemon-red-light: #FF6E52;  /* Rouge clair plus lumineux */
@@ -28,18 +29,39 @@
   --color-warning: #FFC107;      /* Jaune */
   --color-info: #2196F3;         /* Bleu */
   
+  /* Nouvelles couleurs de gradient */
+  --gradient-primary: linear-gradient(135deg, #FF3D28, #CC2512);  
+  --gradient-secondary: linear-gradient(135deg, #FFD700, #FFA500);
+  --gradient-dark: linear-gradient(135deg, #333333, #000000);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  
   /* Styles communs */
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 16px;
   --border-radius-xl: 24px;
+  --border-radius-full: 9999px;
   
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  /* Ombres améliorées pour depth */
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 15px 50px rgba(0, 0, 0, 0.35);
+  
+  /* Ombres avec couleur */
+  --shadow-red: 0 5px 20px rgba(255, 61, 40, 0.3);
+  --shadow-gold: 0 5px 20px rgba(255, 215, 0, 0.3);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg-dark: rgba(0, 0, 0, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-border-dark: rgba(255, 255, 255, 0.08);
+  --glass-blur: 10px;
   
   --transition-speed: 0.3s;
   --transition-timing: ease;
+  --transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   
   /* Définition pour l'espacement */
   --spacing-xs: 4px;
@@ -47,6 +69,7 @@
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
+  --spacing-2xl: 48px;
   
   /* Typographie */
   --font-family-main: 'Inter', 'Segoe UI', system-ui, sans-serif;
@@ -60,6 +83,17 @@
   --font-size-xl: 1.5rem;
   --font-size-2xl: 1.875rem;
   --font-size-3xl: 2.25rem;
+  
+  /* Z-index layers */
+  --z-background: -1;
+  --z-default: 1;
+  --z-elevated: 10;
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-drawer: 200;
+  --z-modal: 300;
+  --z-popover: 400;
+  --z-maximum: 9999;
 }
 
 /* Classes utilitaires pour utiliser le thème */

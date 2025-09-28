@@ -18,6 +18,10 @@ import './assets/theme.css'
 import './assets/global-mobile.css'
 // Styles pour les écrans splash et overlays
 import './assets/splash-screens.css'
+// Glassmorphism effects and animations
+import './assets/glassmorphism.css'
+// Micro-interactions for improved user feedback
+import './assets/micro-interactions.css'
 
 const vuetify = createVuetify({ components, directives })
 

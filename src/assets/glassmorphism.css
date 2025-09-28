@@ -1,0 +1,287 @@
+/* Glassmorphism Design System
+   This file contains reusable glassmorphism components, effects, and utilities
+   for creating a modern, immersive UI with depth and visual appeal.
+*/
+
+/* Glass Container Styles */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Glass Variations */
+.glass-dark {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-red {
+  background: rgba(255, 61, 40, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 61, 40, 0.3);
+  box-shadow: 0 8px 32px rgba(255, 61, 40, 0.2);
+}
+
+/* Glass Cards */
+.glass-card {
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  transition: all 0.3s ease;
+}
+
+/* Effet de survol de glass-card supprimé pour éviter les mouvements */
+
+/* Glass Buttons */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  padding: 10px 24px;
+  border-radius: 12px;
+  color: white;
+}
+
+.glass-btn:hover, .glass-btn:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  /* transform supprimé */
+}
+
+.glass-btn:active {
+  transform: translateY(0);
+}
+
+/* Glass Button Variations */
+.glass-btn-primary {
+  background: rgba(255, 61, 40, 0.3);
+  border: 1px solid rgba(255, 61, 40, 0.4);
+}
+
+.glass-btn-primary:hover, .glass-btn-primary:focus {
+  background: rgba(255, 61, 40, 0.4);
+}
+
+.glass-btn-secondary {
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.glass-btn-secondary:hover, .glass-btn-secondary:focus {
+  background: rgba(255, 215, 0, 0.3);
+}
+
+/* Gradients and Effects */
+.glass-gradient {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+.glass-separator {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0));
+  margin: var(--spacing-md) 0;
+}
+
+/* Depth and 3D Effects */
+.depth-shadow {
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.depth-shadow-intense {
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.depth-inset {
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Blur Effects */
+.blur-bg {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+.blur-bg-light {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.blur-bg-heavy {
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+/* Glow Effects */
+.glow {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.glow-red {
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.5);
+}
+
+.glow-gold {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+/* Animation Classes */
+/* Slide Up */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.slide-up-enter-from {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.slide-up-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+/* Fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Scale */
+.scale-enter-active,
+.scale-leave-active {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+/* Progress Animation */
+@keyframes progress-shine {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.progress-animated {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: progress-shine infinite;
+}
+
+/* Animated Borders */
+@keyframes border-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.animated-border {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: border-glow 2s infinite;
+}
+
+/* Micro-interaction Utilities */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+/* Effet hover-lift supprimé pour éviter les mouvements */
+
+.hover-grow {
+  transition: transform 0.3s ease;
+}
+
+/* Effet hover-grow supprimé pour éviter les mouvements */
+
+.click-feedback {
+  transition: transform 0.1s ease;
+}
+
+.click-feedback:active {
+  /* transform supprimé */
+  opacity: 0.9; /* Effet subtil sans mouvement */
+}
+
+/* Mobile Optimized Touch Elements */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-padding {
+    padding: 12px 16px;
+  }
+  
+  .glass-btn {
+    padding: 12px 24px;
+  }
+}
+
+/* Floating Elements */
+.floating {
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Subtle Gradient Backgrounds */
+.gradient-subtle-red {
+  background: linear-gradient(135deg, rgba(255, 61, 40, 0.1), rgba(255, 61, 40, 0.2));
+}
+
+.gradient-subtle-dark {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+}
+
+.gradient-subtle-gold {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
+}

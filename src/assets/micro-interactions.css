@@ -1,0 +1,333 @@
+/* Micro-Interactions CSS
+   This file contains enhanced animations, transitions and feedback effects 
+   to improve the user experience with subtle visual cues
+*/
+
+/* Button Press Effect */
+.btn-press {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn-press:active {
+  transform: scale(0.96) translateY(2px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Success Feedback Animation */
+@keyframes success-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+}
+
+.success-feedback {
+  animation: success-pulse 1s ease-out;
+}
+
+/* Error Feedback Animation */
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.error-feedback {
+  animation: error-shake 0.5s ease-in-out;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid var(--pokemon-red);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Button Loading State */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+/* Focus Ring Animation */
+@keyframes focus-ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(33, 150, 243, 0); }
+}
+
+.focus-ring:focus {
+  outline: none;
+  animation: focus-ring-pulse 2s infinite;
+}
+
+/* Hover Card Lift */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Ripple Effect */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.ripple:focus:not(:active)::after {
+  animation: ripple 0.5s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.5;
+    transform: scale(0, 0) translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(20, 20) translate(-50%, -50%);
+  }
+}
+
+/* Input Focus Effect */
+.input-focus {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-focus:focus {
+  border-color: var(--pokemon-blue);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* Toggle Switch Animation */
+.switch-toggle {
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+
+.switch-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s var(--transition-bounce);
+}
+
+.switch-toggle.active::after {
+  transform: translateX(20px);
+}
+
+/* Checkbox Animation */
+.animated-checkbox {
+  position: relative;
+}
+
+.animated-checkbox input {
+  display: none;
+}
+
+.animated-checkbox .checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--pokemon-gray-300);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.animated-checkbox input:checked ~ .checkmark {
+  background: var(--pokemon-blue);
+  border-color: var(--pokemon-blue);
+}
+
+.animated-checkbox .checkmark:after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.animated-checkbox input:checked ~ .checkmark:after {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(45deg) scale(1);
+}
+
+/* Badge Notification Animation */
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.badge-notification {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: var(--pokemon-red);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  animation: badge-pulse 2s infinite ease-in-out;
+}
+
+/* Progress Bar Animation */
+.progress-bar-animated .progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-animated .progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: progress-shine 2s infinite linear;
+}
+
+@keyframes progress-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Haptic feedback simulation */
+.haptic {
+  transition: transform 0.1s ease;
+}
+
+.haptic:active {
+  transform: scale(0.97);
+}
+
+/* Touch feedback for mobile */
+@media (max-width: 768px) {
+  .touch-feedback {
+    position: relative;
+  }
+  
+  .touch-feedback:active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: inherit;
+  }
+}
+
+/* Swipe animation */
+.swipe-hint {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-hint::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: swipe-hint 1.5s infinite;
+}
+
+@keyframes swipe-hint {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+/* Heartbeat animation for important elements */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.1); }
+}
+
+.heartbeat {
+  animation: heartbeat 1.5s infinite;
+}

@@ -32,12 +32,32 @@ const welcomeMessage = computed(() => {
   }
 })
 
-// Menu items pour navigation
+// Menu items pour navigation avec des icônes améliorées
 const menuItems = [
-  { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
-  { id: 'badges', label: 'Voir les badges', icon: '🏆' },
-  { id: 'intro', label: 'Revoir intro', icon: '🌟' },
-  { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
+  { 
+    id: 'start', 
+    label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', 
+    icon: '🚀',
+    color: 'var(--pokemon-red)'
+  },
+  { 
+    id: 'badges', 
+    label: 'Voir les badges', 
+    icon: '🏆',
+    color: '#FFD700'
+  },
+  { 
+    id: 'intro', 
+    label: 'Revoir intro', 
+    icon: '🌟',
+    color: '#64FFDA'
+  },
+  { 
+    id: 'reset', 
+    label: 'Réinitialiser', 
+    icon: '🔄',
+    color: '#8B8B8B'
+  }
 ]
 
 // Interface pour les items du menu
@@ -45,6 +65,7 @@ interface MenuItem {
   id: string;
   label: string;
   icon?: string;
+  color?: string;
   disabled?: boolean;
 }
 
@@ -119,17 +140,17 @@ function resetIntro() {
 
 <template>
   <main class="pokemon-home">
-    <!-- Hero Section -->
-    <div class="pokemon-hero">
+    <!-- Hero Section with Glassmorphism -->
+    <div class="pokemon-hero glass-dark">
+      <div class="hero-background"></div>
       <div class="pokemon-hero-content">
         <h1 class="pokemon-main-title">{{ title }}</h1>
-        <div class="pokemon-subtitle">Une chasse au trésor à travers Lyon</div>
+        <div class="pokemon-subtitle glass-light">Une chasse au trésor à travers Lyon</div>
       </div>
     </div>
 
-    <!-- Progress Bar -->
-    <!-- Barre de santé Pokémon montrant la progression -->
-    <div class="progress-section">
+    <!-- Progress Bar with animated gradient -->
+    <div class="progress-section glass-card">
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
@@ -139,13 +160,14 @@ function resetIntro() {
               :level="progressPercent"
               name="AVENTURIER"
               label="XP"
+              class="progress-animated"
             />
           </v-col>
         </v-row>
       </v-container>
     </div>
 
-    <!-- Dialog de bienvenue Pokémon -->
+    <!-- Dialog de bienvenue Pokémon avec effet de profondeur -->
     <div class="dialog-section">
       <v-container>
         <v-row justify="center">
@@ -155,26 +177,30 @@ function resetIntro() {
               speaker="PROFESSEUR"
               avatar="../../images/prof.png"
               @complete="dialogDone = true"
+              class="depth-shadow"
             />
           </v-col>
         </v-row>
       </v-container>
     </div>
 
-    <!-- Menu de navigation style Pokémon -->
-    <div class="menu-section" v-if="dialogDone">
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12">
-            <PokemonMenu
-              :items="menuItems"
-              title="MENU PRINCIPAL"
-              @select="handleMenuSelect"
-            />
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+    <!-- Menu de navigation avec effet glassmorphism -->
+    <transition name="fade" mode="out-in">
+      <div class="menu-section" v-if="dialogDone">
+        <v-container>
+          <v-row justify="center">
+            <v-col cols="12">
+              <PokemonMenu
+                :items="menuItems"
+                title="MENU PRINCIPAL"
+                @select="handleMenuSelect"
+                class="glass-card depth-shadow"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
+    </transition>
 
     <!-- Dialog des badges Pokémon -->
     <PokemonBadges
@@ -184,33 +210,39 @@ function resetIntro() {
       :showAnimation="true"
     />
 
-    <!-- Dialogue de confirmation pour la réinitialisation -->
-    <div v-if="showResetConfirmation" class="reset-confirmation-overlay">
-      <div class="reset-confirmation-dialog">
-        <div class="dialog-content">
-          <h3 class="dialog-title">Attention!</h3>
-          <p class="dialog-message">{{ resetConfirmationMessage }}</p>
-          <div class="dialog-actions">
-            <button @click="resetProgress" class="confirm-btn">Oui, réinitialiser</button>
-            <button @click="showResetConfirmation = false" class="cancel-btn">Annuler</button>
+    <!-- Dialogue de confirmation pour la réinitialisation avec glassmorphism -->
+    <transition name="scale">
+      <div v-if="showResetConfirmation" class="reset-confirmation-overlay blur-bg">
+        <div class="reset-confirmation-dialog glass-dark">
+          <div class="dialog-content">
+            <h3 class="dialog-title">Attention!</h3>
+            <div class="glass-separator"></div>
+            <p class="dialog-message">{{ resetConfirmationMessage }}</p>
+            <div class="dialog-actions">
+              <button @click="resetProgress" class="confirm-btn glass-btn glass-btn-primary click-feedback touch-target">Oui, réinitialiser</button>
+              <button @click="showResetConfirmation = false" class="cancel-btn click-feedback touch-target">Annuler</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
     
-    <!-- Dialogue de confirmation pour revoir l'intro -->
-    <div v-if="showIntroConfirmation" class="reset-confirmation-overlay">
-      <div class="reset-confirmation-dialog">
-        <div class="dialog-content">
-          <h3 class="dialog-title">Revoir l'intro</h3>
-          <p class="dialog-message">{{ introConfirmationMessage }}</p>
-          <div class="dialog-actions">
-            <button @click="resetIntro" class="confirm-btn">Oui, revoir</button>
-            <button @click="showIntroConfirmation = false" class="cancel-btn">Annuler</button>
+    <!-- Dialogue de confirmation pour revoir l'intro avec glassmorphism -->
+    <transition name="scale">
+      <div v-if="showIntroConfirmation" class="reset-confirmation-overlay blur-bg">
+        <div class="reset-confirmation-dialog glass-dark">
+          <div class="dialog-content">
+            <h3 class="dialog-title">Revoir l'intro</h3>
+            <div class="glass-separator"></div>
+            <p class="dialog-message">{{ introConfirmationMessage }}</p>
+            <div class="dialog-actions">
+              <button @click="resetIntro" class="confirm-btn glass-btn glass-btn-primary click-feedback touch-target">Oui, revoir</button>
+              <button @click="showIntroConfirmation = false" class="cancel-btn click-feedback touch-target">Annuler</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
   </main>
 </template>
 
@@ -220,33 +252,113 @@ function resetIntro() {
   min-height: 100vh;
   padding: 16px;
   color: var(--pokemon-white);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Ajout d'un fond avec effet de rotation pour toute la page */
+.pokemon-home::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    radial-gradient(circle at 30% 30%, rgba(255, 61, 40, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(255, 61, 40, 0.1) 0%, transparent 60%);
+  z-index: -1;
+  animation: rotate-slow 40s linear infinite;
+  pointer-events: none;
+}
+
+/* Couche supplémentaire avec des étoiles/points pour créer de la profondeur */
+.pokemon-home::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 0.2%, transparent 0.5%),
+    radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.03) 0.2%, transparent 0.4%),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.04) 0.2%, transparent 0.5%),
+    radial-gradient(circle at 25% 35%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.02) 0.2%, transparent 0.4%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.04) 0.2%, transparent 0.5%),
+    radial-gradient(circle at 80% 85%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.02) 0.2%, transparent 0.4%),
+    radial-gradient(circle at 85% 90%, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.03) 0.2%, transparent 0.5%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Hero section with glassmorphism */
 .pokemon-hero {
-  padding: 40px 16px 20px;
+  padding: 50px 16px 30px;
   text-align: center;
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow-lg);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-background {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  z-index: -1;
+  animation: rotate-slow-reverse 35s linear infinite; /* Animation en sens inverse pour créer un effet de profondeur */
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-slow-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
 }
 
 .pokemon-hero-content {
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .pokemon-main-title {
-  font-size: 1.75rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: var(--pokemon-red);
-  margin-bottom: 10px;
-  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+  color: var(--pokemon-white);
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(255, 61, 40, 0.7);
+  letter-spacing: -0.02em;
+  /* animation supprimée */
 }
 
 .pokemon-subtitle {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--pokemon-white);
+  padding: 8px 16px;
+  display: inline-block;
+  border-radius: var(--border-radius-md);
+  margin: 0 auto;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
 }
 
-/* Progress bar styles */
+/* Progress bar styles with glassmorphism */
 .progress-section {
-  padding: 20px 0;
+  padding: 20px;
+  margin: 0 10px 30px;
+  border-radius: var(--border-radius-lg);
 }
 
 .progress-info {
@@ -254,69 +366,22 @@ function resetIntro() {
 }
 
 .progress-text {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
   color: var(--pokemon-white);
   font-weight: 500;
 }
 
-/* Action buttons */
-.action-section {
-  padding: 20px 0;
+/* Dialog section */
+.dialog-section {
+  margin-bottom: 30px;
+  position: relative;
 }
 
-.action-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.start-btn {
-  background: var(--pokemon-red) !important;
-  color: white !important;
-  height: 48px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-}
-
-.map-btn {
-  border-color: var(--pokemon-black) !important;
-  color: var(--pokemon-black) !important;
-  height: 48px !important;
-}
-
-/* Instructions section */
-.instructions-section {
-  padding: 20px 0;
-}
-
-.instruction-card {
-  background: var(--pokemon-gray-100);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--pokemon-red);
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.15);
-}
-
-.instruction-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-  color: var(--pokemon-red);
-  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
-}
-
-.instruction-card ol {
-  padding-left: 24px;
-  margin: 0;
-}
-
-.instruction-card li {
-  margin-bottom: 10px;
-  color: var(--pokemon-white);
-}
-
-.instruction-card li:last-child {
-  margin-bottom: 0;
+/* Menu section with animations */
+.menu-section {
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
 }
 
 /* Dialog de confirmation de réinitialisation */
@@ -326,8 +391,7 @@ function resetIntro() {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
+  z-index: var(--z-modal);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -335,105 +399,164 @@ function resetIntro() {
 }
 
 .reset-confirmation-dialog {
-  background-color: var(--pokemon-gray-100);
-  border: 4px solid var(--pokemon-white);
-  border-radius: 10px;
-  box-shadow: 0 0 0 4px var(--pokemon-black), 0 0 15px rgba(255, 61, 40, 0.5);
   width: 100%;
   max-width: 400px;
+  border-radius: var(--border-radius-xl);
   overflow: hidden;
-  animation: dialog-appear 0.3s ease-out;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  transition: all 0.3s var(--transition-bounce);
+}
+
+/* Shine effect for dialogs */
+.reset-confirmation-dialog::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  height: 5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+  z-index: 0;
 }
 
 .dialog-content {
-  padding: 20px;
+  padding: 25px;
+  position: relative;
+  z-index: 1;
 }
 
 .dialog-title {
   color: var(--pokemon-red);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   margin-top: 0;
   margin-bottom: 16px;
-  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
+  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
   text-align: center;
+  font-weight: 700;
 }
 
 .dialog-message {
   color: var(--pokemon-white);
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin: 20px 0;
+  line-height: 1.6;
   text-align: center;
+  font-size: 1.05rem;
 }
 
 .dialog-actions {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 15px;
+  margin-top: 25px;
 }
 
 .confirm-btn, .cancel-btn {
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 25px;
+  border-radius: var(--border-radius-md);
   font-weight: bold;
   cursor: pointer;
   border: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
 .confirm-btn {
-  background-color: var(--pokemon-red);
   color: var(--pokemon-white);
 }
 
 .cancel-btn {
-  background-color: var(--pokemon-gray-300);
-  color: var(--pokemon-black);
+  background-color: rgba(100, 100, 100, 0.2);
+  color: var(--pokemon-white);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.confirm-btn:hover {
-  background-color: var(--pokemon-red-dark);
-  transform: translateY(-2px);
-}
-
-.cancel-btn:hover {
-  background-color: var(--pokemon-gray-200);
-  transform: translateY(-2px);
-}
-
+/* Animations */
 @keyframes dialog-appear {
-  from { transform: scale(0.8); opacity: 0; }
+  from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Styles pour le bouton de retour dans la section badges */
-.back-button-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 61, 40, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 61, 40, 0.8), 0 0 30px rgba(255, 215, 0, 0.5); }
 }
 
-.back-button {
-  background-color: var(--pokemon-red);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Press Start 2P', 'Courier New', monospace;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 0 var(--pokemon-red-dark), 0 0 10px rgba(255, 61, 40, 0.3);
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .pokemon-main-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .pokemon-subtitle {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+  
+  .progress-section {
+    padding: 15px;
+    margin: 0 5px 20px;
+  }
+  
+  .pokemon-hero {
+    padding: 40px 16px 25px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 20px;
+  }
+  
+  /* Hero background reste à opacité normale */
+  
+  .dialog-title {
+    font-size: 1.3rem;
+  }
+  
+  .dialog-message {
+    font-size: 1rem;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
 }
 
-.back-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--pokemon-red-dark), 0 0 15px rgba(255, 61, 40, 0.5);
-}
-
-.back-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 var(--pokemon-red-dark), 0 0 5px rgba(255, 61, 40, 0.3);
+@media (max-width: 480px) {
+  .pokemon-main-title {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  
+  .pokemon-subtitle {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+  
+  .pokemon-hero {
+    padding: 25px 12px 15px;
+    border-radius: var(--border-radius-md);
+    margin: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .progress-section {
+    padding: 12px;
+    margin: 0 5px 15px;
+  }
+  
+  /* Hero background reste à opacité normale */
+  
+  .dialog-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    width: 100%;
+    padding: 8px 16px;
+  }
 }
 </style>

@@ -14,6 +14,18 @@ const drawer = ref(false)
 const showSplashScreen = ref(false)
 const showIntroScreen = ref(false)
 
+// Variables pour l'animation de transition de page
+const pageTransitioning = ref(false)
+
+// Fonctions de gestion des transitions
+function beforeEnter() {
+  pageTransitioning.value = true
+}
+
+function afterLeave() {
+  pageTransitioning.value = false
+}
+
 // Vérifier si c'est la première visite
 onMounted(() => {
   const hasSeenSplash = localStorage.getItem('hasSeenSplash')
@@ -181,10 +193,19 @@ const earnedBadges = computed(() => {
       </v-btn> -->
     </v-app-bar>
 
-    <!-- Main Content -->
+    <!-- Main Content with Page Transitions -->
     <v-main class="pokemon-main">
       <div class="pokemon-background">
-        <router-view />
+        <router-view v-slot="{ Component, route }">
+          <transition 
+            :name="(route.meta && typeof route.meta === 'object' && 'transition' in route.meta) ? route.meta.transition as string : 'fade'"
+            mode="out-in"
+            @before-enter="beforeEnter"
+            @after-leave="afterLeave"
+          >
+            <component :is="Component" :key="route.path" />
+          </transition>
+        </router-view>
       </div>
     </v-main>
   </v-app>
@@ -195,6 +216,36 @@ const earnedBadges = computed(() => {
 @keyframes floating {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* Page Transition Animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-left-enter-from,
+.slide-right-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
+
+.slide-left-leave-to,
+.slide-right-enter-from {
+  transform: translateX(-30px);
+  opacity: 0;
 }
 
 @keyframes heart-beat {

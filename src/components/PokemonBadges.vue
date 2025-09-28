@@ -164,10 +164,14 @@ watch(() => dialogOpen.value, (isOpen) => {
     max-width="600px"
     content-class="badge-dialog"
     transition="dialog-bottom-transition"
+    overlay-opacity="0.9"
   >
-    <v-card class="pokemon-badges">
+    <v-card class="pokemon-badges glass-dark depth-shadow">
+      <div class="badge-background-decoration"></div>
+      
       <v-card-title>
-        <h3 class="badges-title">Badges</h3>
+        <h3 class="badges-title">Collection de Badges</h3>
+        <div class="glass-separator"></div>
       </v-card-title>
       
       <v-card-text>
@@ -175,7 +179,7 @@ watch(() => dialogOpen.value, (isOpen) => {
           <div 
             v-for="(badge, index) in displayBadges" 
             :key="index"
-            class="badge-item"
+            class="badge-item hover-lift click-feedback"
             :class="{
               'badge-earned': index < earned,
               'badge-animate': index === animateBadgeIndex,
@@ -183,7 +187,7 @@ watch(() => dialogOpen.value, (isOpen) => {
             }"
             @click="handleBadgeClick(index)"
           >
-            <div class="badge-wrapper">
+            <div class="badge-wrapper glass-card depth-shadow" :style="{ '--badge-color': badge.color }">
               <img 
                 :src="badge.image" 
                 :alt="badge.name" 
@@ -191,28 +195,38 @@ watch(() => dialogOpen.value, (isOpen) => {
               />
               <div v-if="index === animateBadgeIndex" class="badge-shine"></div>
               <div v-if="index < earned" class="badge-glow" :style="{ '--badge-color': badge.color }"></div>
+              
+              <!-- Indicateur de badge complet -->
+              <div v-if="index < earned" class="badge-complete-indicator" :style="{ '--badge-color': badge.color }">
+                <v-icon size="x-small" color="white">mdi-check</v-icon>
+              </div>
             </div>
             <span class="badge-name">{{ badge.name }}</span>
             
             <!-- Indicateur cliquable pour badges obtenus -->
-            <div v-if="index < earned" class="badge-click-indicator">
+            <div v-if="index < earned" class="badge-click-indicator glass-light">
               <v-icon size="x-small" color="white">mdi-information-outline</v-icon>
             </div>
           </div>
         </div>
         
-        <div class="badges-progress">
+        <div class="badges-progress glass-card">
           <div class="progress-header">
             <span class="progress-title">Progression</span>
-            <span class="progress-text">{{ earned }}/{{ displayBadges.length }}</span>
+            <span class="progress-text glass-light">{{ earned }}/{{ displayBadges.length }}</span>
           </div>
+          
+          <!-- Barre de progression avec animation -->
           <div class="progress-bar">
             <div 
-              class="progress-fill"
+              class="progress-fill progress-bar-animated"
               :style="{ width: `${(earned / displayBadges.length) * 100}%` }"
             >
               <div class="progress-shine"></div>
+              <div class="progress-particles" v-if="earned > displayBadges.length / 2"></div>
             </div>
+            
+            <!-- Indicateurs de progression -->
             <div 
               v-for="index in displayBadges.length" 
               :key="index"
@@ -221,19 +235,24 @@ watch(() => dialogOpen.value, (isOpen) => {
               :style="{ left: `${((index - 1) / (displayBadges.length - 1)) * 100}%` }"
             ></div>
           </div>
-          <div class="progress-percentage">{{ Math.round((earned / displayBadges.length) * 100) }}% complété</div>
+          
+          <!-- Pourcentage de progression -->
+          <div class="progress-percentage glass-light" :class="{'complete': earned === displayBadges.length}">
+            {{ Math.round((earned / displayBadges.length) * 100) }}% complété
+            <v-icon v-if="earned === displayBadges.length" color="amber" size="x-small" class="ml-1">mdi-star</v-icon>
+          </div>
         </div>
       </v-card-text>
       
-      <!-- Détails du badge sélectionné -->
-      <v-dialog v-model="showBadgeDetails" max-width="400px" transition="dialog-bottom-transition" content-class="badge-detail-dialog">
-        <v-card v-if="selectedBadge >= 0" class="badge-detail-card" :style="{ '--badge-detail-color': displayBadges[selectedBadge].color }">
-          <div class="badge-detail-header" :style="{ backgroundColor: displayBadges[selectedBadge].color }">
-            <div class="badge-detail-image-container">
+      <!-- Détails du badge sélectionné avec glassmorphism -->
+      <v-dialog v-model="showBadgeDetails" max-width="400px" transition="scale-transition" content-class="badge-detail-dialog">
+        <v-card v-if="selectedBadge >= 0" class="badge-detail-card glass-dark depth-shadow-intense" :style="{ '--badge-detail-color': displayBadges[selectedBadge].color }">
+          <div class="badge-detail-header" :style="{ background: `linear-gradient(135deg, ${displayBadges[selectedBadge].color}CC, ${displayBadges[selectedBadge].color}99)` }">
+            <div class="badge-detail-image-container glass-light">
               <img 
                 :src="displayBadges[selectedBadge].image" 
                 :alt="displayBadges[selectedBadge].name"
-                class="badge-detail-image"
+                class="badge-detail-image floating"
               />
             </div>
           </div>
@@ -242,17 +261,19 @@ watch(() => dialogOpen.value, (isOpen) => {
             {{ displayBadges[selectedBadge].name }}
           </v-card-title>
           
+          <div class="glass-separator"></div>
+          
           <v-card-text class="badge-detail-text pa-4 text-center">
-            <p>« {{ displayBadges[selectedBadge].description }} »</p>
-            <div class="badge-achievement mt-4">
-              <v-icon color="amber" class="mr-2">mdi-trophy-award</v-icon>
+            <p class="description glass-card">« {{ displayBadges[selectedBadge].description }} »</p>
+            <div class="badge-achievement glass-light mt-4 glow" :style="{'--glow-color': displayBadges[selectedBadge].color}">
+              <v-icon color="amber" class="mr-2 pulsing-icon">mdi-trophy-award</v-icon>
               <span>Badge obtenu !</span>
             </div>
           </v-card-text>
           
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" variant="elevated" class="close-detail-button" @click="closeBadgeDetails">
+            <v-btn color="primary" variant="elevated" class="close-detail-button glass-btn hover-lift click-feedback" @click="closeBadgeDetails">
               Fermer
             </v-btn>
             <v-spacer></v-spacer>
@@ -265,7 +286,7 @@ watch(() => dialogOpen.value, (isOpen) => {
         <v-btn
           color="red-darken-1"
           variant="elevated"
-          class="close-button"
+          class="close-button glass-btn hover-lift click-feedback touch-target"
           @click="dialogOpen = false"
         >
           Fermer
@@ -277,28 +298,50 @@ watch(() => dialogOpen.value, (isOpen) => {
 </template>
 
 <style scoped>
+/* Main Badge Dialog */
 .pokemon-badges {
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
-  padding: 16px;
-  border: 2px solid var(--pokemon-red);
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.2);
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.7), rgba(40, 40, 40, 0.7));
+  border-radius: var(--border-radius-xl);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background decoration with particles effect */
+.badge-background-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 80%, rgba(255, 61, 40, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .badges-title {
-  color: var(--pokemon-red);
+  color: var(--pokemon-white);
   text-align: center;
   margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 1.2rem;
-  text-shadow: 0 0 5px rgba(255, 61, 40, 0.5);
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 1;
 }
 
+/* Badge grid container */
 .badges-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 20px;
+  margin: 20px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .badge-item {
@@ -307,8 +350,10 @@ watch(() => dialogOpen.value, (isOpen) => {
   align-items: center;
   opacity: 0.4;
   filter: grayscale(1);
-  transition: all 0.3s ease;
+  transition: all 0.3s var(--transition-bounce);
   position: relative;
+  cursor: default;
+  padding: 5px;
 }
 
 .badge-earned {
@@ -317,7 +362,8 @@ watch(() => dialogOpen.value, (isOpen) => {
 }
 
 .badge-animate {
-  animation: badge-obtained 3s ease-in-out;
+  animation: badge-obtained 3s var(--transition-bounce);
+  z-index: 5;
 }
 
 .badge-selected {
@@ -325,45 +371,62 @@ watch(() => dialogOpen.value, (isOpen) => {
   z-index: 10;
 }
 
+/* Badge circular wrapper */
 .badge-wrapper {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(20, 20, 20, 0.6);
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: 8px;
-  border: 2px solid transparent;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: default;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .badge-earned .badge-wrapper {
   cursor: pointer;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .badge-earned .badge-wrapper:hover {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.badge-click-indicator {
+/* Badge complete indicator checkmark */
+.badge-complete-indicator {
   position: absolute;
-  bottom: 15px;
+  bottom: 0;
   right: 0;
-  background-color: var(--pokemon-red);
+  background-color: var(--badge-color, var(--pokemon-red));
   color: white;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px var(--badge-color, rgba(255, 61, 40, 0.5));
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Information indicator */
+.badge-click-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 3;
   opacity: 0;
   transform: scale(0);
   animation: pulse-indicator 2s infinite;
@@ -375,7 +438,7 @@ watch(() => dialogOpen.value, (isOpen) => {
   transform: scale(1);
 }
 
-/* Glow autour des badges gagnés */
+/* Glow effect for earned badges */
 .badge-glow {
   position: absolute;
   top: -4px;
@@ -384,27 +447,36 @@ watch(() => dialogOpen.value, (isOpen) => {
   bottom: -4px;
   border-radius: 50%;
   background: transparent;
-  box-shadow: 0 0 10px var(--badge-color, var(--pokemon-red));
-  opacity: 0.7;
+  box-shadow: 0 0 15px var(--badge-color, var(--pokemon-red));
+  opacity: 0.6;
   z-index: -1;
-  animation: glow-pulse 2s infinite;
+  animation: glow-pulse 2s infinite ease-in-out;
 }
 
-.badge-earned .badge-wrapper {
-  background-color: var(--pokemon-black);
-  border-color: var(--pokemon-red);
-}
-
+/* Badge image */
 .badge-image {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+}
+
+.badge-earned .badge-image {
+  animation: floating-subtle 5s infinite ease-in-out;
 }
 
 .badge-name {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--pokemon-white);
   text-align: center;
+  margin-top: 5px;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  max-width: 90px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .badge-shine {
@@ -422,59 +494,70 @@ watch(() => dialogOpen.value, (isOpen) => {
   animation: shine 1.5s infinite;
   border-radius: 50%;
   pointer-events: none;
+  z-index: 3;
 }
 
+/* Progress section with glassmorphism */
 .badges-progress {
   margin-top: 24px;
-  background-color: var(--pokemon-gray-200);
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(30, 30, 30, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 .progress-title {
   color: var(--pokemon-white);
-  font-weight: bold;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .progress-text {
   color: var(--pokemon-white);
   font-size: 0.9rem;
-  font-weight: bold;
-  padding: 3px 8px;
-  background-color: var(--pokemon-gray-300);
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1);
 }
 
+/* Progress bar with animated fill */
 .progress-bar {
-  height: 12px;
-  background-color: var(--pokemon-gray-300);
-  border-radius: 10px;
+  height: 14px;
+  background-color: rgba(30, 30, 30, 0.6);
+  border-radius: 7px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
   position: relative;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #ff6b6b, var(--pokemon-red));
-  border-radius: 10px;
-  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+  background: linear-gradient(90deg, rgba(255, 61, 40, 0.6), rgba(255, 61, 40, 0.9));
+  border-radius: 7px;
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 8px var(--pokemon-red);
+  box-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
 }
 
 .progress-shine {
@@ -489,39 +572,86 @@ watch(() => dialogOpen.value, (isOpen) => {
     rgba(255, 255, 255, 0.6) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-  animation: shine 2s infinite;
+  animation: progress-shine 2s infinite linear;
 }
 
-.progress-step {
-  width: 8px;
-  height: 8px;
-  background-color: var(--pokemon-gray-300);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
+/* Particles animation for progress bar */
+.progress-particles {
   position: absolute;
-  top: 1px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.progress-particles::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.8) 0.2px, transparent 0.2px),
+    radial-gradient(circle at 70% 40%, rgba(255, 255, 255, 0.7) 0.2px, transparent 0.2px),
+    radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.6) 0.2px, transparent 0.2px);
+  background-size: 15px 15px;
+  animation: particles-float 3s infinite linear;
+}
+
+/* Progress step indicators */
+.progress-step {
+  width: 5px;
+  height: 14px;
+  background-color: rgba(50, 50, 50, 0.5);
+  border-radius: 2.5px;
+  position: absolute;
+  top: 0;
   transform: translateX(-50%);
   z-index: 2;
-  transition: background-color 0.5s ease;
+  transition: all 0.5s var(--transition-bounce);
 }
 
 .step-completed {
-  background-color: #ffd700; /* Couleur or pour les badges obtenus */
-  box-shadow: 0 0 5px #ffd700;
-  border-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 215, 0, 0.9); /* Gold color for completed steps */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
 }
 
+/* Progress percentage display */
 .progress-percentage {
   text-align: center;
   color: var(--pokemon-white);
-  font-size: 0.8rem;
-  margin-top: 8px;
-  opacity: 0.8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 10px;
+  padding: 4px 12px;
+  display: inline-block;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.progress-percentage.complete {
+  animation: pulse-glow 2s infinite;
+  color: #ffd700;
+  font-weight: 700;
 }
 
 @keyframes shine {
+  0% { transform: translateX(-150%) rotate(45deg); }
+  100% { transform: translateX(150%) rotate(45deg); }
+}
+
+@keyframes progress-shine {
   0% { left: -100%; }
   100% { left: 100%; }
+}
+
+@keyframes particles-float {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes badge-obtained {
@@ -532,68 +662,114 @@ watch(() => dialogOpen.value, (isOpen) => {
   80% { transform: scale(1.1); }
 }
 
-@keyframes shine {
-  0% { transform: translateX(-150%) rotate(45deg); }
-  100% { transform: translateX(150%) rotate(45deg); }
+@keyframes floating-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; box-shadow: 0 0 10px var(--badge-color, var(--pokemon-red)); }
+  50% { opacity: 1; box-shadow: 0 0 20px var(--badge-color, var(--pokemon-red)); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+  50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
 }
 
 /* Style pour le dialogue des détails du badge */
 .badge-detail-card {
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
-  border: 3px solid var(--badge-detail-color, var(--pokemon-red));
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.6), rgba(30, 30, 30, 0.8));
+  border-radius: var(--border-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  box-shadow: 0 0 20px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--badge-detail-color, rgba(255, 61, 40, 0.3));
+  position: relative;
+}
+
+.badge-detail-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--badge-detail-color), transparent);
+  opacity: 0.5;
 }
 
 .badge-detail-header {
-  padding: 20px;
+  padding: 30px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .badge-detail-image-container {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 3px solid white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 30px var(--badge-detail-color, rgba(255, 61, 40, 0.5));
+  position: relative;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 1;
 }
 
 .badge-detail-image {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  animation: float 3s infinite ease-in-out;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
 }
 
 .badge-detail-title {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--badge-detail-color, var(--pokemon-red));
   font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 10px var(--badge-detail-color, rgba(255, 61, 40, 0.3));
+  letter-spacing: -0.01em;
 }
 
 .badge-detail-text {
   color: var(--pokemon-white);
   font-size: 1.1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+.description {
+  padding: 15px;
+  border-radius: var(--border-radius-lg);
+  margin: 0 0 20px;
+  font-style: italic;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
 }
 
 .badge-achievement {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-xl);
   color: var(--pokemon-white);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  animation: pulse 2s infinite;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+
+.badge-achievement.glow {
+  box-shadow: 0 0 15px var(--glow-color, rgba(255, 215, 0, 0.5));
+}
+
+.pulsing-icon {
+  animation: pulse 1.5s infinite ease-in-out;
 }
 
 /* Animation pour l'indicateur de clic */
@@ -622,19 +798,64 @@ watch(() => dialogOpen.value, (isOpen) => {
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .badges-container {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
   }
   
   .badge-wrapper {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
   
   .badge-image {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .badge-detail-image-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .badge-detail-image {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .progress-step {
+    width: 4px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .badges-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .badge-wrapper {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .badge-image {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .badge-name {
+    font-size: 0.75rem;
+  }
+  
+  .badge-detail-card {
+    border-radius: var(--border-radius-lg);
+  }
+  
+  .badge-detail-header {
+    padding: 20px 15px;
   }
   
   .badge-detail-image-container {
@@ -645,6 +866,32 @@ watch(() => dialogOpen.value, (isOpen) => {
   .badge-detail-image {
     width: 50px;
     height: 50px;
+  }
+  
+  .badge-detail-title {
+    font-size: 1.3rem;
+  }
+  
+  .badge-detail-text {
+    font-size: 0.95rem;
+  }
+  
+  .description {
+    padding: 10px;
+  }
+  
+  .badge-achievement {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .progress-bar {
+    height: 12px;
+  }
+  
+  .progress-step {
+    width: 3px;
+    height: 12px;
   }
 }
 </style>
