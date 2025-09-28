@@ -354,8 +354,8 @@ function goToPreviousStep() {
 }
 
 .pokemon-input {
-  background-color: rgba(50, 50, 50, 0.6);
   border-radius: 16px;
+  margin: 20px;
   overflow: hidden;
   padding-top: 4px;
   border: 1px solid var(--glass-border-light);
@@ -389,6 +389,7 @@ function goToPreviousStep() {
   gap: 15px;
   margin-bottom: 15px;
   flex-wrap: wrap;
+  padding-bottom: 20px;
 }
 
 .hint-button {

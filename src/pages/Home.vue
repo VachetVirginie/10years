@@ -135,7 +135,7 @@ function resetIntro() {
 
     <!-- Progress Bar -->
     <!-- Barre de santé Pokémon montrant la progression -->
-    <div class="progress-section">
+    <!-- <div class="progress-section">
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
@@ -149,7 +149,7 @@ function resetIntro() {
           </v-col>
         </v-row>
       </v-container>
-    </div>
+    </div> -->
 
     <!-- Dialog de bienvenue Pokémon -->
     <div class="dialog-section">

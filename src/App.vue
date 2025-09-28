@@ -150,24 +150,40 @@ const earnedBadges = computed(() => {
       
       <v-spacer />
       
-      <!-- Barre de progression stylisée -->
+      <!-- Barre de progression stylisée améliorée -->
       <div class="header-progress" v-if="steps && steps.length > 0">
+        <div class="progress-info d-flex justify-space-between align-center mb-1">
+          <span class="header-progress-title">Progression</span>
+          <span class="header-progress-fraction">{{ store.done.size }}<span class="fraction-separator">/</span>{{ steps.length }}</span>
+        </div>
         <div class="progress-bar header-progress-bar glass-progress-bar">
           <div 
-            class="progress-fill header-progress-fill glass-progress-fill"
+            class="progress-fill header-progress-fill"
+            :class="{
+              'progress-fill-green': (store.done.size / steps.length) > 0.65,
+              'progress-fill-orange': (store.done.size / steps.length) > 0.3 && (store.done.size / steps.length) <= 0.65,
+              'progress-fill-red': (store.done.size / steps.length) <= 0.3
+            }"
             :style="{ width: `${(store.done.size / steps.length) * 100}%` }"
           >
             <div class="progress-shine"></div>
           </div>
-          <div 
-            v-for="index in Math.min(steps.length, 8)" 
-            :key="index"
-            class="progress-step header-progress-step"
-            :class="{ 'step-completed glass-badge-earned': index <= earnedBadges }"
-            :style="{ left: `${((index - 1) / (Math.min(steps.length, 8) - 1)) * 100}%` }"
-          ></div>
+          <div class="progress-steps-container">
+            <div 
+              v-for="index in Math.min(steps.length, 8)" 
+              :key="index"
+              class="progress-step header-progress-step"
+              :class="{ 
+                'step-completed': index <= earnedBadges,
+                'step-current': index === earnedBadges + 1,
+                'step-future': index > earnedBadges + 1
+              }"
+              :style="{ left: `${((index - 1) / (Math.min(steps.length, 8) - 1)) * 100}%` }"
+            >
+              <div class="step-pulse" v-if="index === earnedBadges + 1"></div>
+            </div>
+          </div>
         </div>
-        <span class="progress-text header-progress-text">{{ store.done.size }}/{{ steps.length }}</span>
       </div>
       
       <!-- Bouton carte -->
@@ -277,61 +293,171 @@ const earnedBadges = computed(() => {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Styles de la barre de progression dans le header */
+/* Styles améliorés de la barre de progression dans le header */
 .header-progress {
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin-right: 12px;
-  min-width: 180px;
-  max-width: 240px;
-  width: 30vw;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 8px 12px;
-  border-radius: 16px;
+  min-width: 200px;
+  max-width: 280px;
+  width: 35vw;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px 14px;
+  border-radius: 20px;
   border: 1px solid var(--glass-border-light);
-  backdrop-filter: blur(var(--glass-blur-light));
-  -webkit-backdrop-filter: blur(var(--glass-blur-light));
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.header-progress:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.header-progress-title {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-progress-fraction {
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fraction-separator {
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 1px;
 }
 
 .header-progress-bar {
-  height: 8px;
+  height: 12px;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+  background-color: rgba(20, 20, 20, 0.6);
+  border-radius: 12px;
   position: relative;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-  margin-bottom: 3px;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
   overflow: visible;
-  margin-top: 5px;
+  padding: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.progress-steps-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
 }
 
 .header-progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #ffd700, #ffaa00);
-  border-radius: 10px;
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+  z-index: 1;
+  transition: width 0.5s ease-out;
+}
+
+/* Couleurs de progression en fonction de l'avancement */
+.progress-fill-green {
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.8), rgba(120, 255, 60, 0.8));
+  box-shadow: 0 0 15px rgba(58, 223, 0, 0.5);
+}
+
+.progress-fill-orange {
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.8), rgba(255, 200, 0, 0.8));
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+}
+
+.progress-fill-red {
+  background: linear-gradient(to right, rgba(255, 61, 40, 0.8), rgba(255, 100, 60, 0.8));
+  box-shadow: 0 0 15px rgba(255, 61, 40, 0.5);
 }
 
 .header-progress-step {
-  width: 5px;
-  height: 5px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   position: absolute;
-  top: 0.5px;
-  transform: translateX(-50%);
-  z-index: 2;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
 }
 
-.header-progress-text {
-  font-size: 0.75rem;
-  color: white;
-  font-weight: 600;
+/* États des marqueurs d'étape */
+.step-completed {
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(to bottom right, #ffd700, #ffaa00);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+}
+
+.step-current {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(to bottom right, #ff9d00, #ff5100);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 157, 0, 0.8);
+  position: relative;
+}
+
+.step-future {
+  width: 6px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Effet de pulse sur l'étape courante */
+.step-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 157, 0, 0.6);
+  opacity: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
 }
 
 /* Animations et styles existants */
