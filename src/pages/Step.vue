@@ -7,6 +7,7 @@ import { useProgress } from '../store/progress'
 import RiddleStep from '../components/RiddleStep.vue'
 import ChoiceStep from '../components/ChoiceStep.vue'
 import EnigmeSplash from '../components/EnigmeSplash.vue'
+import MissionComplete from '../components/MissionComplete.vue'
 
 // Activer le suivi de géolocalisation
 const { getCurrentPosition } = useGeolocation()
@@ -22,8 +23,18 @@ store.load()
 const showSplash = ref(true)
 const splashComplete = ref(false)
 
+// Gestion de l'écran de fin de mission
+const showMissionComplete = ref(false)
+
 // Fonction pour naviguer vers la prochaine étape avec splash
 function navigateToStep(stepId: string | number) {
+  // Vérifier si c'est la fin de la chasse au trésor (après l'étape 7)
+  if (stepId.toString() === 'end') {
+    // Afficher l'écran de fin de mission
+    showMissionComplete.value = true
+    return
+  }
+  
   // Réinitialiser l'état du splash avant la navigation
   showSplash.value = true
   splashComplete.value = false
@@ -169,14 +180,17 @@ function resetHunt() {
 </script>
 
 <template>
+  <!-- Écran de fin de mission -->
+  <MissionComplete v-if="showMissionComplete" />
+  
   <!-- Splash d'énigme au chargement de l'étape -->
   <EnigmeSplash 
-    v-if="step && showSplash && !splashComplete" 
+    v-if="step && showSplash && !splashComplete && !showMissionComplete" 
     :step="step" 
     @complete="splashComplete = true; showSplash = false"
   />
   
-  <main class="pokemon-step" v-if="step">
+  <main class="pokemon-step" v-if="step && !showMissionComplete">
     <!-- Particules d'ambiance -->
     <div class="glass-particles">
       <div class="glass-particle"></div>

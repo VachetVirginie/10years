@@ -133,10 +133,16 @@ function goToNextStep() {
   // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
     const currentId = Number(props.step.id)
-    const nextId = currentId + 1
     
-    // Utiliser la fonction injectée pour naviguer avec le splash
-    emit('navigate', nextId)
+    // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
+    if (currentId === 7) {
+      // Naviguer vers l'écran de fin de mission
+      emit('navigate', 'end')
+    } else {
+      // Sinon passer à l'étape suivante normalement
+      const nextId = currentId + 1
+      emit('navigate', nextId)
+    }
   }, 300)
 }
 
