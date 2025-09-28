@@ -199,9 +199,9 @@ function goToPreviousStep() {
 <template>
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
       <h2 class="quest-title">Énigme Pokémon</h2>
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
     </div>
 
     <div class="riddle-content">
