@@ -50,7 +50,7 @@ export function useGeolocation() {
     // Puis la mettre à jour toutes les 10 secondes
     intervalId = window.setInterval(() => {
       getCurrentPosition()
-    }, 10000)
+    }, 30000)
   }
 
   const stopTracking = () => {

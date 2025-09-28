@@ -24,7 +24,7 @@
           <v-switch
             v-model="useFrontCamera"
             color="var(--pokemon-blue)"
-            :label="useFrontCamera ? 'Caméra avant' : 'Caméra arrière'"
+            :label="useFrontCamera ? 'Caméra arrière' : 'Caméra avant'"
             hide-details
             class="camera-switch"
             density="compact"
@@ -366,17 +366,25 @@ function skipPhoto() {
 
 /* Camera styles */
 .camera-view-container {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
-  flex: 1; /* Prend tout l'espace disponible */
+  height: 100vh;
   overflow: hidden;
   background-color: #000;
+  z-index: 1000;
 }
 
 .camera-view {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .camera-controls {
@@ -388,6 +396,7 @@ function skipPhoto() {
   justify-content: space-around;
   align-items: center;
   padding: 0 20px;
+  z-index: 1010;
 }
 
 .camera-control-btn {
@@ -473,7 +482,8 @@ function skipPhoto() {
   }
   
   .camera-view-container {
-    height: 300px;
+    height: 100vh;
+    position: fixed;
   }
   
   .camera-control-btn {
