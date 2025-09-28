@@ -212,7 +212,7 @@ function resetHunt() {
       <div class="step-progress">
         <!-- Étape et badges -->
         <div class="step-journey mb-4">
-          <div class="step-badges-container">
+          <!-- <div class="step-badges-container">
             <div 
               v-for="n in totalSteps" 
               :key="n"
@@ -226,11 +226,11 @@ function resetHunt() {
               <span class="step-number">{{ n }}</span>
               <div class="connection-line" v-if="n < totalSteps"></div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- Information d'étape -->
-        <div class="step-info-panel mb-3">
+        <!-- <div class="step-info-panel mb-3">
           <div class="step-info-content">
             <div class="step-title-row">
               <div class="step-icon-container">
@@ -242,7 +242,7 @@ function resetHunt() {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Barre de progression améliorée -->
         <div class="progress-info d-flex justify-space-between align-center mb-2">

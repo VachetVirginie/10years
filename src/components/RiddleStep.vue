@@ -92,6 +92,13 @@ function calculateSimilarity(str1: string, str2: string): number {
 
 // Fonction pour vérifier la réponse
 function check() {
+  // Vérifier d'abord si une réponse a été saisie
+  if (!answer.value || answer.value.trim() === '') {
+    isFeedbackSuccess.value = false
+    feedback.value = 'Tu dois saisir une réponse.'
+    return
+  }
+  
   // Validation directe en cas d'égalité exacte (insensible à la casse)
   const exactMatch = answer.value.trim().toLowerCase() === props.step.answer.toLowerCase();
   
@@ -205,12 +212,14 @@ function goToPreviousStep() {
       <div class="riddle-input">
         <v-text-field
           v-model="answer"
-          label="Votre réponse"
+          label="Ta réponse"
           variant="outlined"
           color="var(--pokemon-red)"
           bg-color="var(--pokemon-gray-200)"
           class="pokemon-input"
-          hide-details="auto"
+          :error-messages="feedback && !isFeedbackSuccess ? feedback : ''"
+          :success="isFeedbackSuccess"
+          :success-messages="isFeedbackSuccess ? feedback : ''"
           @keyup.enter="check"
           aria-describedby="hint"
           persistent-placeholder
@@ -272,13 +281,7 @@ function goToPreviousStep() {
         @skip="onPhotoSkipped"
       />
       
-      <!-- Feedback text -->
-      <div v-if="feedback" class="feedback-container" :class="{ 'success-feedback': isFeedbackSuccess, 'error-feedback': !isFeedbackSuccess }">
-        <v-icon :color="isFeedbackSuccess ? 'success' : 'error'" class="feedback-icon">
-          {{ isFeedbackSuccess ? 'mdi-check-circle' : 'mdi-alert-circle' }}
-        </v-icon>
-        <p aria-live="polite" class="feedback-text whitespace-pre-line">{{ feedback }}</p>
-      </div>
+      <!-- Pas besoin du feedback séparé puisqu'il est intégré au champ texte -->
     </div>
   </section>
 </template>
