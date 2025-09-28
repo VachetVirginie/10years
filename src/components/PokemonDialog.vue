@@ -141,10 +141,27 @@ onMounted(() => {
   position: relative;
   display: flex;
   min-height: 120px;
-  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong),
+              0 0 15px rgba(255, 61, 40, 0.15);
   transition: var(--glass-transition);
   backdrop-filter: blur(var(--glass-blur-medium));
   -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.dialog-frame::before {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 61, 40, 0.05) 0%, transparent 70%);
+  top: -50px;
+  right: -50px;
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .dialog-avatar {
@@ -152,13 +169,25 @@ onMounted(() => {
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--glass-border-light);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   margin-right: 16px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
-  box-shadow: 0 4px 12px var(--glass-shadow-medium);
+  box-shadow: 0 4px 12px var(--glass-shadow-medium),
+              0 0 10px rgba(255, 61, 40, 0.2);
   transition: var(--glass-transition);
   transform: translateZ(0);
+  position: relative;
+}
+
+.dialog-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 80%);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .dialog-avatar:hover {
@@ -179,10 +208,10 @@ onMounted(() => {
 }
 
 .dialog-speaker {
-  background: var(--glass-pokemon-red);
+  background: linear-gradient(135deg, var(--glass-pokemon-red), rgba(200, 30, 30, 0.8));
   color: var(--pokemon-white);
   font-weight: bold;
-  padding: 6px 14px;
+  padding: 6px 16px;
   border-radius: 20px;
   display: inline-block;
   margin-bottom: 10px;
@@ -192,7 +221,20 @@ onMounted(() => {
   box-shadow: 0 2px 10px rgba(255, 0, 0, 0.2);
   backdrop-filter: blur(var(--glass-blur-light));
   -webkit-backdrop-filter: blur(var(--glass-blur-light));
-  letter-spacing: 0.02em;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dialog-speaker::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
+  border-radius: 20px 20px 0 0;
 }
 
 .dialog-text {

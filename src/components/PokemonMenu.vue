@@ -161,21 +161,24 @@ navigateFirst();
   background-color: rgba(33, 33, 33, 0.7);
   border: 1px solid var(--glass-border-light);
   border-radius: 16px;
-  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong),
+              0 0 15px rgba(255, 61, 40, 0.15);
   padding: 8px;
   overflow: hidden;
   backdrop-filter: blur(var(--glass-blur-medium));
   -webkit-backdrop-filter: blur(var(--glass-blur-medium));
   transition: var(--glass-transition);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .pokemon-menu:hover .menu-frame {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px var(--glass-shadow-strong);
+  box-shadow: 0 12px 32px var(--glass-shadow-strong),
+              0 0 20px rgba(255, 61, 40, 0.25);
 }
 
 .menu-header {
-  background: var(--glass-pokemon-red);
+  background: linear-gradient(135deg, var(--glass-pokemon-red), rgba(200, 30, 30, 0.8));
   color: var(--pokemon-white);
   text-align: center;
   padding: 12px;
@@ -183,7 +186,7 @@ navigateFirst();
   border-radius: 10px 10px 0 0;
   text-transform: uppercase;
   font-size: 0.95rem;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   margin-bottom: 4px;
   font-family: 'Press Start 2P', 'Courier New', monospace;
   border-bottom: 1px solid var(--glass-border-light);
@@ -228,10 +231,22 @@ navigateFirst();
 }
 
 .item-selected {
-  background: var(--glass-bg-medium);
-  border: 1px solid var(--glass-border-light);
-  box-shadow: 0 4px 15px var(--glass-shadow-medium);
+  background: linear-gradient(135deg, rgba(40, 40, 40, 0.8), rgba(60, 60, 60, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px var(--glass-shadow-medium),
+              0 0 10px rgba(255, 61, 40, 0.2);
   transform: translateY(-2px);
+  position: relative;
+}
+
+.item-selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 61, 40, 0.5), transparent);
 }
 
 .menu-item:hover:not(.item-selected):not(.item-disabled) {

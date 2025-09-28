@@ -249,7 +249,7 @@ function resetHunt() {
           <span class="progress-text">Étape {{ stepNumber }}/{{ totalSteps }}</span>
           <span class="progress-percentage" :class="getProgressClass(progressPercentage)">{{ progressPercentage }}%</span>
         </div>
-        <div class="progress-bar glass-progress-bar">
+        <!-- <div class="progress-bar glass-progress-bar">
           <div 
             class="progress-fill" 
             :class="getProgressClass(progressPercentage)"
@@ -257,7 +257,7 @@ function resetHunt() {
           >
             <div class="progress-shine"></div>
           </div>
-        </div>
+        </div> -->
       </div>
       
       <!-- <div class="step-info d-flex align-center justify-center mb-4">

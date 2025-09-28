@@ -224,6 +224,7 @@ function resetIntro() {
 @import '../assets/glassmorphism.css';
 .pokemon-home {
   background: var(--pokemon-black);
+  background-image: radial-gradient(circle at 80% 20%, rgba(255, 61, 40, 0.08), transparent 250px);
   min-height: 100vh;
   padding: 16px;
   color: var(--pokemon-white);
@@ -241,6 +242,8 @@ function resetIntro() {
   backdrop-filter: blur(var(--glass-blur-medium));
   -webkit-backdrop-filter: blur(var(--glass-blur-medium));
   transition: var(--glass-transition);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
+              0 0 15px rgba(255, 61, 40, 0.2);
 }
 
 .pokemon-hero:hover {
@@ -271,6 +274,7 @@ function resetIntro() {
   text-shadow: 0 0 10px var(--glass-pokemon-red), 0 0 20px rgba(255, 61, 40, 0.5);
   position: relative;
   display: inline-block;
+  letter-spacing: 1px;
 }
 
 .pokemon-main-title::after {
@@ -289,9 +293,15 @@ function resetIntro() {
   font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
-  margin-top: 5px;
+  letter-spacing: 0.8px;
+  margin-top: 10px;
   position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 40px;
+  display: inline-block;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 /* Progress bar styles */
