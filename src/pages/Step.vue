@@ -177,20 +177,27 @@ function resetHunt() {
   />
   
   <main class="pokemon-step" v-if="step">
+    <!-- Particules d'ambiance -->
+    <div class="glass-particles">
+      <div class="glass-particle"></div>
+      <div class="glass-particle"></div>
+      <div class="glass-particle"></div>
+      <div class="glass-particle"></div>
+      <div class="glass-particle"></div>
+    </div>
+    
     <!-- En-tête de l'étape -->
-    <div class="step-header pa-4">
+    <div class="step-header pa-4 glass-card">
       <div class="step-progress mb-4">
         <div class="progress-info d-flex justify-space-between align-center mb-2">
           <span class="progress-text text-caption">Étape {{ stepNumber }} sur {{ totalSteps }}</span>
           <span class="progress-percentage text-caption">{{ progressPercentage }}%</span>
         </div>
-        <v-progress-linear 
-          :model-value="progressPercentage" 
-          color="#fbbf24" 
-          bg-color="rgba(255,255,255,0.3)"
-          height="8"
-          rounded
-        ></v-progress-linear>
+        <div class="progress-bar glass-progress-bar">
+          <div class="progress-fill glass-progress-fill" :style="{ width: progressPercentage + '%' }">
+            <div class="progress-shine"></div>
+          </div>
+        </div>
       </div>
       
       <!-- <div class="step-info d-flex align-center justify-center mb-4">
@@ -214,7 +221,7 @@ function resetHunt() {
     
     <!-- Contenu de l'étape -->
     <div class="step-content pa-4">
-      <v-card class="content-card" elevation="8">
+      <v-card class="content-card glass-dialog" elevation="0">
         <div class="pa-4">
           <component :is="step.type==='riddle' ? RiddleStep
                      : ChoiceStep"
@@ -227,32 +234,48 @@ function resetHunt() {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .pokemon-step {
   background: var(--pokemon-black);
   min-height: 100vh;
   position: relative;
   color: var(--pokemon-white);
+  padding: 10px;
+  background-image: radial-gradient(circle at center, rgba(50, 50, 50, 0.8) 0%, rgba(20, 20, 20, 0.95) 70%);
 }
 
 .step-header {
-  background: var(--pokemon-black);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
+  background: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   margin-bottom: 24px;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
+}
+
+.step-header:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .progress-text, .progress-percentage {
   color: #ffffff;
   font-weight: 600;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
 }
 
 .step-badge {
-  background: var(--pokemon-gray-200);
-  border-radius: 12px;
-  border: 2px solid var(--pokemon-red);
-  transition: all 0.2s ease;
-  box-shadow: 0 0 10px rgba(255, 61, 40, 0.3);
+  background: rgba(40, 40, 40, 0.7);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border-light);
+  transition: var(--glass-transition);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .step-badge:hover {
@@ -279,14 +302,32 @@ function resetHunt() {
 }
 
 .content-card {
-  border-radius: 12px;
-  background: var(--pokemon-black);
-  transition: all 0.2s ease;
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
+  border-radius: 20px;
+  background: rgba(33, 33, 33, 0.7);
+  transition: var(--glass-transition);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  overflow: hidden;
+  position: relative;
 }
 
 .content-card:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.content-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  pointer-events: none;
+  border-radius: 20px;
 }
 
 .step-navigation {
@@ -295,10 +336,13 @@ function resetHunt() {
 }
 
 .nav-card {
-  background: var(--pokemon-gray-100);
-  border-radius: 16px;
-  border: 2px solid var(--pokemon-red);
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
+  background: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
 }
 
 .nav-buttons {
@@ -306,17 +350,40 @@ function resetHunt() {
 }
 
 .nav-btn {
-  border-radius: 8px;
+  border-radius: 30px;
   font-weight: 500;
   text-transform: none;
-  letter-spacing: -0.025em;
-  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+  transition: var(--glass-transition);
   min-width: 140px;
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-btn:hover::before {
+  opacity: 1;
 }
 
 /* Responsive design */
@@ -332,13 +399,53 @@ function resetHunt() {
   }
 }
 
-/* Animation pour le badge d'étape */
+/* Animations */
 @keyframes badgePulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
 }
 
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
 .step-badge:hover .step-icon {
   animation: badgePulse 1s ease-in-out infinite;
+}
+
+/* Ajout des styles pour la barre de progression */
+.progress-bar {
+  height: 10px;
+  background-color: rgba(30, 30, 30, 0.6);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border-light);
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.8), rgba(255, 200, 0, 0.8));
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.progress-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shine 2s infinite;
 }
 </style>

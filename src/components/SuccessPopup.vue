@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="success-popup-overlay">
-    <div class="success-popup">
+    <div class="success-popup glass-card">
       <div class="success-popup-header">
         <h2 class="success-title">{{ title }}</h2>
       </div>
@@ -15,7 +15,7 @@
           color="var(--pokemon-blue)"
           variant="elevated"
           @click="showPhotoBonus"
-          class="photo-bonus-btn"
+          class="photo-bonus-btn glass-button"
           rounded="pill"
         >
           <v-icon start>mdi-camera</v-icon>
@@ -29,7 +29,7 @@
             color="var(--pokemon-gray-300)" 
             variant="outlined" 
             @click="previousStep" 
-            class="nav-btn prev-btn"
+            class="nav-btn prev-btn glass-button"
             :disabled="!props.hasPreviousStep"
           >
             <v-icon start>mdi-arrow-left</v-icon>
@@ -40,7 +40,7 @@
             color="var(--pokemon-red)" 
             variant="elevated" 
             @click="nextStep" 
-            class="nav-btn next-btn"
+            class="nav-btn next-btn glass-button"
           >
             <v-icon start>mdi-arrow-right</v-icon>
             Suivante
@@ -82,6 +82,7 @@ const showPhotoBonus = () => {
 </script>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 /* Variables CSS pour le thème Pokémon */
 :root {
   --pokemon-blue: #2196F3;
@@ -102,32 +103,68 @@ const showPhotoBonus = () => {
 }
 
 .success-popup {
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
+  background: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
-  border: 2px solid var(--pokemon-red);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  border: 1px solid var(--glass-border-light);
   overflow: hidden;
   animation: popup-appear 0.3s ease-out;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
+  position: relative;
+}
+
+.success-popup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  pointer-events: none;
+  border-radius: 20px;
 }
 
 .success-popup-header {
-  background-color: var(--pokemon-red);
+  background: var(--glass-pokemon-red);
   color: white;
-  padding: 15px 20px;
+  padding: 18px 20px;
   text-align: center;
+  border-bottom: 1px solid var(--glass-border-light);
+  position: relative;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.success-popup-header::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15), transparent 70%);
+  pointer-events: none;
 }
 
 .success-title {
   margin: 0;
   font-size: 1.5rem;
   font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
 }
 
 .success-popup-content {
-  padding: 20px;
+  padding: 25px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .success-icon {
@@ -147,7 +184,10 @@ const showPhotoBonus = () => {
   padding: 15px 20px;
   display: flex;
   justify-content: center;
-  border-top: 1px solid var(--pokemon-gray-300);
+  border-top: 1px solid var(--glass-border-light);
+  background: rgba(40, 40, 40, 0.3);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .nav-buttons {
@@ -160,6 +200,19 @@ const showPhotoBonus = () => {
 .nav-btn {
   min-width: 120px;
   margin: 0 5px;
+  border-radius: 30px;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: var(--glass-transition);
+}
+
+.nav-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .next-btn {
@@ -178,16 +231,39 @@ const showPhotoBonus = () => {
 
 .photo-bonus-btn {
   width: 100%;
-  margin-bottom: 5px;
-  background-color: var(--pokemon-blue, #2196F3) !important;
+  margin-bottom: 8px;
+  background: rgba(33, 150, 243, 0.7) !important;
   color: white !important;
   font-weight: bold;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--glass-transition);
+  border-radius: 30px;
+  backdrop-filter: blur(var(--glass-blur-light)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-light)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3) !important;
+  position: relative;
+  overflow: hidden;
 }
 
 .photo-bonus-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5) !important;
+}
+
+.photo-bonus-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-bonus-btn:hover::before {
+  opacity: 1;
 }
 
 @keyframes popup-appear {
