@@ -1,23 +1,37 @@
 <template>
   <transition name="fade">
     <div v-if="visible" class="enigme-splash">
-      <div class="enigme-content">
+      <!-- Particules d'ambiance -->
+      <div class="glass-particles">
+        <div class="glass-particle"></div>
+        <div class="glass-particle"></div>
+        <div class="glass-particle"></div>
+        <div class="glass-particle"></div>
+        <div class="glass-particle"></div>
+        <div class="glass-particle"></div>
+      </div>
+      <div class="enigme-content glass-card">
         <div class="enigme-image">
           <!-- Image d'illustration selon le type d'énigme depuis le dossier public -->
           <img v-if="step.type === 'riddle'" src="../assets/images/pokemon/luv.png" alt="Énigme" />
           <img v-else-if="step.type === 'choice'" src="/images/pokemon/choice.svg" alt="Choix" />
           <img v-else src="/images/pokemon/pokeball.svg" alt="Étape" />
         </div>
-        <h1 class="enigme-title">Énigme {{ step.id }}</h1>
-        <h2 class="enigme-subtitle">{{ step.splash }}</h2>
+        <div class="enigme-info">
+          <h1 class="enigme-title">Énigme {{ step.id }}</h1>
+          <div class="title-underline"></div>
+          <h2 class="enigme-subtitle">{{ step.splash }}</h2>
+        </div>
         <div class="progress-container">
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+          <div class="progress-bar glass-progress-bar">
+            <div class="progress-fill glass-progress-fill" :style="{ width: progress + '%' }">
+              <div class="progress-shine"></div>
+            </div>
           </div>
         </div>
         
         <!-- Bouton pour passer l'animation -->
-        <button @click="skipAnimation" class="skip-button">
+        <button @click="skipAnimation" class="skip-button glass-button">
           PASSER
         </button>
       </div>
@@ -127,6 +141,7 @@ body, html {
 </style>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 
 .enigme-splash {
   position: fixed;
@@ -138,18 +153,21 @@ body, html {
   /* Hauteur de base */
   height: 100vh;
   min-height: -webkit-fill-available; /* Support pour iOS */
-  background-color: var(--pokemon-black, #212121);
+  background-color: rgba(33, 33, 33, 0.9);
+  background-image: radial-gradient(circle at center, rgba(50, 50, 50, 0.8) 0%, rgba(20, 20, 20, 0.95) 70%);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   padding: 0; /* Retirer le padding ici */
   box-sizing: border-box;
-  overflow: auto; /* Permettre le défilement si nécessaire */
+  overflow: hidden; /* Permettre le défilement si nécessaire */
   touch-action: auto; /* Permettre les gestes tactiles */
   pointer-events: auto !important;
   isolation: isolate;
   will-change: transform;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .enigme-content {
@@ -165,6 +183,27 @@ body, html {
   overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
   -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
   scrollbar-width: none; /* Cacher la barre de défilement sur Firefox */
+  background-color: rgba(33, 33, 33, 0.7);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  transition: var(--glass-transition);
+  position: relative;
+}
+
+.enigme-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  border-radius: 20px;
+  pointer-events: none;
 }
 
 /* Cacher la barre de défilement pour Chrome, Safari et Edge */
@@ -175,64 +214,134 @@ body, html {
 .enigme-image {
   margin-bottom: 30px;
   animation: bounce 1s infinite alternate ease-in-out;
+  background: rgba(0, 0, 0, 0.3);
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border-light);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.enigme-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shine 3s infinite;
 }
 
 .enigme-image img {
-  width: 100px;
-  height: 100px;
-  filter: drop-shadow(0 0 10px rgba(255, 69, 58, 0.6));
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 0 15px rgba(255, 69, 58, 0.8));
+  z-index: 2;
+  transform: scale(1.1);
+}
+
+.enigme-info {
+  position: relative;
+  margin-bottom: 25px;
 }
 
 .enigme-title {
   font-size: 2.5rem;
-  color: var(--pokemon-red, #E3350D);
-  margin: 0 0 10px;
-  text-shadow: 0 0 10px rgba(255, 69, 58, 0.5);
+  color: white;
+  margin: 0 0 15px;
+  text-shadow: 0 0 10px var(--glass-pokemon-red), 0 0 20px rgba(255, 69, 58, 0.5);
   font-weight: bold;
+  letter-spacing: 0.5px;
+  position: relative;
+  display: inline-block;
+}
+
+.title-underline {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--glass-pokemon-red), transparent);
+  margin: 0 auto 15px;
+  border-radius: 3px;
 }
 
 .enigme-subtitle {
   font-size: 1.5rem;
   color: var(--pokemon-white, #FFFFFF);
-  margin: 0 0 30px;
+  margin: 0;
   opacity: 0.9;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
 }
 
 .progress-container {
-  width: 80%;
-  max-width: 300px;
-  margin-top: 20px;
+  width: 85%;
+  max-width: 320px;
+  margin-top: 35px;
+  position: relative;
 }
 
 .progress-bar {
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  height: 10px;
+  background-color: rgba(30, 30, 30, 0.6);
+  border-radius: 20px;
   overflow: hidden;
+  border: 1px solid var(--glass-border-light);
+  position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: var(--pokemon-red, #E3350D);
+  background: linear-gradient(to right, rgba(255, 107, 107, 0.9), var(--glass-pokemon-red));
   width: 0%;
   transition: width 0.1s linear;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 61, 40, 0.7);
 }
 
 .skip-button {
-  margin-top: 20px;
-  padding: 8px 16px;
-  background-color: var(--pokemon-red, #E3350D);
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: var(--glass-pokemon-red);
   color: white;
-  border: none;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
   font-size: 14px;
   cursor: pointer;
   font-weight: bold;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
+  letter-spacing: 0.5px;
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .skip-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+}
+
+.skip-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.5s ease-out, opacity 0.3s ease;
+}
+
+.skip-button:hover::before {
+  transform: scale(1);
   opacity: 1;
 }
 
@@ -240,6 +349,11 @@ body, html {
 @keyframes bounce {
   0% { transform: translateY(0); }
   100% { transform: translateY(-10px); }
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 /* Transition d'entrée/sortie */
