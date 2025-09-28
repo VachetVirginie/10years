@@ -308,6 +308,7 @@ body, html {
 
 .skip-button {
   margin-top: 30px;
+  margin-bottom: 30px;
   padding: 12px 24px;
   background: var(--glass-pokemon-red);
   color: white;

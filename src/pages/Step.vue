@@ -104,6 +104,13 @@ const getStepTypeLabel = (type: string) => {
   }
 }
 
+// Fonction pour obtenir la classe de couleur en fonction du pourcentage
+const getProgressClass = (percentage: number) => {
+  if (percentage >= 66) return 'green'
+  if (percentage >= 33) return 'orange'
+  return 'red'
+}
+
 function goNext() {
   if (!canGoNext.value) return
   const currentIndex = stepNumber.value - 1
@@ -200,15 +207,54 @@ function resetHunt() {
       <div class="glass-particle"></div>
     </div>
     
-    <!-- En-tête de l'étape -->
+    <!-- En-tête de l'étape amélioré -->
     <div class="step-header pa-4 glass-card">
-      <div class="step-progress mb-4">
+      <div class="step-progress">
+        <!-- Étape et badges -->
+        <div class="step-journey mb-4">
+          <div class="step-badges-container">
+            <div 
+              v-for="n in totalSteps" 
+              :key="n"
+              class="step-badge-dot"
+              :class="{
+                'completed': n < stepNumber,
+                'current': n === stepNumber,
+                'future': n > stepNumber
+              }"
+            >
+              <span class="step-number">{{ n }}</span>
+              <div class="connection-line" v-if="n < totalSteps"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Information d'étape -->
+        <div class="step-info-panel mb-3">
+          <div class="step-info-content">
+            <div class="step-title-row">
+              <div class="step-icon-container">
+                <div class="step-icon">{{ getStepTypeIcon(step.type) }}</div>
+              </div>
+              <div class="step-title-container">
+                <h3 class="step-title">{{ step.title || `Étape ${stepNumber}` }}</h3>
+                <div class="step-type">{{ getStepTypeLabel(step.type) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barre de progression améliorée -->
         <div class="progress-info d-flex justify-space-between align-center mb-2">
-          <span class="progress-text text-caption">Étape {{ stepNumber }} sur {{ totalSteps }}</span>
-          <span class="progress-percentage text-caption">{{ progressPercentage }}%</span>
+          <span class="progress-text">Étape {{ stepNumber }}/{{ totalSteps }}</span>
+          <span class="progress-percentage" :class="getProgressClass(progressPercentage)">{{ progressPercentage }}%</span>
         </div>
         <div class="progress-bar glass-progress-bar">
-          <div class="progress-fill glass-progress-fill" :style="{ width: progressPercentage + '%' }">
+          <div 
+            class="progress-fill" 
+            :class="getProgressClass(progressPercentage)"
+            :style="{ width: progressPercentage + '%' }"
+          >
             <div class="progress-shine"></div>
           </div>
         </div>
@@ -267,6 +313,8 @@ function resetHunt() {
   backdrop-filter: blur(var(--glass-blur-medium));
   -webkit-backdrop-filter: blur(var(--glass-blur-medium));
   transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
 }
 
 .step-header:hover {
@@ -274,12 +322,143 @@ function resetHunt() {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-.progress-text, .progress-percentage {
+.step-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, #536DFE, #FF4081, #FF5252, #FF9800);
+  z-index: 5;
+  opacity: 0.8;
+  animation: gradient 3s ease infinite;
+  background-size: 300% 300%;
+}
+
+.progress-text {
   color: #ffffff;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.5px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+}
+
+.progress-percentage {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+  font-size: 1rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.step-badges-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  padding: 5px 30px;
+  margin-bottom: 10px;
+}
+
+.step-badge-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(60, 60, 60, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+  transition: var(--glass-transition);
+  border: 1px solid var(--glass-border-light);
+}
+
+.step-badge-dot.completed {
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.8), rgba(120, 255, 60, 0.8));
+  box-shadow: 0 0 15px rgba(58, 223, 0, 0.5);
+}
+
+.step-badge-dot.current {
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.8), rgba(255, 200, 0, 0.8));
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+  transform: scale(1.2);
+  animation: pulse 1.5s infinite;
+}
+
+.step-badge-dot.future {
+  background: rgba(80, 80, 80, 0.4);
+}
+
+.step-number {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.connection-line {
+  position: absolute;
+  top: 50%;
+  right: -100%;
+  width: 100%;
+  height: 3px;
+  background-color: rgba(80, 80, 80, 0.4);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.step-badge-dot.completed .connection-line {
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.6), rgba(58, 223, 0, 0.3));
+}
+
+.step-info-panel {
+  background: rgba(50, 50, 50, 0.5);
+  border-radius: 16px;
+  padding: 15px;
+  margin: 10px 0;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+}
+
+.step-title-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.step-icon-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(60, 60, 60, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border-light);
+}
+
+.step-title-container {
+  flex: 1;
+}
+
+.step-title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.step-icon {
+  font-size: 1.5rem;
+  animation: float 2s infinite alternate ease-in-out;
 }
 
 .step-badge {
@@ -424,19 +603,33 @@ function resetHunt() {
   100% { left: 100%; }
 }
 
-.step-badge:hover .step-icon {
-  animation: badgePulse 1s ease-in-out infinite;
+@keyframes pulse {
+  0% { transform: scale(1.2); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1.2); }
 }
 
-/* Ajout des styles pour la barre de progression */
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Styles améliorés pour la barre de progression */
 .progress-bar {
-  height: 10px;
+  height: 12px;
   background-color: rgba(30, 30, 30, 0.6);
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--glass-border-light);
   position: relative;
   margin-bottom: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .progress-fill {
@@ -446,6 +639,35 @@ function resetHunt() {
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+  transition: width 0.5s ease-out;
+}
+
+/* Classes pour les différents états de la barre de progression */
+.progress-fill.green {
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.8), rgba(120, 255, 60, 0.8));
+  box-shadow: 0 0 10px rgba(58, 223, 0, 0.5);
+}
+
+.progress-fill.orange {
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.8), rgba(255, 200, 0, 0.8));
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.progress-fill.red {
+  background: linear-gradient(to right, rgba(255, 0, 0, 0.8), rgba(255, 70, 70, 0.8));
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.progress-percentage.green {
+  background-color: rgba(58, 223, 0, 0.3);
+}
+
+.progress-percentage.orange {
+  background-color: rgba(255, 165, 0, 0.3);
+}
+
+.progress-percentage.red {
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 .progress-shine {
