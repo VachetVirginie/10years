@@ -69,21 +69,57 @@
   justify-content: center;
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
+  padding: 10px 0;
+  position: relative;
 }
 
 .pokeball-icon {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   animation: float 3s infinite ease-in-out alternate;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  z-index: 2;
+  position: relative;
+  transform-style: preserve-3d;
 }
 
 .quest-title {
-  color: var(--pokemon-red);
+  color: white;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   margin: 0;
   text-align: center;
-  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+  text-shadow: 0 2px 10px rgba(255, 61, 40, 0.6);
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--glass-pokemon-red), rgba(200, 30, 30, 0.8));
+  border-radius: 50px;
+  display: inline-block;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2);
+  transform: translateZ(0);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.quest-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50px 50px 0 0;
+  pointer-events: none;
+}
+
+.quest-header:hover .quest-title {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
 }
 
 /* Carte de quête */
@@ -198,8 +234,9 @@
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-5px); }
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+  100% { transform: translateY(-10px) rotate(-2deg); }
 }
 
 @keyframes pulse {
@@ -240,14 +277,40 @@
   filter: drop-shadow(0 0 5px var(--pokemon-red));
 }
 
+/* Animation spécifique pour les pokéballs */
+.quest-header img:first-of-type {
+  animation: float-left 3s infinite ease-in-out alternate;
+}
+
+.quest-header img:last-of-type {
+  animation: float-right 3s infinite ease-in-out alternate;
+}
+
+@keyframes float-left {
+  0% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(-3deg); }
+  70% { transform: translateY(-6px) rotate(2deg); }
+  100% { transform: translateY(-8px) rotate(-5deg); }
+}
+
+@keyframes float-right {
+  0% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(3deg); }
+  70% { transform: translateY(-6px) rotate(-2deg); }
+  100% { transform: translateY(-8px) rotate(5deg); }
+}
+
 /* Responsive */
 @media (max-width: 600px) {
-  .quest-container {
+  .quest-card, .quest-header {
     padding: var(--spacing-md);
   }
   
   .quest-title {
     font-size: var(--font-size-lg);
+    padding: 8px 16px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(255, 0, 0, 0.2);
   }
   
   .quest-content {

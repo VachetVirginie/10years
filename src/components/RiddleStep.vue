@@ -92,6 +92,13 @@ function calculateSimilarity(str1: string, str2: string): number {
 
 // Fonction pour vérifier la réponse
 function check() {
+  // Vérifier d'abord si une réponse a été saisie
+  if (!answer.value || answer.value.trim() === '') {
+    isFeedbackSuccess.value = false
+    feedback.value = 'Tu dois saisir une réponse.'
+    return
+  }
+  
   // Validation directe en cas d'égalité exacte (insensible à la casse)
   const exactMatch = answer.value.trim().toLowerCase() === props.step.answer.toLowerCase();
   
@@ -133,10 +140,16 @@ function goToNextStep() {
   // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
     const currentId = Number(props.step.id)
-    const nextId = currentId + 1
     
-    // Utiliser la fonction injectée pour naviguer avec le splash
-    emit('navigate', nextId)
+    // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
+    if (currentId === 7) {
+      // Naviguer vers l'écran de fin de mission
+      emit('navigate', 'end')
+    } else {
+      // Sinon passer à l'étape suivante normalement
+      const nextId = currentId + 1
+      emit('navigate', nextId)
+    }
   }, 300)
 }
 
@@ -186,9 +199,9 @@ function goToPreviousStep() {
 <template>
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
       <h2 class="quest-title">Énigme Pokémon</h2>
-      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
     </div>
 
     <div class="riddle-content">
@@ -199,12 +212,14 @@ function goToPreviousStep() {
       <div class="riddle-input">
         <v-text-field
           v-model="answer"
-          label="Votre réponse"
+          label="Ta réponse"
           variant="outlined"
           color="var(--pokemon-red)"
           bg-color="var(--pokemon-gray-200)"
           class="pokemon-input"
-          hide-details="auto"
+          :error-messages="feedback && !isFeedbackSuccess ? feedback : ''"
+          :success="isFeedbackSuccess"
+          :success-messages="isFeedbackSuccess ? feedback : ''"
           @keyup.enter="check"
           aria-describedby="hint"
           persistent-placeholder
@@ -217,11 +232,10 @@ function goToPreviousStep() {
       
       <div class="riddle-actions">
         <v-btn 
-          color="var(--pokemon-red)" 
           @click="check"
-          class="quest-button"
+          class="quest-button glass-button"
           rounded="pill"
-          elevation="3"
+          elevation="0"
           min-width="120"
         >
           <v-icon start>mdi-check</v-icon>
@@ -267,36 +281,64 @@ function goToPreviousStep() {
         @skip="onPhotoSkipped"
       />
       
-      <!-- Feedback text -->
-      <div v-if="feedback" class="feedback-container" :class="{ 'success-feedback': isFeedbackSuccess, 'error-feedback': !isFeedbackSuccess }">
-        <v-icon :color="isFeedbackSuccess ? 'success' : 'error'" class="feedback-icon">
-          {{ isFeedbackSuccess ? 'mdi-check-circle' : 'mdi-alert-circle' }}
-        </v-icon>
-        <p aria-live="polite" class="feedback-text whitespace-pre-line">{{ feedback }}</p>
-      </div>
+      <!-- Pas besoin du feedback séparé puisqu'il est intégré au champ texte -->
     </div>
   </section>
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .riddle-container {
   max-width: 600px;
   margin: 0 auto;
 }
 
 .riddle-content {
-  background: var(--pokemon-gray-100);
-  border-radius: 12px;
-  padding: 20px;
+  background: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
   margin-top: 20px;
-  box-shadow: 0 0 15px rgba(255, 61, 40, 0.3);
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  position: relative;
+  transition: var(--glass-transition);
+}
+
+.riddle-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  border-radius: 20px;
+  pointer-events: none;
 }
 
 .riddle-prompt {
-  margin-bottom: 20px;
-  background: var(--pokemon-gray-200);
-  border-radius: 8px;
-  padding: 15px;
+  margin-bottom: 25px;
+  background: rgba(50, 50, 50, 0.6);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.riddle-prompt::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shine 5s infinite;
 }
 
 .riddle-prompt h3 {
@@ -312,10 +354,20 @@ function goToPreviousStep() {
 }
 
 .pokemon-input {
-  background-color: var(--pokemon-gray-200);
-  border-radius: 8px;
+  border-radius: 16px;
+  margin: 20px;
   overflow: hidden;
   padding-top: 4px;
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--glass-transition);
+}
+
+.pokemon-input:focus-within {
+  box-shadow: 0 6px 20px rgba(255, 61, 40, 0.3);
+  transform: translateY(-2px);
 }
 
 .pokemon-input :deep(.v-field__outline) {
@@ -337,6 +389,7 @@ function goToPreviousStep() {
   gap: 15px;
   margin-bottom: 15px;
   flex-wrap: wrap;
+  padding-bottom: 20px;
 }
 
 .hint-button {
@@ -344,13 +397,35 @@ function goToPreviousStep() {
 }
 
 .hint-box {
-  background: var(--pokemon-gray-200);
-  border-radius: 10px;
-  padding: 12px 15px;
-  margin: 15px 0;
+  background: rgba(50, 50, 50, 0.6);
+  border-radius: 16px;
+  padding: 15px 18px;
+  margin: 18px 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.hint-box::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hint-box:hover::after {
+  opacity: 1;
 }
 
 .hint-icon {
@@ -369,19 +444,26 @@ function goToPreviousStep() {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 15px;
-  padding: 10px 15px;
-  border-radius: 8px;
+  margin-top: 18px;
+  padding: 15px 18px;
+  border-radius: 16px;
+  transition: var(--glass-transition);
 }
 
 .success-feedback {
   background: rgba(76, 175, 80, 0.2);
-  border: 1px solid #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);
 }
 
 .error-feedback {
   background: rgba(244, 67, 54, 0.2);
-  border: 1px solid #F44336;
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
 }
 
 .feedback-icon {

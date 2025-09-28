@@ -163,10 +163,16 @@ function goToNextStep() {
   // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
     const currentId = Number(props.step.id);
-    const nextId = currentId + 1;
     
-    // Utiliser la fonction injectée pour naviguer avec le splash
-    emit('navigate', nextId);
+    // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
+    if (currentId === 7) {
+      // Naviguer vers l'écran de fin de mission
+      emit('navigate', 'end');
+    } else {
+      // Sinon passer à l'étape suivante normalement
+      const nextId = currentId + 1;
+      emit('navigate', nextId);
+    }
   }, 300);
 }
 
@@ -217,13 +223,13 @@ function toggleHint() {
   <div class="quest-container">
     <!-- En-tête du combat -->
     <div class="quest-header">
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon" />
       <h2 class="quest-title">Combat de Dresseurs</h2>
-      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon animate-float" />
+      <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon" />
     </div>
     
     <!-- Écran de bataille Pokémon -->
-    <v-card class="quest-card" elevation="8">
+    <v-card class="quest-card glass-card" elevation="0">
       <!-- Écran d'intro -->
       <div v-if="battleState === 'intro'" class="intro-screen">
         <div class="intro-content">
@@ -234,7 +240,7 @@ function toggleHint() {
           </div>
           <img :src="playerInfo.avatar" alt="Ton avatar" class="trainer-avatar player-avatar" />
         </div>
-        <v-btn color="var(--pokemon-red)" @click="startBattle" class="quest-button" rounded="pill">
+        <v-btn @click="startBattle" class="quest-button glass-button" rounded="pill" elevation="0">
           <span class="btn-text">Commencer le combat !</span>
         </v-btn>
       </div>
@@ -310,11 +316,11 @@ function toggleHint() {
           </div>
           <div class="attack-actions">
             <v-btn 
-              color="var(--pokemon-red)" 
               @click="useAttack" 
               :disabled="selected === null || animationInProgress"
-              class="quest-button"
+              class="quest-button glass-button"
               rounded="pill"
+              elevation="0"
             >
               Utiliser l'attaque
             </v-btn>
@@ -408,6 +414,7 @@ function toggleHint() {
 </template>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 /* Styles pour le combat Pokémon */
 
 .intro-screen {
@@ -416,7 +423,23 @@ function toggleHint() {
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-lg);
-  background: var(--pokemon-gray-100);
+  background: rgba(33, 33, 33, 0.7);
+  border-radius: 20px;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  pointer-events: none;
 }
 
 .intro-content {
@@ -431,9 +454,16 @@ function toggleHint() {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--pokemon-red);
-  background-color: var(--pokemon-gray-200);
-  box-shadow: 0 0 10px rgba(255, 61, 40, 0.3);
+  border: 2px solid var(--glass-border-light);
+  background-color: rgba(50, 50, 50, 0.6);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: var(--glass-transition);
+  position: relative;
+}
+
+.trainer-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 61, 40, 0.3);
 }
 
 .player-avatar {
@@ -441,12 +471,21 @@ function toggleHint() {
 }
 
 .intro-message {
-  background: var(--pokemon-gray-200);
-  border-radius: var(--border-radius-md);
+  background: rgba(50, 50, 50, 0.6);
+  border-radius: 16px;
   padding: var(--spacing-md);
   flex: 1;
   position: relative;
-  border: 2px solid var(--pokemon-red);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--glass-transition);
+}
+
+.intro-message:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 .battle-text {
@@ -467,12 +506,14 @@ function toggleHint() {
   align-items: center;
   padding: var(--spacing-md);
   position: relative;
-  background: var(--pokemon-gray-100);
+  background: rgba(33, 33, 33, 0.7);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .opponent-area {
   justify-content: space-between;
-  border-bottom: 2px dashed var(--pokemon-gray-300);
+  border-bottom: 1px solid var(--glass-border-light);
 }
 
 .player-area {
@@ -506,11 +547,20 @@ function toggleHint() {
 
 /* Stats Pokémon */
 .pokemon-stats {
-  background: var(--pokemon-gray-200);
-  border: 2px solid var(--pokemon-red);
-  border-radius: var(--border-radius-md);
+  background: rgba(50, 50, 50, 0.6);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
   padding: var(--spacing-sm);
   min-width: 180px;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--glass-transition);
+}
+
+.pokemon-stats:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .stats-header {
@@ -546,15 +596,32 @@ function toggleHint() {
 .hp-container {
   flex: 1;
   height: 8px;
-  background: var(--pokemon-gray-300);
-  border-radius: 4px;
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 10px;
   overflow: hidden;
+  border: 1px solid var(--glass-border-light);
+  position: relative;
 }
 
 .hp-fill {
   height: 100%;
-  background: #3ADF00;
+  background: linear-gradient(to right, rgba(58, 223, 0, 0.8), rgba(120, 255, 60, 0.8));
   transition: width 0.5s ease;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(58, 223, 0, 0.5);
+}
+
+.hp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shine 2s infinite;
 }
 
 .hp-value {
@@ -563,13 +630,19 @@ function toggleHint() {
 }
 
 .low-hp {
-  background: #FF0000;
+  background: linear-gradient(to right, rgba(255, 0, 0, 0.8), rgba(255, 70, 70, 0.8));
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
 }
 
 /* Zone d'attaques */
 .attack-selection {
   padding: var(--spacing-md);
-  background: var(--pokemon-gray-200);
+  background: rgba(50, 50, 50, 0.6);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top: 1px solid var(--glass-border-light);
 }
 
 .attacks-grid {
@@ -580,24 +653,48 @@ function toggleHint() {
 }
 
 .attack-option {
-  background: var(--pokemon-gray-300);
-  border: 1px solid var(--pokemon-gray-400);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
+  background: rgba(60, 60, 60, 0.6);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 12px;
+  padding: var(--spacing-md);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--glass-transition);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.attack-option::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.attack-option:hover::after {
+  opacity: 1;
+  animation: shine 2s infinite;
 }
 
 .attack-option:hover {
-  background: var(--pokemon-gray-200);
-  border-color: var(--pokemon-red);
+  background: rgba(70, 70, 70, 0.7);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .selected-attack {
-  background: var(--pokemon-red-light);
-  border: 2px solid var(--pokemon-red);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(255, 61, 40, 0.3);
+  background: rgba(255, 61, 40, 0.3);
+  border: 1px solid var(--glass-pokemon-red);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 61, 40, 0.3);
 }
 
 .attack-name {
@@ -655,13 +752,17 @@ function toggleHint() {
   opacity: 0.7;
 }
 
-.result-message {
-  background: var(--pokemon-gray-200);
-  border: 2px solid var(--pokemon-red);
-  border-radius: var(--border-radius-md);
+.quest-message {
+  background: rgba(50, 50, 50, 0.6);
+  border-radius: 16px;
   padding: var(--spacing-md);
   position: relative;
-  max-width: 400px;
+  border: 1px solid var(--glass-border-light);
+  margin: 10px 0;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--glass-transition);
 }
 
 .result-title {

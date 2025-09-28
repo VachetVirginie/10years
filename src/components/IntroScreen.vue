@@ -87,14 +87,25 @@ const closeIntro = () => {
   <transition name="fade">
     <div v-if="visible" class="intro-container">
       <div class="intro-content">
+        <!-- Particules d'ambiance -->
+        <div class="glass-particles">
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+          <div class="glass-particle"></div>
+        </div>
         <!-- <div class="pokeball-top"></div> -->
         
         <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
           <div class="professor-image"></div>
-          <div class="dialogue-box">
+          <div class="dialogue-box glass-dialogue-box">
             <pre class="typing-text">{{ displayedText }}</pre>
             <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
-            <button @click="closeIntro" class="skip-button">
+            <button @click="closeIntro" class="skip-button glass-button">
               <span class="btn-text">COMMENCER L'AVENTURE</span>
               <span class="btn-icon">→</span>
             </button>
@@ -124,8 +135,9 @@ body.intro-active, html.intro-active {
 </style>
 
 <style scoped>
-/* Importation des variables du thème Pokémon */
+/* Importation des variables du thème Pokémon et glassmorphisme */
 @import '../assets/splash-screens.css';
+@import '../assets/glassmorphism.css';
 
 .intro-container {
   position: fixed;
@@ -146,6 +158,19 @@ body.intro-active, html.intro-active {
   box-sizing: border-box;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
+}
+
+.intro-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 61, 0, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 80% 70%, rgba(255, 61, 0, 0.1) 0%, transparent 30%);
 }
 
 /* Appliquer différentes hauteurs pour assurer la compatibilité multi-navigateurs */
@@ -258,20 +283,19 @@ body.intro-active, html.intro-active {
 
 .dialogue-box {
   width: 100%;
-  background-color: var(--pokemon-gray-100);
-  border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 0 25px rgba(227, 53, 13, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.6);
-  border: 2px solid var(--pokemon-red);
+  border: 1px solid var(--glass-border-light);
   scrollbar-color: var(--pokemon-black) var(--pokemon-black);
   scrollbar-width: thin;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 50vh;
-  backdrop-filter: blur(5px);
+  max-height: 60vh;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
   animation: dialogue-reveal 0.5s ease-out forwards;
   transform-origin: top center;
+  transition: var(--glass-transition);
 }
 
 @keyframes dialogue-reveal {
@@ -292,8 +316,8 @@ body.intro-active, html.intro-active {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  border-radius: 20px;
   pointer-events: none;
 }
 
@@ -308,7 +332,7 @@ body.intro-active, html.intro-active {
 }
 
 .skip-button-container {
-  margin-top: 30px;
+  margin-top: 42px;
   margin-bottom: 10px;
   width: 100%;
   display: flex;
@@ -328,22 +352,24 @@ body.intro-active, html.intro-active {
 }
 
 .skip-button {
-  background: linear-gradient(145deg, var(--pokemon-red) 0%, var(--pokemon-red-dark) 100%);
+  background: var(--glass-pokemon-red);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 15px 30px;
   font-family: 'Courier New', monospace;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--glass-transition);
   border-radius: 30px;
-  box-shadow: 0 4px 15px rgba(227, 53, 13, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(227, 53, 13, 0.4);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   gap: 10px;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .skip-button::before {

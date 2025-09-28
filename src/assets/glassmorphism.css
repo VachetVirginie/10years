@@ -1,0 +1,307 @@
+/* ========================================
+   GLASSMORPHISM CSS - Treasure Hunt App
+   ======================================== */
+
+:root {
+  /* Couleurs principales */
+  --glass-bg-light: rgba(255, 255, 255, 0.1);
+  --glass-bg-medium: rgba(255, 255, 255, 0.15);
+  --glass-bg-dark: rgba(0, 0, 0, 0.2);
+  
+  /* Bordures */
+  --glass-border-light: rgba(255, 255, 255, 0.18);
+  --glass-border-dark: rgba(0, 0, 0, 0.18);
+  
+  /* Ombres */
+  --glass-shadow-light: rgba(255, 255, 255, 0.1);
+  --glass-shadow-medium: rgba(0, 0, 0, 0.1);
+  --glass-shadow-strong: rgba(0, 0, 0, 0.25);
+  
+  /* Flou */
+  --glass-blur-light: 5px;
+  --glass-blur-medium: 10px;
+  --glass-blur-strong: 20px;
+  
+  /* Animations */
+  --glass-transition: all 0.3s ease;
+  
+  /* Pokemon thème spécifique */
+  --glass-pokemon-red: rgba(229, 57, 53, 0.7);
+  --glass-pokemon-blue: rgba(30, 136, 229, 0.7);
+  --glass-pokemon-yellow: rgba(255, 213, 0, 0.7);
+  --glass-pokemon-green: rgba(67, 160, 71, 0.7);
+}
+
+/* ======= Mixins glassmorphism ======= */
+
+/* Card avec effet glassmorphisme */
+.glass-card {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px var(--glass-shadow-strong);
+}
+
+/* Bouton glassmorphisme */
+.glass-button {
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+  border-radius: 30px;
+  padding: 10px 24px;
+  color: white;
+  box-shadow: 0 2px 10px var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--glass-shadow-strong);
+  background: var(--glass-bg-medium);
+}
+
+.glass-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  transform: scale(0);
+  transition: transform 0.5s ease-out;
+  pointer-events: none;
+}
+
+.glass-button:hover::before {
+  transform: scale(1);
+}
+
+/* Dialog/Modal glassmorphisme */
+.glass-dialog {
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  border: 1px solid var(--glass-border-light);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-dialog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--glass-border-light), transparent);
+}
+
+/* Header avec effet glassmorphisme */
+.glass-header {
+  background: var(--glass-pokemon-red);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Navigation drawer avec glassmorphisme */
+.glass-drawer {
+  background: var(--glass-bg-dark);
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  border-right: 1px solid var(--glass-border-dark);
+  box-shadow: 5px 0 15px var(--glass-shadow-medium);
+}
+
+/* Barre de progression glassmorphisme */
+.glass-progress-bar {
+  height: 8px;
+  width: 100%;
+  background: var(--glass-bg-light);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+}
+
+.glass-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--glass-pokemon-blue), var(--glass-pokemon-yellow));
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shine 3s infinite;
+}
+
+/* Badge glassmorphisme */
+.glass-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+  box-shadow: 0 3px 10px var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-badge::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glass-badge:hover::before {
+  opacity: 1;
+}
+
+.glass-badge-earned {
+  background: var(--glass-pokemon-yellow);
+  box-shadow: 0 0 15px var(--glass-pokemon-yellow);
+  animation: pulse 2s infinite;
+}
+
+/* Input glassmorphisme */
+.glass-input {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: white;
+  box-shadow: inset 0 2px 5px var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+}
+
+.glass-input:focus {
+  box-shadow: inset 0 2px 5px var(--glass-shadow-medium), 0 0 0 2px rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+/* Dialog box glassmorphisme */
+.glass-dialogue-box {
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
+  border: 1px solid var(--glass-border-light);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.glass-dialogue-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+/* Container d'écran principal */
+.glass-screen-container {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animations */
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Effet de particules flottantes pour le background */
+.glass-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glass-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--glass-border-light);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: float 15s infinite ease-in-out;
+}
+
+.glass-particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.glass-particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 1s; }
+.glass-particle:nth-child(3) { top: 50%; left: 15%; animation-delay: 3s; }
+.glass-particle:nth-child(4) { top: 70%; left: 60%; animation-delay: 5s; }
+.glass-particle:nth-child(5) { top: 30%; left: 30%; animation-delay: 7s; }
+.glass-particle:nth-child(6) { top: 90%; left: 40%; animation-delay: 9s; }
+.glass-particle:nth-child(7) { top: 45%; left: 90%; animation-delay: 2s; }
+.glass-particle:nth-child(8) { top: 80%; left: 20%; animation-delay: 4s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(0) translateX(20px); }
+  75% { transform: translateY(20px) translateX(10px); }
+}

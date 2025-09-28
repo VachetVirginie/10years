@@ -274,6 +274,7 @@ function skipPhoto() {
 </script>
 
 <style scoped>
+@import '../assets/glassmorphism.css';
 .photo-bonus-overlay {
   position: fixed;
   top: 0;
@@ -289,7 +290,7 @@ function skipPhoto() {
 }
 
 .photo-bonus-container {
-  background-color: var(--pokemon-gray-100);
+  background-color: rgba(33, 33, 33, 0.8);
   width: 100%; /* Prend toute la largeur */
   height: 100%; /* Prend toute la hauteur */
   max-width: 100%; /* Plus de limite max-width */
@@ -299,13 +300,32 @@ function skipPhoto() {
   animation: popup-appear 0.3s ease-out;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .photo-bonus-header {
-  background-color: var(--pokemon-red);
+  background: var(--glass-pokemon-red);
   color: white;
-  padding: 15px 20px;
+  padding: 18px 20px;
   text-align: center;
+  border-bottom: 1px solid var(--glass-border-light);
+  position: relative;
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.photo-bonus-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 80%);
+  pointer-events: none;
 }
 
 .photo-bonus-title {
@@ -320,6 +340,10 @@ function skipPhoto() {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(40, 40, 40, 0.6);
+  flex-grow: 1;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .photo-preview-content {
@@ -328,6 +352,10 @@ function skipPhoto() {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(40, 40, 40, 0.6);
+  flex-grow: 1;
+  backdrop-filter: blur(var(--glass-blur-medium));
+  -webkit-backdrop-filter: blur(var(--glass-blur-medium));
 }
 
 .photo-icon {
@@ -353,7 +381,10 @@ function skipPhoto() {
   padding: 15px 20px;
   display: flex;
   justify-content: center;
-  border-top: 1px solid var(--pokemon-gray-300);
+  border-top: 1px solid var(--glass-border-light);
+  background: rgba(40, 40, 40, 0.5);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
 }
 
 .skip-button {
@@ -400,21 +431,58 @@ function skipPhoto() {
 }
 
 .camera-control-btn {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
   color: white !important;
-  border: 2px solid white !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
   height: 50px;
   width: 50px;
   border-radius: 25px;
+  backdrop-filter: blur(var(--glass-blur-light)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-light)) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  transition: var(--glass-transition);
+}
+
+.camera-control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
 }
 
 .capture-btn {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(255, 61, 40, 0.3) !important;
   color: white !important;
-  border: 3px solid white !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
   height: 70px;
   width: 70px;
   border-radius: 35px;
+  backdrop-filter: blur(var(--glass-blur-light)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur-light)) !important;
+  box-shadow: 0 4px 20px rgba(255, 61, 40, 0.3) !important;
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.capture-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(255, 61, 40, 0.5) !important;
+}
+
+.capture-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.capture-btn:hover::before {
+  opacity: 1;
 }
 
 .camera-options {
@@ -429,9 +497,15 @@ function skipPhoto() {
 .preview-image {
   max-width: 100%;
   max-height: 300px;
-  border: 3px solid var(--pokemon-red);
-  border-radius: 8px;
-  box-shadow: 0 0 20px rgba(227, 53, 13, 0.5);
+  border: 2px solid var(--glass-border-light);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px var(--glass-shadow-strong);
+  transition: var(--glass-transition);
+}
+
+.preview-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px var(--glass-shadow-strong);
 }
 
 .preview-actions {
