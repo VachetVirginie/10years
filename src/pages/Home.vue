@@ -236,7 +236,6 @@ function resetIntro() {
   border-radius: 20px;
   margin: 10px 10px 20px;
   border: 1px solid var(--glass-border-light);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(var(--glass-blur-medium));
@@ -246,7 +245,6 @@ function resetIntro() {
 
 .pokemon-hero:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .pokemon-hero-content {
