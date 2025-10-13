@@ -12,7 +12,7 @@
       "answer": "Bellecour",
       "success": "Tu as trouvé la statue de Louis XIV ! \n\nIci, sous son regard, nos histoires s'écrivent. \nTon aventure commence ici, prépare-toi pour la suite !",
       "hint": "La plus grande place de Lyon, \noù les amoureux se donnent rendez-vous depuis des siècles.",
-      "splash": "Là où tout commence",
+      "splash": "L’appel du Roi de Bronze !",
       "photo": "Prenez une photo en mimant une pose de dresseur !"
     },
     {
@@ -26,22 +26,22 @@
       "answer": "Bocuse",
       "success": "Cours aux Halles Paul Bocuse ! \n\nGoûte à ce macaron, symbole de douceur partagée !",
       "hint": "Un marché couvert, \noù chaque stand est une ode à la gourmandise lyonnaise.",
-      "splash": "Le festin",
+      "splash": "Le Temple des Maîtres du Goût !",
       "photo": "Prenez une photo en tenant la main de la statue (ou en contre-plongée avec le cheval derrière vous)."
     },
     {
       "id": "3",
       "type": "riddle",
-      "title": "Micromania Part-Dieu – Le Jeu de Nos Vies",
-      "prompt": "Entre les rails et les départs, un palais de verre veille, \nOù les héros naissent, où les quêtes s'achèvent. \n\nJ'ai couru après des pixels, défié des dragons, \nMais c'est toi, mon vrai trésor, que j'ai trouvé en chemin. \n\nCherche l'échoppe où les rêves s'achètent, \nOù nos enfances se rencontrent, où nos futurs s'inventent.",
-      "lat": 45.76169967651367,
-      "lng": 4.8504961,
-      "radius": 25,
-      "answer": "Micromania",
-      "success": "Bravo ! Tu as trouvé Micromania. \n\nPrends ce ticket à gratter… \nil cache un indice pour la suite !",
-      "hint": "Un magasin où les manettes remplacent les épées, \net où les écrans illuminent les sourires.",
-      "splash": "Le jeu",
-      "photo": "Faites un selfie en trinquant avec une gourmandise (verre, macaron, café…)."
+      "title": "Le Cœur de Verre",
+      "prompt": "Entre les rails et les nuages, un palais de verre respire,\nOù se croisent les destins, les pas, les souvenirs.\n\nSous la lumière des verrières, le monde se rassemble,\nEt le temps s’arrête un instant, dans son tumulte qui tremble.\n\nCherche le lieu où tout commence et tout converge,\nOù les voyageurs deviennent rêveurs,\nEt où Lyon bat, entre béton et lumière.",
+      "lat": 45.7609,
+      "lng": 4.8506,
+      "radius": 40,
+      "answer": "La Part-Dieu",
+      "success": "Bravo ! Tu as trouvé la Part-Dieu 💫\n\nUn carrefour vivant, entre voyages, commerces et rencontres.\nPrends un instant pour observer la foule : chaque visage est une histoire.",
+      "hint": "Un quartier de verre et d’acier, où les trains, les tours et les rêves se croisent.",
+      "splash": "A la croisee des chemins.",
+      "photo": "Faites un selfie sous la verrière ou devant les tours, symbole de la Part-Dieu."
     },
     {
       "id": "4",
@@ -54,7 +54,7 @@
       "answer": "Entrecôte",
       "success": "Tu as trouvé L’Entrecôte, juste à côté de notre tout premier appartement ! 🏡❤️  \nIci, chaque bouchée est un retour dans le temps… et chaque souvenir nourrit encore notre histoire.",
       "hint": "Un restaurant de la Rue de la République, célèbre pour n’avoir qu’un seul plat au menu.",
-      "splash": "Nos débuts",
+      "splash": "Le Repas des Origines !",
       "photo": "Prenez une photo en mimant une pose de gamer (comme si vous jouiez avec une manette invisible)."
     },
     {
@@ -68,7 +68,7 @@
       "answer": "Tête d'Or",
       "success": "Magnifique ! Tu es dans la roseraie. \n\nRespire ce parfum… \net garde cette rose séchée, elle t'accompagnera jusqu'à la fin.",
       "hint": "Un jardin où chaque variété de rose raconte une histoire, \nprès du lac.",
-      "splash": "Les souvenirs",
+      "splash": "La Rose Éternelle !",
       "photo": "Prenez une photo en sautant en l’air devant le lac, avec l’île en arrière-plan."
     },
     {
@@ -87,7 +87,7 @@
       "radius": 25,
       "success": "L'île aux cygnes, bien sûr ! \n\nC'est ici que Tony Garnier a sculpté l'amour et le souvenir. \nPrends ce caillou blanc… il te guidera vers la dernière étape.",
       "hint": "Un lieu de mémoire, \noù l'art et la nature s'unissent.",
-      "splash": "Le mystère",
+      "splash": "L’Île aux Cygnes Cachée !",
       "photo": "Prenez une photo main dans la main devant l’enseigne (comme un retour à vos débuts)."
     },
     {
@@ -101,7 +101,7 @@
       "radius": 25,
       "success": "🎉 Félicitations ! Tu as trouvé le trésor le plus précieux : notre amour. \n\nOuvre ce coffret… \nil contient une clé, celle de notre futur. 💖",
       "hint": "Le sentiment le plus précieux \nqui unit deux cœurs.",
-      "splash": "Le trésor",
+      "splash": "Le Cœur Légendaire !",
       "photo": "Faites une photo en flairant une rose ou en formant un cœur avec vos mains autour d’une fleur."
     }
   ]

@@ -200,7 +200,7 @@ function goToPreviousStep() {
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
-      <h2 class="quest-title">Énigme Pokémon</h2>
+      <h2 class="quest-title">Énigme <span>{{ props.step.id }}</span></h2> 
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
     </div>
 
@@ -246,11 +246,12 @@ function goToPreviousStep() {
           v-if="props.step.hint" 
           :aria-controls="'hint'"
           @click="showHint = !showHint"
-          variant="outlined"
-          color="var(--pokemon-gray-300)"
-          class="hint-button"
-          size="small"
+          class="quest-button glass-button"
+          rounded="pill"
+          elevation="0"
+          min-width="120"
         >
+          <v-icon start>mdi-lightbulb-outline</v-icon>
           {{ showHint ? 'Cacher l\'indice' : 'Voir l\'indice' }}
         </v-btn>
       </div>
@@ -392,9 +393,6 @@ function goToPreviousStep() {
   padding-bottom: 20px;
 }
 
-.hint-button {
-  font-size: 0.85rem;
-}
 
 .hint-box {
   background: rgba(50, 50, 50, 0.6);
