@@ -20,11 +20,8 @@ const fullText = `
 Bonjour, Soso ! Enfin te voilà… Je savais que je pouvais compter sur toi.
 Une étrange énigme a surgi dans les rues de Lyon. 
 Comme des Pokémon rares, des indices se sont éparpillés aux quatre coins de la ville.
-
 Pour réussir ta mission, tu devras faire preuve de courage, de stratégie et d'un esprit affûté, comme lors d'un combat d'arène.
-
 Ta quête commence maintenant. Le destin de cette aventure est entre tes mains… »
-
 ⚡️ Alors, jeune dresseuse… es-tu prête à partir à l'aventure ?
 `
 

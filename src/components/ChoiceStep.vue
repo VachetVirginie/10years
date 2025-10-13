@@ -224,7 +224,7 @@ function toggleHint() {
     <!-- En-tête du combat -->
     <div class="quest-header">
       <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon" />
-      <h2 class="quest-title">Combat de Dresseurs</h2>
+      <h2 class="quest-title">Combat</h2>
       <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="Poké Ball" class="pokeball-icon" />
     </div>
     
@@ -240,8 +240,8 @@ function toggleHint() {
           </div>
           <img :src="playerInfo.avatar" alt="Ton avatar" class="trainer-avatar player-avatar" />
         </div>
-        <v-btn @click="startBattle" class="quest-button glass-button" rounded="pill" elevation="0">
-          <span class="btn-text">Commencer le combat !</span>
+        <v-btn @click="startBattle" class="quest-button glass-button margin-6" rounded="pill" elevation="0">
+          <span class="btn-text">Fight !</span>
         </v-btn>
       </div>
       
@@ -297,7 +297,7 @@ function toggleHint() {
         
         <!-- Zone de message -->
         <div class="quest-message">
-          <p class="quest-message-text">{{ battleMessage }}</p>
+          <p class="glass-text">{{ battleMessage }}</p>
         </div>
         
         <!-- Zone d'attaques (choix) -->
@@ -400,7 +400,7 @@ function toggleHint() {
     </v-card>
     
     <!-- Prompt original (caché) -->
-    <div class="original-prompt">
+    <!-- <div class="original-prompt">
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-title>Voir l'indice original</v-expansion-panel-title>
@@ -409,7 +409,7 @@ function toggleHint() {
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-    </div>
+    </div> -->
   </div>
 </template>
 

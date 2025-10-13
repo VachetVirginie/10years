@@ -140,7 +140,7 @@ const earnedBadges = computed(() => {
         size="large"
       >
         <span class="pokemon-menu-icon">
-          <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" width="24" alt="Poké Ball" class="menu-pokeball animate-pulse">
+          <img src="../public/images/pokeDream.png" width="24" alt="Poké Ball" class="menu-pokeball animate-pulse">
         </span>
       </v-app-bar-nav-icon>
       
