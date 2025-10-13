@@ -96,7 +96,7 @@
   border: 1px solid var(--glass-border-light);
   border-radius: 20px;
   box-shadow: 0 8px 32px var(--glass-shadow-strong);
-  padding: 24px;
+  padding: 4px;
   position: relative;
   overflow: hidden;
 }
