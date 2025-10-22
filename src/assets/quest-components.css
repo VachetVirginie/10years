@@ -162,7 +162,7 @@
 .quest-message-text {
   margin: 0;
   font-size: var(--font-size-md);
-  color: var(--pokemon-black);
+  /* color: var(--pokemon-black); */
   line-height: 1.5;
 }
 

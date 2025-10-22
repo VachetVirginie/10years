@@ -1,195 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
-import { useHunt } from '../composables/useHunt'
-import { useProgress } from '../store/progress'
-import { useGeolocation } from '../composables/useGeolocation'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-
-const { steps } = useHunt()
-const store = useProgress()
-store.load()
-// Activer le suivi de géolocalisation avec mise à jour fréquente
-const { position, getCurrentPosition, startTracking, stopTracking } = useGeolocation()
-const mapEl = ref<HTMLDivElement|null>(null)
-let map: any = null
-let userMarker: any = null
-let rangeCircle: any = null
-let positionUpdateInterval: number | null = null
-
-const geoSteps = computed(() => steps.filter(s => s.type === 'geo'))
-const completedSteps = computed(() => geoSteps.value.filter(s => store.done.has(s.id)).length)
-const totalGeoSteps = computed(() => geoSteps.value.length)
-
-const updateUserPosition = () => {
-  if (!map || !position.value) return
-  
-  // Supprimer l'ancien marqueur utilisateur s'il existe
-  if (userMarker) {
-    map.removeLayer(userMarker)
-  }
-  
-  // Créer une icône personnalisée pour le dresseur
-  const trainerIcon = L.divIcon({
-    html: `<div class="trainer-marker pulsing"><img src="../src/assets/images/pokeMarker.png" /></div>`,
-    className: 'trainer-icon-container',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40]
-  })
-  
-  // Créer un nouveau marqueur pour la position de l'utilisateur
-  userMarker = L.marker([position.value.latitude, position.value.longitude], {
-    icon: trainerIcon
-  }).addTo(map).bindPopup('👨‍🏭 Votre position')
-  
-  // Cercle de portée autour de la position du dresseur
-  rangeCircle = L.circle([position.value.latitude, position.value.longitude], { 
-    radius: 100, // Rayon en mètres
-    color: 'var(--pokemon-red)',
-    fillColor: 'var(--pokemon-red)',
-    fillOpacity: 0.1,
-    weight: 2,
-    dashArray: '5, 10'
-  }).addTo(map)
-}
-
-onMounted(() => {
-  // Force une mise à jour immédiate de la position
-  getCurrentPosition()
-  
-  // Démarrer le suivi fréquent de la position pour la carte
-  // Mise à jour plus fréquente que celle par défaut (toutes les 5 secondes au lieu de 10)
-  startTracking()
-  positionUpdateInterval = window.setInterval(() => {
-    getCurrentPosition()
-  }, 5000) // Intervalle plus court que celui par défaut
-  
-  if (!mapEl.value) return
-  const geoStepsArray = geoSteps.value as any[]
-  
-  const center = geoStepsArray.length ? [geoStepsArray[0].lat, geoStepsArray[0].lng] : [48.8566, 2.3522]
-  map = L.map(mapEl.value).setView(center as any, 14)
-  // Utiliser un style de carte plus sombre qui correspond mieux au thème Pokémon
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-  }).addTo(map)
-  
-  geoStepsArray.forEach(gs => {
-    const isCompleted = store.done.has(gs.id)
-    const isCurrent = (store.currentIndex + 1).toString() === gs.id
-    
-    // Ne montrer que les étapes complétées et la position actuelle
-    if (isCompleted) {
-      // Marqueur de Pokémon capturé
-      const markerColor = '#10b981' // Vert Pokémon
-      const borderColor = '#059669'
-      const popupText = `✅ ${gs.title} - Capturé!`
-      const emoji = '🏆'
-      
-      // Créer un marqueur de PokéBall pour les étapes complétées
-      const pokeBallIcon = L.divIcon({
-        html: `<div class="pokeball-marker completed"><img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" style="width: 60%; height: auto;" /></div>`,
-        className: 'pokeball-icon-container',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-        popupAnchor: [0, -15],
-      });
-      
-      // Utiliser un marqueur PokéBall pour les points complétés
-      const marker = L.marker([gs.lat, gs.lng], {
-        icon: pokeBallIcon
-      }).addTo(map).bindPopup(`${emoji} ${popupText}`)
-    }
-  })
-  
-  // Mettre à jour la position utilisateur si elle est déjà disponible
-  updateUserPosition()
-})
-
-// Surveiller les changements de position
-watch(position, () => {
-  if (position.value) {
-    updateUserPosition()
-    
-    // Centrer la carte sur la position de l'utilisateur
-    if (map && userMarker) {
-      map.setView([position.value.latitude, position.value.longitude], map.getZoom())
-    }
-  }
-}, { deep: true })
-
-// Arrêter le suivi de position lorsque le composant est démonté
-onUnmounted(() => {
-  stopTracking()
-  if (positionUpdateInterval) {
-    clearInterval(positionUpdateInterval)
-  }
-})
+import LyonMap from '../components/LyonMap.vue'
 </script>
 
 <template>
-  <main class="pokemon-map pa-4">
-    <!-- En-tête avec statistiques -->
-    <div class="map-header mb-6">
-      <h1 class="map-title text-h4 mb-4">
-        🗺️ Carte des Pokémon
-      </h1>
-      
-      <div class="stats-container d-flex flex-wrap gap-3 mb-4">
-        <v-card class="stat-card flex-grow-1" elevation="3">
-          <v-card-text class="text-center pa-3">
-            <div class="stat-icon mb-2">🏆</div>
-            <div class="stat-value text-h6">{{ completedSteps }}</div>
-            <div class="stat-label text-caption">Capturés</div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card class="stat-card flex-grow-1" elevation="3">
-          <v-card-text class="text-center pa-3">
-            <div class="stat-icon mb-2">🎯</div>
-            <div class="stat-value text-h6">{{ totalGeoSteps }}</div>
-            <div class="stat-label text-caption">Total</div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card class="stat-card flex-grow-1" elevation="3">
-          <v-card-text class="text-center pa-3">
-            <div class="stat-icon mb-2">⚡</div>
-            <div class="stat-value text-h6">{{ Math.round((completedSteps / totalGeoSteps) * 100) || 0 }}%</div>
-            <div class="stat-label text-caption">Progression</div>
-          </v-card-text>
-        </v-card>
-      </div>
-    </div>
-    
-    <!-- Carte interactive -->
-    <v-card class="map-container" elevation="8">
-      <div ref="mapEl" class="pokemon-map-view"></div>
-      
-      <!-- Légende -->
-      <v-card-text class="legend pa-3">
-        <div class="legend-title text-subtitle2 mb-2">🔍 Légende</div>
-        <div class="legend-items d-flex flex-wrap gap-4">
-          <div class="legend-item d-flex align-center">
-            <div class="legend-icon">
-              <img src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" alt="PokéBall" class="legend-img" />
-            </div>
-            <span class="text-caption ml-2 text-pokemon-white">Pokémon capturé</span>
-          </div>
-          <div class="legend-item d-flex align-center">
-            <div class="legend-icon">
-              <img src="../assets/images/pokeMarker.png" alt="Dresseur" class="legend-img" />
-            </div>
-            <span class="text-caption ml-2 text-pokemon-white">Votre position</span>
-          </div>
-        </div>
-      </v-card-text>
-    </v-card>
-  </main>
+  <LyonMap />
 </template>
+
+<style scoped>
+/* Styles spécifiques à la page si nécessaire */
+</style>
 
 <style scoped>
 .pokemon-map {
@@ -256,7 +75,6 @@ onUnmounted(() => {
 .map-container {
   background: var(--pokemon-gray-100);
   border-radius: 12px;
-  border: 2px solid var(--pokemon-red);
   box-shadow: 0 0 15px rgba(227, 53, 13, 0.3);
   overflow: hidden;
 }

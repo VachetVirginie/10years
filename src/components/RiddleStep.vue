@@ -1,36 +1,65 @@
 <script setup lang="ts">
-import { ref, inject, watch, onMounted } from 'vue'
+import { ref, computed, inject, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProgress } from '../store/progress'
+import { useStepState } from '../composables/useStepState'
+import { useTextValidation } from '../composables/useTextValidation'
 import '../assets/quest-components.css'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 import SuccessPopup from './SuccessPopup.vue'
 import PhotoBonus from './PhotoBonus.vue'
 
-const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string; photo?:string } }>()
+const props = defineProps<{
+  step: {
+    id: string
+    prompt: string
+    answer: string
+    success?: string
+    hint?: string
+    photo?: string
+  },
+  steps?: any[],
+  id?: string
+}>()
 const emit = defineEmits(['navigate'])
 
-const answer = ref('')
-const feedback = ref('')
-const showHint = ref(false)
-const isFeedbackSuccess = ref(false)
-const showSuccessPopup = ref(false)
-const showPhotoBonus = ref(false)
 const router = useRouter()
 const store = useProgress()
 store.load()
 
+// Utiliser les composables modulaires
+const {
+  currentState,
+  resetState,
+  validateRiddle,
+  navigateToNext,
+  navigateToPrevious,
+  handlePhotoBonus,
+  completePhotoBonus,
+  skipPhotoBonus
+} = useStepState()
+
+const { validateAnswer } = useTextValidation()
+
+// Récupérer la fonction de navigation du parent
+const navigateToStep = inject('navigateToStep', (stepId: string | number) => {
+  router.push(`/step/${stepId}`)
+})
+
+// Variables locales liées à l'état
+const answer = computed({
+  get: () => currentState.value.answer || '',
+  set: (value: string) => {
+    currentState.value.answer = value
+  }
+})
+
 // Déterminer si l'étape actuelle a une étape précédente
 const hasPreviousStep = Number(props.step.id) > 1
 
-// Réinitialiser les données chaque fois que l'étape change
+// Réinitialiser l'état chaque fois que l'étape change
 function resetStepData() {
-  answer.value = ''
-  feedback.value = ''
-  showHint.value = false
-  isFeedbackSuccess.value = false
-  showSuccessPopup.value = false
-  showPhotoBonus.value = false
+  resetState()
 }
 
 // Réinitialiser les données au montage du composant
@@ -45,154 +74,53 @@ watch(() => props.step.id, (newId, oldId) => {
   }
 })
 
-// Récupérer la fonction de navigation du parent
-const navigateToStep = inject('navigateToStep', (stepId: string | number) => {
-  // Fallback si l'injection n'est pas disponible
-  console.warn('navigateToStep not provided by parent')
-  router.push(`/step/${stepId}`)
-})
-
-// Fonctions pour normaliser les textes et rendre la validation permissive
-function normalizeText(text: string): string {
-  // Conversion en minuscules
-  let normalized = text.toLowerCase();
-  
-  // Suppression des accents
-  normalized = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  
-  // Suppression des caractères spéciaux et de ponctuation
-  normalized = normalized.replace(/[^a-z0-9]/g, '');
-  
-  return normalized;
-}
-
-function calculateSimilarity(str1: string, str2: string): number {
-  // Algorithme de distance de Levenshtein simplifié
-  const s1 = normalizeText(str1);
-  const s2 = normalizeText(str2);
-  
-  // Si les chaînes normalisées sont identiques, c'est un match parfait
-  if (s1 === s2) return 1.0;
-  
-  // Si l'une est contenue dans l'autre, c'est probablement une réponse valide
-  if (s1.includes(s2) || s2.includes(s1)) return 0.9;
-  
-  // Si la longueur est très différente, c'est probablement incorrect
-  if (Math.abs(s1.length - s2.length) > 3) return 0.0;
-  
-  // Compteur de caractères identiques
-  let matches = 0;
-  for (let i = 0; i < s1.length; i++) {
-    if (s2.includes(s1[i])) matches++;
-  }
-  
-  // Calcul du ratio de similarité
-  return matches / Math.max(s1.length, s2.length);
-}
-
-// Fonction pour vérifier la réponse
+// Fonction pour vérifier la réponse (simplifiée avec le composable)
 function check() {
-  // Vérifier d'abord si une réponse a été saisie
   if (!answer.value || answer.value.trim() === '') {
-    isFeedbackSuccess.value = false
-    feedback.value = 'Tu dois saisir une réponse.'
+    currentState.value.isFeedbackSuccess = false
+    currentState.value.feedback = 'Tu dois saisir une réponse.'
     return
   }
-  
-  // Validation directe en cas d'égalité exacte (insensible à la casse)
-  const exactMatch = answer.value.trim().toLowerCase() === props.step.answer.toLowerCase();
-  
-  // Validation permissive basée sur la similarité
-  const similarity = calculateSimilarity(answer.value.trim(), props.step.answer);
-  const similarityThreshold = 0.7; // 70% de similarité est considéré comme correct
-  
-  // Log pour débogage (peut être retiré en production)
-  console.log(`Réponse: ${answer.value}, Attendue: ${props.step.answer}, Similarité: ${similarity}`);
-  
-  // La réponse est correcte si exacte ou suffisamment similaire
-  const ok = exactMatch || similarity >= similarityThreshold;
-  
-  if (ok) {
-    // Si la réponse est correcte
-    isFeedbackSuccess.value = true
-    feedback.value = props.step.success ?? 'Bravo ! Tu as trouvé la bonne réponse !'
+
+  const validation = validateAnswer(answer.value, props.step.answer)
+  currentState.value.validationAttempts = validation.attempts
+
+  if (validation.isValid) {
+    currentState.value.isFeedbackSuccess = true
+    currentState.value.feedback = props.step.success ?? 'Bravo ! Tu as trouvé la bonne réponse !'
     store.markDone(props.step.id)
-    
-    // Afficher le pop-in de succès
-    showSuccessPopup.value = true
+    currentState.value.showSuccessPopup = true
   } else {
-    // Si la réponse est incorrecte
-    isFeedbackSuccess.value = false
-    feedback.value = 'Mauvaise réponse. Essaie encore.'
+    currentState.value.isFeedbackSuccess = false
+    currentState.value.feedback = 'Mauvaise réponse. Essaie encore.'
   }
 }
 
 // Fonction pour passer à l'étape suivante
 function goToNextStep() {
-  // Fermer la pop-in avant de naviguer
-  showSuccessPopup.value = false
-  
-  // Réinitialiser le champ de réponse et le feedback
-  answer.value = ''
-  feedback.value = ''
-  isFeedbackSuccess.value = false
-  
-  // Petit délai avant la navigation pour permettre à la transition de se terminer
-  setTimeout(() => {
-    const currentId = Number(props.step.id)
-    
-    // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
-    if (currentId === 7) {
-      // Naviguer vers l'écran de fin de mission
-      emit('navigate', 'end')
-    } else {
-      // Sinon passer à l'étape suivante normalement
-      const nextId = currentId + 1
-      emit('navigate', nextId)
-    }
-  }, 300)
+  navigateToNext(props.step.id, props.steps || [], props.step.photo)
 }
 
 // Fonction pour afficher le bonus photo
 function displayPhotoBonus() {
-  showSuccessPopup.value = false
-  showPhotoBonus.value = true
+  handlePhotoBonus(props.step.photo)
 }
 
 // Fonction appelée lorsque le bonus photo est terminé
 function onPhotoCompleted() {
-  showPhotoBonus.value = false
-  // Si l'utilisateur a pris une photo, on pourrait la sauvegarder ici
-  // Puis on continue vers l'étape suivante
+  completePhotoBonus()
   goToNextStep()
 }
 
 // Fonction appelée lorsque le bonus photo est ignoré
 function onPhotoSkipped() {
-  showPhotoBonus.value = false
+  skipPhotoBonus()
   goToNextStep()
 }
 
 // Fonction pour revenir à l'étape précédente
 function goToPreviousStep() {
-  // Fermer la pop-in avant de naviguer
-  showSuccessPopup.value = false
-  
-  // Réinitialiser le champ de réponse et le feedback
-  answer.value = ''
-  feedback.value = ''
-  isFeedbackSuccess.value = false
-  
-  // Petit délai avant la navigation pour permettre à la transition de se terminer
-  setTimeout(() => {
-    const currentId = Number(props.step.id)
-    if (currentId > 1) {
-      const prevId = currentId - 1
-      
-      // Utiliser la fonction injectée pour naviguer avec le splash
-      emit('navigate', prevId)
-    }
-  }, 300)
+  navigateToPrevious(props.step.id)
 }
 </script>
 
@@ -200,7 +128,7 @@ function goToPreviousStep() {
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
-      <h2 class="quest-title">Énigme <span>{{ props.step.id }}</span></h2> 
+      <h2 class="quest-title">Énigme <span>{{ props.step.id }}</span></h2>
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
     </div>
 
@@ -217,9 +145,9 @@ function goToPreviousStep() {
           color="var(--pokemon-red)"
           bg-color="var(--pokemon-gray-200)"
           class="pokemon-input"
-          :error-messages="feedback && !isFeedbackSuccess ? feedback : ''"
-          :success="isFeedbackSuccess"
-          :success-messages="isFeedbackSuccess ? feedback : ''"
+          :error-messages="currentState.feedback && !currentState.isFeedbackSuccess ? currentState.feedback : ''"
+          :success="currentState.isFeedbackSuccess"
+          :success-messages="currentState.isFeedbackSuccess ? currentState.feedback : ''"
           @keyup.enter="check"
           aria-describedby="hint"
           persistent-placeholder
@@ -245,27 +173,26 @@ function goToPreviousStep() {
         <v-btn 
           v-if="props.step.hint" 
           :aria-controls="'hint'"
-          @click="showHint = !showHint"
-          class="quest-button glass-button"
-          rounded="pill"
-          elevation="0"
-          min-width="120"
+          @click="currentState.showHint = !currentState.showHint"
+          variant="outlined"
+          color="var(--pokemon-gray-300)"
+          class="hint-button"
+          size="small"
         >
-          <v-icon start>mdi-lightbulb-outline</v-icon>
-          {{ showHint ? 'Cacher l\'indice' : 'Voir l\'indice' }}
+          {{ currentState.showHint ? 'Cacher l\'indice' : 'Voir l\'indice' }}
         </v-btn>
       </div>
       
-      <div v-if="showHint && props.step.hint" class="hint-box">
+      <div v-if="currentState.showHint && props.step.hint" class="hint-box">
         <div class="hint-icon">💡</div>
         <p id="hint" class="hint-text">{{ props.step.hint }}</p>
       </div>
       
       <!-- Pop-in de succès -->
       <SuccessPopup 
-        :show="showSuccessPopup"
+        :show="currentState.showSuccessPopup"
         title="Bravo !"
-        :message="feedback"
+        :message="currentState.feedback"
         :current-step-id="props.step.id"
         :hasPreviousStep="hasPreviousStep"
         :photoInstruction="props.step.photo"
@@ -276,7 +203,7 @@ function goToPreviousStep() {
       
       <!-- Bonus photo -->
       <PhotoBonus
-        :show="showPhotoBonus"
+        :show="currentState.showPhotoBonus"
         :photoInstruction="props.step.photo || 'Prenez une photo souvenir de cette étape !'"
         @confirm="onPhotoCompleted"
         @skip="onPhotoSkipped"
@@ -367,18 +294,18 @@ function goToPreviousStep() {
 }
 
 .pokemon-input:focus-within {
-  box-shadow: 0 6px 20px rgba(255, 61, 40, 0.3);
-  transform: translateY(-2px);
+  box-shadow: 2px 2px px rgba(255, 61, 40, 0.3);
+  transform: translateY(-1px);
 }
 
 .pokemon-input :deep(.v-field__outline) {
   color: var(--pokemon-red) !important;
 }
 
-.pokemon-input :deep(.v-field__input) {
+/* .pokemon-input :deep(.v-field__input) {
   color: var(--pokemon-white);
   font-weight: 500;
-}
+} */
 
 .pokemon-input :deep(.v-label) {
   color: var(--pokemon-gray-800);

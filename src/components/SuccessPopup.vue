@@ -63,9 +63,6 @@ const props = defineProps<{
   photoInstruction?: string; // Instruction pour le bonus photo (optionnel)
 }>();
 
-// Debug pour vérifier la valeur de hasPreviousStep
-console.log('SuccessPopup - hasPreviousStep:', props.hasPreviousStep);
-
 const emit = defineEmits(['next', 'previous', 'close', 'photo-bonus']);
 
 const nextStep = () => {

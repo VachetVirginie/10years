@@ -58,8 +58,8 @@
           size="large"
           elevation="0"
         >
-          <v-icon start>mdi-home</v-icon>
-          Retour à l'accueil
+          <v-icon start>mdi-book-open-page-variant</v-icon>
+          Voir mon journal
         </v-btn>
       </div>
     </div>
@@ -104,7 +104,7 @@ const photosTaken = computed(() => {
 });
 
 // Message spécial personnalisé
-const specialMessage = ref("Merci d'avoir partagé cette belle aventure. Notre amour est le plus beau des trésors.");
+const specialMessage = ref("🎉 Toutes les étapes accomplies ! 🎉\n\nTon journal t'attend avec tous nos précieux souvenirs immortalisés à jamais.");
 
 // Animation de confettis
 onMounted(() => {
@@ -135,9 +135,9 @@ function animateParticles() {
   });
 }
 
-// Retour à l'accueil
+// Retour au journal pour voir les souvenirs
 function returnToHome() {
-  router.push('/');
+  router.push('/journal')
 }
 </script>
 

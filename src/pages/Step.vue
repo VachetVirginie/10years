@@ -6,6 +6,7 @@ import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
 import RiddleStep from '../components/RiddleStep.vue'
 import ChoiceStep from '../components/ChoiceStep.vue'
+import BonusStep from '../components/BonusStep.vue'
 import EnigmeSplash from '../components/EnigmeSplash.vue'
 import MissionComplete from '../components/MissionComplete.vue'
 
@@ -19,6 +20,11 @@ const { steps } = useHunt()
 const store = useProgress()
 store.load()
 
+// Props pour éviter les warnings d'attributs non hérités
+const props = defineProps<{
+  id?: string
+}>()
+
 // Gestion du splash d'énigme
 const showSplash = ref(true)
 const splashComplete = ref(false)
@@ -28,24 +34,31 @@ const showMissionComplete = ref(false)
 
 // Fonction pour naviguer vers la prochaine étape avec splash
 function navigateToStep(stepId: string | number) {
-  // Vérifier si c'est la fin de la chasse au trésor (après l'étape 7)
+  // Vérifier si c'est la fin de la chasse au trésor (après l'étape 8)
+  if (stepId.toString() === 'journal') {
+    // Naviguer vers le journal de dresseur
+    router.push('/journal')
+    return
+  }
+
+  // Vérifier si c'est la fin de la chasse au trésor (écran de fin traditionnel)
   if (stepId.toString() === 'end') {
     // Afficher l'écran de fin de mission
     showMissionComplete.value = true
     return
   }
-  
+
   // Réinitialiser l'état du splash avant la navigation
   showSplash.value = true
   splashComplete.value = false
-  
+
   // Mettre à jour l'index courant dans le store
   const stepIndex = steps.findIndex(s => s.id === stepId.toString())
   if (stepIndex !== -1) {
     // Mise à jour du currentIndex pour que la reprise fonctionne correctement
     store.goToStep(stepIndex)
   }
-  
+
   // Navigation vers l'étape suivante après un court délai pour permettre la mise à jour des refs
   setTimeout(() => {
     router.push(`/step/${stepId}`)
@@ -70,6 +83,31 @@ watch(() => step.value, (newStep: any) => {
   }
 }, { immediate: true })
 
+// Calculer si l'étape actuelle doit afficher automatiquement une étape bonus
+const shouldShowBonusAfterCurrent = computed(() => {
+  if (!step.value) return false
+
+  // Si l'étape actuelle est une étape principale (pas un bonus)
+  if (step.value.type !== 'bonus') {
+    const currentStepNumber = parseInt(step.value.id)
+    const bonusStepId = `${currentStepNumber}b`
+
+    // Vérifier s'il y a une étape bonus correspondante
+    const bonusStep = steps.find(s => s.id === bonusStepId)
+    return !!bonusStep
+  }
+
+  return false
+})
+
+// Calculer l'ID de l'étape bonus à afficher après l'étape actuelle
+const nextBonusStepId = computed(() => {
+  if (!step.value || step.value.type === 'bonus') return null
+
+  const currentStepNumber = parseInt(step.value.id)
+  return `${currentStepNumber}b`
+})
+
 const stepNumber = computed(() => {
   if (!step.value) return 0
   return steps.findIndex(s => s.id === step.value!.id) + 1
@@ -92,6 +130,7 @@ const getStepTypeIcon = (type: string) => {
   switch (type) {
     case 'riddle': return '🧩'
     case 'choice': return '🎯'
+    case 'bonus': return '⭐'
     default: return '⚡'
   }
 }
@@ -100,6 +139,7 @@ const getStepTypeLabel = (type: string) => {
   switch (type) {
     case 'riddle': return 'Énigme'
     case 'choice': return 'Choix'
+    case 'bonus': return 'Bonus'
     default: return 'Défi'
   }
 }
@@ -160,7 +200,7 @@ function resetHunt() {
       
       // Vérifier que hasSeenSplash est bien supprimé
       if (localStorage.getItem('hasSeenSplash')) {
-        console.error("Impossible de supprimer hasSeenSplash!");
+        throw new Error('hasSeenSplash non supprimé');
       }
       
       // Pour s'assurer que tout est supprimé
@@ -284,8 +324,11 @@ function resetHunt() {
       <v-card class="content-card glass-dialog" elevation="0">
         <div class="">
           <component :is="step.type==='riddle' ? RiddleStep
-                     : ChoiceStep"
+                     : step.type==='choice' ? ChoiceStep
+                     : step.type==='bonus' ? BonusStep
+                     : RiddleStep"
                      :step="step as any"
+                     :steps="steps"
                      @navigate="navigateToStep" />
         </div>
       </v-card>
@@ -300,7 +343,6 @@ function resetHunt() {
   min-height: 100vh;
   position: relative;
   color: var(--pokemon-white);
-  padding: 10px;
   background-image: radial-gradient(circle at center, rgba(50, 50, 50, 0.8) 0%, rgba(20, 20, 20, 0.95) 70%);
 }
 

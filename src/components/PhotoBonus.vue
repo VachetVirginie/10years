@@ -171,7 +171,6 @@ function initializeCamera() {
       }
     })
     .catch(error => {
-      console.error("Erreur d'accès à la caméra:", error);
       alert("Impossible d'accéder à la caméra. Vérifiez vos paramètres d'autorisation.");
       cameraActive.value = false;
     });
@@ -246,7 +245,6 @@ function savePhotoToGallery() {
     document.body.removeChild(link);
     return true;
   } catch (error) {
-    console.error("Erreur lors de l'enregistrement de la photo:", error);
     return false;
   }
 }

@@ -1,20 +1,42 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
-import Step from '../pages/Step.vue'
-import Summary from '../pages/Summary.vue'
-import Map from '../pages/Map.vue'
-import OurStory from '../pages/OurStory.vue'
 import { useProgress } from '../store/progress'
+
+// Lazy loading des composants de jeu
+const Step = () => import('../pages/Step.vue')
+const Summary = () => import('../pages/Summary.vue')
+const Map = () => import('../pages/Map.vue')
+const TrainerJournal = () => import('../pages/TrainerJournal.vue')
+const MissionComplete = () => import('../components/MissionComplete.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'home', component: Home },
-    { path: '/step/:id', name: 'step', component: Step, props: true },
-    { path: '/our-story', name: 'our-story', component: OurStory },
-    { 
-      path: '/summary', 
-      name: 'summary', 
+    {
+      path: '/step/:id',
+      name: 'step',
+      component: Step,
+      props: true
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: Map
+    },
+    {
+      path: '/journal',
+      name: 'journal',
+      component: TrainerJournal
+    },
+    {
+      path: '/mission-complete',
+      name: 'mission-complete',
+      component: MissionComplete
+    },
+    {
+      path: '/summary',
+      name: 'summary',
       component: Summary,
       beforeEnter: (to, from, next) => {
         const store = useProgress()

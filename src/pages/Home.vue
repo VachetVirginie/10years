@@ -2,6 +2,9 @@
 import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
+import { usePreloader } from '../composables/usePreloader'
+import { useAdvancedPreloader } from '../composables/useAdvancedPreloader'
+import { useGameImages } from '../composables/useGameImages'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import PokemonDialog from '../components/PokemonDialog.vue'
@@ -16,6 +19,10 @@ const router = useRouter()
 useGeolocation()
 const { title, steps } = useHunt()
 const store = useProgress()
+const { preloadHighPriority, preloadForProgression } = usePreloader()
+const { preloadHighPriority: preloadCritical, preloadForProgression: preloadProgressive } = useAdvancedPreloader()
+const { getImageUrl, preloadCriticalImages, preloadImagesForProgress } = useGameImages()
+
 store.load()
 
 // Calcul du pourcentage de progression pour la barre
@@ -23,18 +30,52 @@ const progressPercent = computed(() => {
   return Math.round((store.done.size / steps.length) * 100)
 })
 
+// URL de l'avatar du professeur (avec lazy loading)
+const profAvatarUrl = ref('')
+
+// Préchargement intelligent des composants et images
+onMounted(async () => {
+  // Attendre que les données critiques soient chargées
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  // Précharger les composants critiques en premier
+  await preloadCritical()
+
+  // Précharger les composants prioritaires
+  await preloadHighPriority()
+
+  // Précharger les images critiques
+  await preloadCriticalImages()
+
+  // Obtenir l'URL de l'image du professeur
+  try {
+    profAvatarUrl.value = await getImageUrl('prof')
+  } catch (error) {
+    profAvatarUrl.value = '/images/prof.jpg' // Fallback
+  }
+
+  // Précharger les images selon la progression
+  await preloadImagesForProgress(progressPercent.value)
+
+  // Précharger selon la progression avec un petit délai
+  await new Promise(resolve => setTimeout(resolve, 500))
+  await preloadProgressive()
+})
+
 // Message de bienvenue pour le dialog Pokémon
 const welcomeMessage = computed(() => {
   if (store.done.size === 0) {
-    return "Bienvenue aventurier! Une quête épique t'attend à travers la ville. Es-tu prêt à relever le défi?"
+    return "Salut Soso ! Une chasse au trésor pleine d’amour commence à Lyon. Attrape ton sac, ton courage et ton sourire — l’aventure démarre maintenant !"
   } else {
-    return `Content de te revoir! Tu as déjà complété ${store.done.size} étapes sur ${steps.length}. Continue l'aventure!`
+    return `Content de te revoir jeune Soso! Tu as déjà complété ${store.done.size} étapes sur ${steps.length}. Continue l'aventure!`
   }
 })
 
 // Menu items pour navigation
 const menuItems = [
   { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
+  { id: 'map', label: 'Voir la carte', icon: '🗺️' },
+  { id: 'journal', label: 'Journal de dresseur', icon: '📖' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
   { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
@@ -61,36 +102,31 @@ const showIntroConfirmation = ref(false)
 const introConfirmationMessage = "Voulez-vous revoir l'animation d'introduction et le splash screen ?"
 
 function handleMenuSelect(item: MenuItem) {
+  // Ne rien faire si l'élément est désactivé
+  if (item.disabled) {
+    return
+  }
+
   if (item.id === 'start') {
     // Charger explicitement le store avant d'accéder aux valeurs
     store.load()
-    
-    console.log('Débog - État actuel:', { 
-      currentIndex: store.currentIndex,
-      doneSize: store.done.size,
-      doneItems: Array.from(store.done),
-      stepCount: steps.length,
-      resumeIndex: store.resumeIndex,
-      currentStepId: store.currentStepId,
-      nextStepId: store.nextStepId
-    });
-    
+
     if (store.done.size === 0) {
-      // Si aucune étape n'est terminée, commencer à la première étape
-      console.log('Débog - Début nouvelle partie');
       router.push('/step/1')
     } else {
       // Déterminer l'ID de l'étape à laquelle reprendre en fonction de la progression
       const resumeIndex = store.resumeIndex;
       const resumeStepId = steps[resumeIndex]?.id || '1';
-      
-      console.log(`Débog - Reprise de l'aventure à l'étape ${resumeStepId} (index ${resumeIndex})`);
       router.push(`/step/${resumeStepId}`)
     }
   } else if (item.id === 'map') {
     router.push('/map')
+  } else if (item.id === 'journal') {
+    router.push('/journal')
   } else if (item.id === 'badges') {
     showBadges.value = true
+  } else if (item.id === 'summary') {
+    router.push('/summary')
   } else if (item.id === 'reset') {
     showResetConfirmation.value = true
   } else if (item.id === 'intro') {
@@ -102,8 +138,17 @@ function handleMenuSelect(item: MenuItem) {
 function resetProgress() {
   store.reset()
   showResetConfirmation.value = false
-  // Mettre à jour l'interface
-  router.go(0) // Équivalent à refresh mais utilise le router
+
+  // Réinitialiser les états locaux des composants
+  dialogDone.value = false
+  showBadges.value = false
+
+  // Supprimer les flags du splash screen et de l'intro pour les revoir
+  localStorage.removeItem('hasSeenSplash')
+  localStorage.removeItem('hasSeenIntro')
+
+  // Recharger complètement la page pour un reset total
+  window.location.reload()
 }
 
 // Fonction pour réinitialiser le splash screen et l'intro
@@ -159,7 +204,7 @@ function resetIntro() {
             <PokemonDialog
               :text="welcomeMessage"
               speaker="PROFESSEUR"
-              avatar="../../images/prof.png"
+              :avatar="profAvatarUrl"
               @complete="dialogDone = true"
             />
           </v-col>
