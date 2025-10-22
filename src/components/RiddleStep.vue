@@ -294,18 +294,18 @@ function goToPreviousStep() {
 }
 
 .pokemon-input:focus-within {
-  box-shadow: 0 6px 20px rgba(255, 61, 40, 0.3);
-  transform: translateY(-2px);
+  box-shadow: 2px 2px px rgba(255, 61, 40, 0.3);
+  transform: translateY(-1px);
 }
 
 .pokemon-input :deep(.v-field__outline) {
   color: var(--pokemon-red) !important;
 }
 
-.pokemon-input :deep(.v-field__input) {
+/* .pokemon-input :deep(.v-field__input) {
   color: var(--pokemon-white);
   font-weight: 500;
-}
+} */
 
 .pokemon-input :deep(.v-label) {
   color: var(--pokemon-gray-800);

@@ -305,8 +305,6 @@ function exportJournal() {
         pdf.save(`journal-dresseur-${formatDate(new Date()).replace(/\s+/g, '-')}.pdf`)
       }).catch(error => {
 throw error
-        // Fallback vers l'export HTML
-        exportJournalAsHTML()
       })
     })
   })
@@ -338,8 +336,7 @@ function exportJournalAsImage() {
       link.click()
       document.body.removeChild(link)
     }).catch(error => {
-      // Fallback vers l'export HTML
-      exportJournalAsHTML()
+      throw error
     })
   })
 }
