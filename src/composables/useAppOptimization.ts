@@ -82,15 +82,6 @@ export function useAppOptimization() {
     // Mesurer les performances d'images
     const imageStats = getImageStats()
     performanceMetrics.value.imageLoadTime = Date.now() // Simulation
-
-    // Log des métriques en développement
-    if (import.meta.env.DEV) {
-        ...performanceMetrics.value,
-        imageStats,
-        geolocationStats: cacheStats.value,
-        progress: `${progressPercent.value}%`
-      })
-    }
   }
 
   // Obtenir un résumé des optimisations

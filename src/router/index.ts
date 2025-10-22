@@ -7,6 +7,7 @@ const Step = () => import('../pages/Step.vue')
 const Summary = () => import('../pages/Summary.vue')
 const Map = () => import('../pages/Map.vue')
 const TrainerJournal = () => import('../pages/TrainerJournal.vue')
+const MissionComplete = () => import('../components/MissionComplete.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/journal',
       name: 'journal',
       component: TrainerJournal
+    },
+    {
+      path: '/mission-complete',
+      name: 'mission-complete',
+      component: MissionComplete
     },
     {
       path: '/summary',

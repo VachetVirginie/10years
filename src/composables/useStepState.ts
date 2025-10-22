@@ -77,11 +77,12 @@ export function useStepState() {
     setTimeout(() => {
       const currentIndex = totalSteps.findIndex((s: any) => s.id === currentStepId)
       const currentId = Number(currentStepId)
+      const isLastStep = currentIndex === totalSteps.length - 1
 
       // Logique de navigation
-      if (currentId === 8) {
-        // Dernière étape - vers le journal
-        window.location.href = '/journal'
+      if (isLastStep) {
+        // Dernière étape - vers l'écran de fin avec animations
+        window.location.href = '/mission-complete'
       } else {
         // Vérifier étape bonus
         const nextBonusStep = `${currentId}b`
