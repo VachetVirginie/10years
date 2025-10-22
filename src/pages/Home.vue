@@ -2,6 +2,8 @@
 import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
+import { usePreloader } from '../composables/usePreloader'
+import { useGameImages } from '../composables/useGameImages'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import PokemonDialog from '../components/PokemonDialog.vue'
@@ -16,11 +18,41 @@ const router = useRouter()
 useGeolocation()
 const { title, steps } = useHunt()
 const store = useProgress()
+const { preloadHighPriority, preloadForProgression } = usePreloader()
+const { getImageUrl, preloadCriticalImages } = useGameImages()
+
 store.load()
 
 // Calcul du pourcentage de progression pour la barre
 const progressPercent = computed(() => {
   return Math.round((store.done.size / steps.length) * 100)
+})
+
+// URL de l'avatar du professeur (avec lazy loading)
+const profAvatarUrl = ref('')
+
+// Préchargement intelligent des composants et images
+onMounted(async () => {
+  // Attendre que les données critiques soient chargées
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  // Précharger les composants prioritaires
+  preloadHighPriority()
+
+  // Précharger les images critiques
+  await preloadCriticalImages()
+
+  // Obtenir l'URL de l'image du professeur
+  try {
+    profAvatarUrl.value = await getImageUrl('prof')
+  } catch (error) {
+    console.warn('Image du professeur non disponible:', error)
+    profAvatarUrl.value = '/images/prof.jpg' // Fallback
+  }
+
+  // Précharger selon la progression avec un petit délai
+  await new Promise(resolve => setTimeout(resolve, 500))
+  preloadForProgression()
 })
 
 // Message de bienvenue pour le dialog Pokémon
@@ -163,7 +195,7 @@ function resetIntro() {
             <PokemonDialog
               :text="welcomeMessage"
               speaker="PROFESSEUR"
-              avatar="../../images/prof.jpg"
+              :avatar="profAvatarUrl"
               @complete="dialogDone = true"
             />
           </v-col>
