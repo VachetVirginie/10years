@@ -100,8 +100,8 @@ const earnedBadges = computed(() => {
           </template>
           <v-list-item-title>Accueil</v-list-item-title>
         </v-list-item>
-        
-        <!-- <v-list-item
+
+        <v-list-item
           to="/map"
           class="nav-item"
         >
@@ -109,10 +109,20 @@ const earnedBadges = computed(() => {
             <v-icon>mdi-map</v-icon>
           </template>
           <v-list-item-title>Carte</v-list-item-title>
-        </v-list-item> -->
-        
+        </v-list-item>
+
+        <v-list-item
+          to="/journal"
+          class="nav-item"
+        >
+          <template #prepend>
+            <v-icon>mdi-book-open-variant</v-icon>
+          </template>
+          <v-list-item-title>Journal de dresseur</v-list-item-title>
+        </v-list-item>
+
         <v-divider class="my-2"></v-divider>
-        
+
         <v-list-item
           v-if="steps?.length > 0"
           :to="`/step/${store.done.size === 0 ? 1 : store.currentIndex + 1}`"

@@ -105,10 +105,15 @@ const showIntroConfirmation = ref(false)
 const introConfirmationMessage = "Voulez-vous revoir l'animation d'introduction et le splash screen ?"
 
 function handleMenuSelect(item: MenuItem) {
+  // Ne rien faire si l'élément est désactivé
+  if (item.disabled) {
+    return
+  }
+
   if (item.id === 'start') {
     // Charger explicitement le store avant d'accéder aux valeurs
     store.load()
-    
+
     console.log('Débog - État actuel:', { 
       currentIndex: store.currentIndex,
       doneSize: store.done.size,
@@ -118,7 +123,7 @@ function handleMenuSelect(item: MenuItem) {
       currentStepId: store.currentStepId,
       nextStepId: store.nextStepId
     });
-    
+
     if (store.done.size === 0) {
       // Si aucune étape n'est terminée, commencer à la première étape
       console.log('Débog - Début nouvelle partie');
@@ -127,7 +132,7 @@ function handleMenuSelect(item: MenuItem) {
       // Déterminer l'ID de l'étape à laquelle reprendre en fonction de la progression
       const resumeIndex = store.resumeIndex;
       const resumeStepId = steps[resumeIndex]?.id || '1';
-      
+
       console.log(`Débog - Reprise de l'aventure à l'étape ${resumeStepId} (index ${resumeIndex})`);
       router.push(`/step/${resumeStepId}`)
     }
