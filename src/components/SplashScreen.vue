@@ -13,6 +13,25 @@ const emit = defineEmits(['complete'])
 // État pour gérer la visibilité du splash screen
 const visible = ref(true)
 
+// Référence à la vidéo
+const introVideo = ref<HTMLVideoElement>()
+
+// Fonction appelée quand la vidéo se termine
+function onVideoEnd() {
+  visible.value = false
+  emit('complete')
+}
+
+// Fonction appelée en cas d'erreur de chargement vidéo
+function onVideoError() {
+  console.warn('Erreur de chargement vidéo, passage au fallback')
+  // Utiliser le délai par défaut si la vidéo ne se charge pas
+  setTimeout(() => {
+    visible.value = false
+    emit('complete')
+  }, props.duration)
+}
+
 // Fonction pour calculer et appliquer la hauteur correcte pour les mobiles
 const setViewportHeight = () => {
   const vh = window.innerHeight * 0.01;
@@ -35,22 +54,19 @@ const preventScroll = (e: Event) => {
 onMounted(() => {
   // Appliquer immédiatement
   setViewportHeight();
-  
+
   // Recalculer lors des événements qui peuvent changer la hauteur de l'écran
   window.addEventListener('resize', setViewportHeight);
   window.addEventListener('orientationchange', setViewportHeight);
   // Désactivé pour permettre le défilement
   // window.addEventListener('scroll', preventScroll, { passive: false });
-  
+
   // Forcer un recalcul après un court délai pour s'assurer que tout est correctement affiché
   setTimeout(setViewportHeight, 100);
   // Et à nouveau après un délai plus long pour assurer la stabilité complète
   setTimeout(setViewportHeight, 500);
 
-  setTimeout(() => {
-    visible.value = false
-    emit('complete')
-  }, props.duration)
+  // Plus besoin de setTimeout fixe car on utilise les événements vidéo
 })
 
 // Nettoyage des événements lors du démontage du composant
@@ -65,12 +81,24 @@ onUnmounted(() => {
 <template>
   <transition name="fade">
     <div v-if="visible" class="splash-container">
-      <div class="splash-image-wrapper">
-        <img 
-          src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png" 
-          alt="Pokéball" 
-          class="splash-image"
-        />
+      <div class="splash-video-wrapper">
+        <video
+          ref="introVideo"
+          class="splash-video"
+          autoplay
+          muted
+          playsinline
+          @ended="onVideoEnd"
+          @error="onVideoError"
+        >
+          <source src="/videos/intro.mp4" type="video/mp4">
+          <!-- Fallback image au cas où la vidéo ne se charge pas -->
+          <img
+            src="https://archives.bulbagarden.net/media/upload/7/79/Dream_Pok%C3%A9_Ball_Sprite.png"
+            alt="Pokéball"
+            class="splash-fallback"
+          />
+        </video>
       </div>
     </div>
   </transition>
@@ -138,17 +166,29 @@ body, html {
   }
 }
 
-.splash-image-wrapper {
-  width: 150px;
-  height: 150px;
+.splash-video-wrapper {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
-.splash-image {
+.splash-video {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.splash-fallback {
+  width: 150px;
   height: auto;
+  position: relative;
+  z-index: 1;
   animation: float-pulse 3s ease-in-out infinite;
 }
 
@@ -179,9 +219,8 @@ body, html {
 
 /* Styles spécifiques pour mobile */
 @media (max-width: 600px) {
-  .splash-image-wrapper {
+  .splash-fallback {
     width: 120px;
-    height: 120px;
   }
 }
 </style>

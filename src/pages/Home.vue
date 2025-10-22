@@ -163,7 +163,7 @@ function resetIntro() {
             <PokemonDialog
               :text="welcomeMessage"
               speaker="PROFESSEUR"
-              avatar="../../images/prof.png"
+              avatar="../../images/prof.jpg"
               @complete="dialogDone = true"
             />
           </v-col>

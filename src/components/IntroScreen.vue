@@ -78,6 +78,13 @@ const closeIntro = () => {
 }
 
 // Les nettoyages sont gérés automatiquement par les composables
+
+// Gestionnaire d'événement pour la fin de la vidéo
+function onVideoEnd() {
+  // Quand la vidéo se termine, on peut ajouter une logique spécifique
+  // Par exemple, masquer le conteneur vidéo ou ajouter un effet
+  console.log('Vidéo du professeur terminée')
+}
 </script>
 
 <template>
@@ -98,7 +105,17 @@ const closeIntro = () => {
         <!-- <div class="pokeball-top"></div> -->
         
         <div class="intro-text-wrapper" :class="{ 'animating': isAnimating }">
-          <div class="professor-image"></div>
+          <div class="professor-video-container">
+            <video
+              class="professor-video"
+              autoplay
+              muted
+              playsinline
+              @ended="onVideoEnd"
+            >
+              <source src="/videos/prof.mp4" type="video/mp4">
+            </video>
+          </div>
           <div class="dialogue-box glass-dialogue-box">
             <pre class="typing-text">{{ displayedText }}</pre>
             <div class="skip-button-container" v-if="displayedText.includes('⚡️')">
@@ -254,10 +271,30 @@ body.intro-active, html.intro-active {
   }
 }
 
-.professor-image {
-  width: 120px;
-  height: 120px;
-  background-image: url('/public/images/prof.png');
+.professor-video-container {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  animation: professor-entrance 1s ease-out forwards;
+  transform-origin: center bottom;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+.professor-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Anciens styles de l'image du professeur - gardés en commentaire au cas où */
+/* .professor-image {
+  width: 150px;
+  height: 150px;
+  background-image: url('/public/images/prof.jpg');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -265,7 +302,7 @@ body.intro-active, html.intro-active {
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   animation: professor-entrance 1s ease-out forwards;
   transform-origin: center bottom;
-}
+} */
 
 @keyframes professor-entrance {
   0% { 
@@ -449,7 +486,7 @@ body.intro-active, html.intro-active {
     height: 40px;
   }
   
-  .professor-image {
+  .professor-video-container {
     width: 100px;
     height: 100px;
   }
