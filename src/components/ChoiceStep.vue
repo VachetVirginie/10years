@@ -164,8 +164,8 @@ function goToNextStep() {
   setTimeout(() => {
     const currentId = Number(props.step.id);
     
-    // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
-    if (currentId === 7) {
+    // Vérifier si c'est la dernière étape (id=8) pour afficher l'écran de fin
+    if (currentId === 8) {
       // Naviguer vers l'écran de fin de mission
       emit('navigate', 'end');
     } else {

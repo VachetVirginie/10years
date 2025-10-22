@@ -35,6 +35,7 @@ const welcomeMessage = computed(() => {
 // Menu items pour navigation
 const menuItems = [
   { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
+  { id: 'map', label: 'Voir la carte', icon: '🗺️' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
   { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }

@@ -2,6 +2,20 @@
   "title": "Lyon, nos pas et nos secrets : une chasse aux trésors pour deux",
   "steps": [
     {
+      "id": "0",
+      "type": "riddle",
+      "title": "Point de Départ – 27 Rue Chanteclair",
+      "prompt": "C'est ici que tout commence, à deux pas de notre histoire.\n\nDans ce quartier paisible du 5ème arrondissement, où les rues portent des noms poétiques, se cache notre point de départ.\n\nRetrouvez cette adresse qui marque le commencement de notre aventure lyonnaise.",
+      "lat": 45.746034,
+      "lng": 4.783157,
+      "radius": 20,
+      "answer": "Chanteclair",
+      "success": "Parfait ! Vous êtes au bon endroit. 👋\n\nIci commence votre quête à travers Lyon. Préparez-vous à découvrir les lieux qui ont marqué notre histoire !",
+      "hint": "Une rue du 5ème arrondissement, à proximité du Parc de la Tête d'Or.",
+      "splash": "Le commencement",
+      "photo": "Prenez une photo du panneau de rue pour immortaliser ce départ !"
+    },
+    {
       "id": "1",
       "type": "riddle",
       "title": "Place Bellecour – Le Roi et l'Éternité",

@@ -11,6 +11,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: Home },
     { path: '/step/:id', name: 'step', component: Step, props: true },
+    { path: '/map', name: 'map', component: Map },
     { path: '/our-story', name: 'our-story', component: OurStory },
     { 
       path: '/summary', 
