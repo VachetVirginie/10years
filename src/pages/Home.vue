@@ -19,7 +19,7 @@ useGeolocation()
 const { title, steps } = useHunt()
 const store = useProgress()
 const { preloadHighPriority, preloadForProgression } = usePreloader()
-const { getImageUrl, preloadCriticalImages } = useGameImages()
+const { getImageUrl, preloadCriticalImages, preloadImagesForProgress } = useGameImages()
 
 store.load()
 
@@ -49,6 +49,9 @@ onMounted(async () => {
     console.warn('Image du professeur non disponible:', error)
     profAvatarUrl.value = '/images/prof.jpg' // Fallback
   }
+
+  // Précharger les images selon la progression
+  await preloadImagesForProgress(progressPercent.value)
 
   // Précharger selon la progression avec un petit délai
   await new Promise(resolve => setTimeout(resolve, 500))
