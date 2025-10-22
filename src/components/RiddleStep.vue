@@ -221,6 +221,11 @@ function goToPreviousStep() {
   margin: 0 auto;
 }
 
+:deep(field .v-field--active input) {
+  opacity: 1;
+  color: white !important;
+}
+
 .riddle-content {
   background: rgba(33, 33, 33, 0.7);
   border-radius: 20px;
@@ -291,6 +296,7 @@ function goToPreviousStep() {
   -webkit-backdrop-filter: blur(var(--glass-blur-light));
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: var(--glass-transition);
+  color: var(--pokemon-white);
 }
 
 .pokemon-input:focus-within {
@@ -302,10 +308,10 @@ function goToPreviousStep() {
   color: var(--pokemon-red) !important;
 }
 
-/* .pokemon-input :deep(.v-field__input) {
+.pokemon-input :deep(.v-field__input) {
   color: var(--pokemon-white);
   font-weight: 500;
-} */
+}
 
 .pokemon-input :deep(.v-label) {
   color: var(--pokemon-gray-800);
