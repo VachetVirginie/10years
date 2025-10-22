@@ -14,14 +14,25 @@ const drawer = ref(false)
 const showSplashScreen = ref(false)
 const showIntroScreen = ref(false)
 
-// Vérifier si c'est la première visite
-onMounted(() => {
+// Fonction pour vérifier et afficher le splash/intro
+function checkAndShowScreens() {
   const hasSeenSplash = localStorage.getItem('hasSeenSplash')
   const hasSeenIntro = localStorage.getItem('hasSeenIntro')
-  
+
+  // Reset des refs pour forcer la réévaluation
+  showSplashScreen.value = false
+  showIntroScreen.value = false
+
   if (!hasSeenSplash) {
     showSplashScreen.value = true
+  } else if (!hasSeenIntro) {
+    showIntroScreen.value = true
   }
+}
+
+// Vérifier si c'est la première visite au montage
+onMounted(() => {
+  checkAndShowScreens()
 })
 
 function onSplashComplete() {

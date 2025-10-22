@@ -138,8 +138,17 @@ function handleMenuSelect(item: MenuItem) {
 function resetProgress() {
   store.reset()
   showResetConfirmation.value = false
-  // Mettre à jour l'interface
-  router.go(0) // Équivalent à refresh mais utilise le router
+
+  // Réinitialiser les états locaux des composants
+  dialogDone.value = false
+  showBadges.value = false
+
+  // Supprimer les flags du splash screen et de l'intro pour les revoir
+  localStorage.removeItem('hasSeenSplash')
+  localStorage.removeItem('hasSeenIntro')
+
+  // Recharger complètement la page pour un reset total
+  window.location.reload()
 }
 
 // Fonction pour réinitialiser le splash screen et l'intro
