@@ -45,6 +45,12 @@ const {
   skipPhotoBonus
 } = useStepState()
 
+// Destructurer les propriétés de currentState pour un accès direct dans le template
+const showHint = computed(() => currentState.value.showHint)
+const showSuccessPopup = computed(() => currentState.value.showSuccessPopup)
+const showPhotoBonus = computed(() => currentState.value.showPhotoBonus)
+const feedback = computed(() => currentState.value.feedback)
+
 // État spécifique au combat Pokémon
 const battleState = ref('intro') // 'intro', 'active', 'attacking', 'victory', 'defeat'
 const selected = ref<number | null>(null)
@@ -115,6 +121,18 @@ const attacks = computed<Attack[]>(() => {
 // Déterminer si l'étape actuelle a une étape précédente
 const hasPreviousStep = Number(props.step.id) > 1
 
+// Démarrer le combat - transition vers l'état actif
+function startBattle() {
+  battleState.value = 'active'
+  battleMessage.value = 'Choisis ton attaque !'
+}
+
+// Sélectionner une attaque
+function selectAttack(index: number) {
+  selected.value = index
+  battleMessage.value = `Attaque choisie : ${attacks.value[index].name}`
+}
+
 // Réinitialiser l'état du combat
 function resetBattle() {
   playerHP.value = playerInfo.hp
@@ -155,6 +173,40 @@ function goToPreviousStep() {
 // Afficher/masquer l'indice
 function toggleHint() {
   currentState.value.showHint = !currentState.value.showHint
+}
+
+// Utiliser l'attaque sélectionnée
+function useAttack() {
+  if (selected.value === null) return
+
+  animationInProgress.value = true
+  battleState.value = 'attacking'
+
+  // Simulation du combat
+  setTimeout(() => {
+    const chosenIndex = selected.value!
+    const isCorrect = chosenIndex === props.step.correctIndex
+
+    if (isCorrect) {
+      // Victoire
+      battleState.value = 'victory'
+      battleMessage.value = `Excellent ! ${props.step.success || 'Réponse correcte !'}`
+      currentState.value.feedback = props.step.success || 'Réponse correcte !'
+
+      // Afficher l'écran de victoire pendant 3 secondes avant le popup
+      setTimeout(() => {
+        currentState.value.showSuccessPopup = true
+        validateChoice(chosenIndex, props.step.correctIndex, props.step.id, props.step.success)
+      }, 5000) // 3 secondes pour admirer la victoire
+    } else {
+      // Défaite
+      battleState.value = 'defeat'
+      battleMessage.value = 'Mauvaise réponse... Réessaie !'
+      currentState.value.feedback = 'Mauvaise réponse... Réessaie !'
+    }
+
+    animationInProgress.value = false
+  }, 1000)
 }
 </script>
 
