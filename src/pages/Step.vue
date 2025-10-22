@@ -343,7 +343,6 @@ function resetHunt() {
   min-height: 100vh;
   position: relative;
   color: var(--pokemon-white);
-  padding: 10px;
   background-image: radial-gradient(circle at center, rgba(50, 50, 50, 0.8) 0%, rgba(20, 20, 20, 0.95) 70%);
 }
 
