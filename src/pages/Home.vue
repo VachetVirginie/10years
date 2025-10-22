@@ -26,9 +26,9 @@ const progressPercent = computed(() => {
 // Message de bienvenue pour le dialog Pokémon
 const welcomeMessage = computed(() => {
   if (store.done.size === 0) {
-    return "Bienvenue aventurier! Une quête épique t'attend à travers la ville. Es-tu prêt à relever le défi?"
+    return "Salut Soso ! Une chasse au trésor pleine d’amour commence à Lyon. Attrape ton sac, ton courage et ton sourire — l’aventure démarre maintenant !"
   } else {
-    return `Content de te revoir! Tu as déjà complété ${store.done.size} étapes sur ${steps.length}. Continue l'aventure!`
+    return `Content de te revoir jeune Soso! Tu as déjà complété ${store.done.size} étapes sur ${steps.length}. Continue l'aventure!`
   }
 })
 
