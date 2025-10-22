@@ -169,7 +169,10 @@ function goToNextStep() {
       // Naviguer vers l'écran de fin de mission
       emit('navigate', 'end');
     } else {
-      // Sinon passer à l'étape suivante normalement
+      // Vérifier s'il y a une étape bonus après l'étape actuelle
+      const nextBonusStep = `${currentId}b`;
+      // Pour l'instant, on passe directement à l'étape suivante
+      // Le système de bonus sera géré au niveau de l'étape principale
       const nextId = currentId + 1;
       emit('navigate', nextId);
     }

@@ -4,6 +4,7 @@ export type Base = { id:string; title:string; prompt:string; success?:string; hi
 export type HuntStep =
   | (Base & { type:'riddle'; answer:string })
   | (Base & { type:'choice'; choices:string[]; correctIndex:number })
+  | (Base & { type:'bonus'; bonusType:string; targetColor?:string; targetTheme?:string; targetElement?:string; targetMemory?:string; targetAction?:string; targetConcept?:string })
 
 export function useHunt() {
   return {

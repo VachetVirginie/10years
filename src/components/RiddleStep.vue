@@ -131,22 +131,25 @@ function check() {
 function goToNextStep() {
   // Fermer la pop-in avant de naviguer
   showSuccessPopup.value = false
-  
+
   // Réinitialiser le champ de réponse et le feedback
   answer.value = ''
   feedback.value = ''
   isFeedbackSuccess.value = false
-  
+
   // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
     const currentId = Number(props.step.id)
-    
+
     // Vérifier si c'est la dernière étape (id=7) pour afficher l'écran de fin
     if (currentId === 7) {
       // Naviguer vers l'écran de fin de mission
       emit('navigate', 'end')
     } else {
-      // Sinon passer à l'étape suivante normalement
+      // Vérifier s'il y a une étape bonus après l'étape actuelle
+      const nextBonusStep = `${currentId}b`
+      // Pour l'instant, on passe directement à l'étape suivante
+      // Le système de bonus sera géré au niveau de l'étape principale
       const nextId = currentId + 1
       emit('navigate', nextId)
     }
@@ -200,7 +203,7 @@ function goToPreviousStep() {
   <section aria-labelledby="riddle-title" class="riddle-container">
     <div class="quest-header">
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
-      <h2 class="quest-title">Énigme <span>{{ props.step.id }}</span></h2> 
+      <h2 class="quest-title">Énigme <span>{{ props.step.id }}</span></h2>
       <img :src="pokeballImg" alt="Poké Ball" class="pokeball-icon" />
     </div>
 

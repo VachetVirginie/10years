@@ -4,7 +4,7 @@
     {
       "id": "1",
       "type": "riddle",
-      "title": "Place Bellecour – Le Roi et l’Éternité",
+      "title": "Place Bellecour – Le Roi et l'Éternité",
       "prompt": "Au cœur de la ville, \n\n Là où le vent danse avec les pavés, \nUn roi de bronze, immobile, garde nos secrets enfouis. \n\nSon cheval, tour à tour flamme et glace, pointe vers l'horizon, \nLà où nos destins s'entrelacent, loin des couronnes et des trônes. \n\nCherche l'ombre qui s'étire au rythme du Rhône, \nEt trouve le lieu où tout commence.",
       "lat": 45.757198,
       "lng": 4.8312188,
@@ -16,10 +16,20 @@
       "photo": "Prenez une photo en mimant une pose de dresseur !"
     },
     {
+      "id": "1b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Observation",
+      "prompt": "Bravo pour cette première étape ! \n\nMaintenant, regarde autour de toi et trouve quelque chose de BLEU dans ton environnement immédiat. Cela peut être n'importe quoi : un panneau, une voiture, un vêtement... \n\nPrends-le en photo pour prouver que tu l'as trouvé !",
+      "bonusType": "photo_challenge",
+      "targetColor": "bleu",
+      "success": "Excellent ! Tu as trouvé un élément bleu ! \n\nCette couleur représente la loyauté et la confiance, comme dans notre relation. Continuons l'aventure !",
+      "splash": "Micro-défi couleur"
+    },
+    {
       "id": "2",
       "type": "riddle",
       "title": "Halles Paul Bocuse – Le Festin des Sens",
-      "prompt": "Entre les parfums de pain chaud et les éclats de rire, \nUn temple s’élève, dédié aux plaisirs éphémères. \n\nC’est ici que les saveurs s’épousent, que les souvenirs s’inventent, \nEt que nos cœurs, comme des bouchons, sautent de joie. \n\nTrouve l’endroit où Le chef du siècle, le magicien, a posé son chapeau.",
+      "prompt": "Entre les parfums de pain chaud et les éclats de rire, \nUn temple s'élève, dédié aux plaisirs éphémères. \n\nC'est ici que les saveurs s'épousent, que les souvenirs s'inventent, \nEt que nos cœurs, comme des bouchons, sautent de joie. \n\nTrouve l'endroit où Le chef du siècle, le magicien, a posé son chapeau.",
       "lat": 45.7636197,
       "lng": 4.8502016,
       "radius": 25,
@@ -30,24 +40,44 @@
       "photo": "Prenez une photo en tenant la main de la statue (ou en contre-plongée avec le cheval derrière vous)."
     },
     {
+      "id": "2b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Créativité",
+      "prompt": "Félicitations pour cette deuxième étape ! \n\nMaintenant, utilise ton imagination : trouve ou crée quelque chose qui représente 'l'amour éternel'. Cela peut être un geste, un objet symbolique, ou même une pose créative !\n\nImmortalise ce moment en photo !",
+      "bonusType": "creative_challenge",
+      "targetTheme": "amour éternel",
+      "success": "Magnifique ! \n\nTon interprétation de l'amour éternel est unique et personnelle. C'est exactement ce qui rend notre histoire si spéciale !",
+      "splash": "Défi créatif"
+    },
+    {
       "id": "3",
       "type": "riddle",
-      "title": "Le Cœur de Verre",
-      "prompt": "Entre les rails et les nuages, un palais de verre respire,\nOù se croisent les destins, les pas, les souvenirs.\n\nSous la lumière des verrières, le monde se rassemble,\nEt le temps s’arrête un instant, dans son tumulte qui tremble.\n\nCherche le lieu où tout commence et tout converge,\nOù les voyageurs deviennent rêveurs,\nEt où Lyon bat, entre béton et lumière.",
-      "lat": 45.7609,
-      "lng": 4.8506,
-      "radius": 40,
-      "answer": "La Part-Dieu",
-      "success": "Bravo ! Tu as trouvé la Part-Dieu 💫\n\nUn carrefour vivant, entre voyages, commerces et rencontres.\nPrends un instant pour observer la foule : chaque visage est une histoire.",
+      "title": "Micromania Part-Dieu – Le Jeu de Nos Vies",
+      "prompt": "Entre les rails et les départs, un palais de verre veille, \nOù les héros naissent, où les quêtes s'achèvent. \n\nJ'ai couru après des pixels, défié des dragons, \nMais c'est toi, mon vrai trésor, que j'ai trouvé en chemin. \n\nCherche l'échoppe où les rêves s'achètent, \nOù nos enfances se rencontrent, où nos futurs s'inventent.",
+      "lat": 45.76169967651367,
+      "lng": 4.8504961,
+      "radius": 25,
+      "answer": "Part Dieu",
+      "success": "Bravo ! Tu as trouvé Micromania. \n\nPrends ce ticket à gratter… \nil cache un indice pour la suite !",
       "hint": "Un quartier de verre et d’acier, où les trains, les tours et les rêves se croisent.",
-      "splash": "A la croisee des chemins.",
-      "photo": "Faites un selfie sous la verrière ou devant les tours, symbole de la Part-Dieu."
+      "splash": "A la croisee des chemins",
+      "photo": "Faites un selfie en trinquant avec une gourmandise (verre, macaron, café…)."
+    },
+    {
+      "id": "3b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Nature",
+      "prompt": "Bravo pour cette troisième victoire ! \n\nObserve la nature autour de toi. Trouve quelque chose de VERT et de vivant (une plante, une feuille, de l'herbe...). \n\nPrends-le en photo pour capturer ce moment de vie !",
+      "bonusType": "nature_challenge",
+      "targetElement": "vert et vivant",
+      "success": "Parfait ! \n\nLa nature nous rappelle que tout évolue et grandit, comme notre amour qui se renforce chaque jour !",
+      "splash": "Connexion naturelle"
     },
     {
       "id": "4",
       "type": "riddle",
-      "title": "Restaurant L’Entrecôte – Le Rituel Gourmand",
-      "prompt": "Tout près d’où nos premiers pas d’amoureux résonnaient, \nSur la grande rue où les passants se croisent sans fin, \nSe cache une adresse immuable, connue de tous les Lyonnais.  \n\nPas de menu compliqué, ici le choix est déjà fait :  \nUne viande tendre, une sauce secrète, et des frites à volonté.  \n\nRetrouve ce lieu qui fut à deux pas de notre premier nid,  \nEt savoure le parfum de nos débuts, encore intact.",
+      "title": "Restaurant L'Entrecôte – Le Rituel Gourmand",
+      "prompt": "Tout près d'où nos premiers pas d'amoureux résonnaient, \nSur la grande rue où les passants se croisent sans fin, \nSe cache une adresse immuable, connue de tous les Lyonnais.  \n\nPas de menu compliqué, ici le choix est déjà fait :  \nUne viande tendre, une sauce secrète, et des frites à volonté.  \n\nRetrouve ce lieu qui fut à deux pas de notre premier nid,  \nEt savoure le parfum de nos débuts, encore intact.",
       "lat": 45.762553,
       "lng": 4.835775,
       "radius": 25,
@@ -56,6 +86,16 @@
       "hint": "Un restaurant de la Rue de la République, célèbre pour n’avoir qu’un seul plat au menu.",
       "splash": "Le Repas des Origines !",
       "photo": "Prenez une photo en mimant une pose de gamer (comme si vous jouiez avec une manette invisible)."
+    },
+    {
+      "id": "4b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Souvenir",
+      "prompt": "Quelle belle étape ! \n\nMaintenant, trouve quelque chose qui te rappelle un souvenir commun avec ton/ta partenaire. Cela peut être un lieu, un objet, ou même une sensation !\n\nPartage ce souvenir en photo !",
+      "bonusType": "memory_challenge",
+      "targetMemory": "souvenir commun",
+      "success": "Touchant ! \n\nCes souvenirs partagés sont les fondations de notre histoire. Ils nous rappellent pourquoi nous sommes ensemble !",
+      "splash": "Mémoire partagée"
     },
     {
       "id": "5",
@@ -72,13 +112,23 @@
       "photo": "Prenez une photo en sautant en l’air devant le lac, avec l’île en arrière-plan."
     },
     {
+      "id": "5b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Mouvement",
+      "prompt": "Super progression ! \n\nMaintenant, bouge ton corps ! Trouve un mouvement ou une action qui représente la LIBERTÉ (courir, sauter, danser...). \n\nCapture ce moment de liberté en mouvement !",
+      "bonusType": "movement_challenge",
+      "targetAction": "liberté",
+      "success": "Libre comme l'air ! \n\nCette sensation de liberté nous rappelle que l'amour nous donne des ailes pour explorer le monde ensemble !",
+      "splash": "Libre mouvement"
+    },
+    {
       "id": "6",
       "type": "choice",
       "title": "Parc de la Tête d'Or – Le Lac et ses Mystères",
       "prompt": "Sur ce miroir d'eau, où les cygnes glissent en silence, \nQue trouve-t-on au centre, comme un cœur dans la balance ?",
       "choices": [
         "Une fontaine",
-        "L’île aux cygnes",
+        "L'île aux cygnes",
         "Un phare"
       ],
       "correctIndex": 1,
@@ -87,8 +137,18 @@
       "radius": 25,
       "success": "L'île aux cygnes, bien sûr ! \n\nC'est ici que Tony Garnier a sculpté l'amour et le souvenir. \nPrends ce caillou blanc… il te guidera vers la dernière étape.",
       "hint": "Un lieu de mémoire, \noù l'art et la nature s'unissent.",
-      "splash": "L’Île aux Cygnes Cachée !",
-      "photo": "Prenez une photo main dans la main devant l’enseigne (comme un retour à vos débuts)."
+      "splash": "Le mystère",
+      "photo": "Prenez une photo main dans la main devant l'enseigne (comme un retour à vos débuts)."
+    },
+    {
+      "id": "6b",
+      "type": "bonus",
+      "title": "Niveau Bonus - Harmonie",
+      "prompt": "Excellent travail ! \n\nTrouve maintenant un élément qui représente l'ÉQUILIBRE dans ta vie (un objet symétrique, deux choses identiques, ou même une position équilibrée...). \n\nPhotographiez cet équilibre parfait !",
+      "bonusType": "balance_challenge",
+      "targetConcept": "équilibre",
+      "success": "Parfait équilibre ! \n\nL'harmonie et l'équilibre sont essentiels dans une relation. Ils nous permettent de nous soutenir mutuellement !",
+      "splash": "Équilibre parfait"
     },
     {
       "id": "7",
