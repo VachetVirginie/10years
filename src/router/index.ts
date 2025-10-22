@@ -3,6 +3,7 @@ import Home from '../pages/Home.vue'
 import Step from '../pages/Step.vue'
 import Summary from '../pages/Summary.vue'
 import Map from '../pages/Map.vue'
+import TrainerJournal from '../pages/TrainerJournal.vue'
 import OurStory from '../pages/OurStory.vue'
 import { useProgress } from '../store/progress'
 
@@ -12,6 +13,7 @@ const router = createRouter({
     { path: '/', name: 'home', component: Home },
     { path: '/step/:id', name: 'step', component: Step, props: true },
     { path: '/map', name: 'map', component: Map },
+    { path: '/journal', name: 'journal', component: TrainerJournal },
     { path: '/our-story', name: 'our-story', component: OurStory },
     { 
       path: '/summary', 

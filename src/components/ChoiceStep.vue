@@ -166,8 +166,8 @@ function goToNextStep() {
     
     // Vérifier si c'est la dernière étape (id=8) pour afficher l'écran de fin
     if (currentId === 8) {
-      // Naviguer vers l'écran de fin de mission
-      emit('navigate', 'end');
+      // Naviguer vers le journal de dresseur pour voir le résumé
+      emit('navigate', 'journal');
     } else {
       // Vérifier s'il y a une étape bonus après l'étape actuelle
       const nextBonusStep = `${currentId}b`;

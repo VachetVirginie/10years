@@ -36,6 +36,7 @@ const welcomeMessage = computed(() => {
 const menuItems = [
   { id: 'start', label: store.done.size === 0 ? 'Commencer l\'aventure' : 'Continuer l\'aventure', icon: '🚀' },
   { id: 'map', label: 'Voir la carte', icon: '🗺️' },
+  { id: 'journal', label: 'Journal de dresseur', icon: '📖' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
   { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
@@ -90,6 +91,8 @@ function handleMenuSelect(item: MenuItem) {
     }
   } else if (item.id === 'map') {
     router.push('/map')
+  } else if (item.id === 'journal') {
+    router.push('/journal')
   } else if (item.id === 'badges') {
     showBadges.value = true
   } else if (item.id === 'reset') {

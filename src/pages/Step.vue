@@ -29,7 +29,14 @@ const showMissionComplete = ref(false)
 
 // Fonction pour naviguer vers la prochaine étape avec splash
 function navigateToStep(stepId: string | number) {
-  // Vérifier si c'est la fin de la chasse au trésor (après l'étape 7)
+  // Vérifier si c'est la fin de la chasse au trésor (après l'étape 8)
+  if (stepId.toString() === 'journal') {
+    // Naviguer vers le journal de dresseur
+    router.push('/journal')
+    return
+  }
+
+  // Vérifier si c'est la fin de la chasse au trésor (écran de fin traditionnel)
   if (stepId.toString() === 'end') {
     // Afficher l'écran de fin de mission
     showMissionComplete.value = true

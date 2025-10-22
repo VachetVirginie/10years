@@ -301,7 +301,7 @@ onMounted(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: var(--pokemon-black);
   color: var(--pokemon-white);
   position: relative;
   overflow: hidden;
@@ -314,31 +314,29 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 61, 40, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at center, rgba(50, 50, 50, 0.3) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
 .map-header {
-  padding: 20px;
-  background: rgba(33, 33, 33, 0.95);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  z-index: 1000;
+  padding: 40px 20px;
+  text-align: center;
   position: relative;
 }
 
 .map-title {
-  margin: 0 0 15px 0;
   font-size: 1.8rem;
-  font-weight: 700;
+  margin: 20px 0 10px 0;
   color: var(--pokemon-white);
-  text-shadow: 0 0 15px rgba(255, 61, 40, 0.8);
-  text-align: center;
+  font-weight: 700;
   letter-spacing: 1px;
+}
+
+.map-subtitle {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .map-legend {
@@ -349,7 +347,7 @@ onMounted(() => {
   padding: 15px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 15px;
-  border: 1px solid rgba(255, 61, 40, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .legend-item {
@@ -370,18 +368,18 @@ onMounted(() => {
 }
 
 .legend-icon.green {
-  background: linear-gradient(135deg, #10b981, #059669);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(145deg, rgba(33, 33, 33, 0.9), rgba(20, 20, 20, 0.9));
+  box-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
 }
 
-.legend-icon.red {
-  background: var(--pokemon-red);
-  box-shadow: 0 0 10px var(--pokemon-red);
+.legend-icon.orange {
+  background: linear-gradient(145deg, rgba(33, 33, 33, 0.9), rgba(20, 20, 20, 0.9));
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .legend-icon.grey {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  box-shadow: 0 0 10px rgba(107, 114, 128, 0.5);
+  background: linear-gradient(145deg, rgba(33, 33, 33, 0.9), rgba(20, 20, 20, 0.9));
+  box-shadow: 0 0 10px rgba(136, 136, 136, 0.5);
 }
 
 .legend-icon.fog {
@@ -401,6 +399,7 @@ onMounted(() => {
   overflow: hidden;
   border-radius: 15px;
   margin: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
@@ -428,10 +427,11 @@ onMounted(() => {
 }
 
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba(255, 61, 40, 0.3);
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--glass-border-light);
   border-radius: 50%;
+  border-top-color: var(--pokemon-red);
   animation: spin 1s ease-in-out infinite;
   margin-bottom: 20px;
   box-shadow: 0 0 20px rgba(255, 61, 40, 0.3);
@@ -439,81 +439,6 @@ onMounted(() => {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-.map-bg-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.1;
-  animation: float 6s ease-in-out infinite;
-}
-
-.particle-1 {
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, rgba(255, 61, 40, 0.3), transparent);
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.particle-2 {
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(120, 119, 198, 0.2), transparent);
-  top: 60%;
-  right: 15%;
-  animation-delay: 2s;
-}
-
-.particle-3 {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent);
-  top: 40%;
-  left: 70%;
-  animation-delay: 4s;
-}
-
-.particle-4 {
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent);
-  top: 80%;
-  left: 50%;
-  animation-delay: 1s;
-}
-
-.particle-5 {
-  width: 60px;
-  height: 60px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
-  top: 30%;
-  right: 40%;
-  animation-delay: 3s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
-}
-
-.map-subtitle {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  margin-bottom: 20px;
-  font-style: italic;
 }
 
 .loading-dots {
@@ -538,6 +463,47 @@ onMounted(() => {
   }
 }
 
+.map-progress {
+  padding: 20px;
+  background: rgba(33, 33, 33, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px 25px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-text {
+  font-size: 1rem;
+  color: var(--pokemon-white);
+  font-weight: 600;
+}
+
+.progress-percentage {
+  background: linear-gradient(135deg, var(--pokemon-red), #ff6b6b);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 61, 40, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 .progress-details {
   display: flex;
   flex-direction: column;
@@ -551,7 +517,7 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(255, 61, 40, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .progress-fill {
@@ -564,9 +530,10 @@ onMounted(() => {
 
 /* Styles pour les popups de la carte */
 :deep(.leaflet-popup-content-wrapper) {
-  background: linear-gradient(135deg, rgba(33, 33, 33, 0.98), rgba(20, 20, 20, 0.98));
+  background: rgba(33, 33, 33, 0.98);
   color: var(--pokemon-white);
   border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(15px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
@@ -577,15 +544,17 @@ onMounted(() => {
 
 :deep(.leaflet-popup-tip) {
   background: var(--pokemon-red);
+  border: 1px solid var(--pokemon-red);
   box-shadow: 0 4px 15px rgba(255, 61, 40, 0.5);
 }
 
 .map-popup h4 {
   margin: 0 0 15px 0;
-  color: var(--pokemon-red);
   font-size: 1.2rem;
   font-weight: 700;
-  text-shadow: 0 0 10px rgba(255, 61, 40, 0.5);
+  color: var(--pokemon-white);
+  text-align: center;
+  letter-spacing: 1px;
 }
 
 .map-popup p {
@@ -595,8 +564,7 @@ onMounted(() => {
 }
 
 .map-popup strong {
-  color: var(--pokemon-red);
-  text-shadow: 0 0 5px var(--pokemon-red);
+  color: var(--pokemon-white);
 }
 
 /* Animations pour les éléments */
@@ -636,6 +604,10 @@ onMounted(() => {
 
   .map-title {
     font-size: 1.4rem;
+  }
+
+  .map-subtitle {
+    font-size: 0.9rem;
   }
 
   .map-legend {
