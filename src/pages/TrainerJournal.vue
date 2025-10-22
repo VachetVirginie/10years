@@ -682,48 +682,68 @@ function generateJournalContent(): string {
 }
 
 .badge-card {
-  background: linear-gradient(145deg, rgba(33, 33, 33, 0.9), rgba(20, 20, 20, 0.9));
+  background: linear-gradient(145deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.8));
   border-radius: 15px;
   padding: 20px;
   text-align: center;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--pokemon-gold);
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .badge-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  border-color: var(--pokemon-gold);
 }
 
 .badge-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 3rem;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .badge-name {
-  font-size: 1.1rem;
-  margin: 10px 0;
-  color: var(--pokemon-white);
-  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 15px 0 10px 0;
+  color: var(--pokemon-gold);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .badge-description {
   font-size: 0.9rem;
   margin: 10px 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
 }
 
 .badge-rarity {
   font-size: 0.8rem;
-  padding: 4px 8px;
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 15px;
   font-weight: bold;
   text-transform: uppercase;
+  margin-top: 10px;
 }
 
-.badge-rarity.Commun { background: rgba(107, 114, 128, 0.8); color: #D1D5DB; }
-.badge-rarity.Rare { background: rgba(124, 45, 18, 0.8); color: rgba(255, 255, 255, 0.8); }
-.badge-rarity.Légendaire { background: rgba(124, 45, 18, 0.8); color: rgba(255, 255, 255, 0.8); }
+.badge-rarity.Commun {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: #D1D5DB;
+  box-shadow: 0 2px 8px rgba(107, 114, 128, 0.4);
+}
+
+.badge-rarity.Rare {
+  background: linear-gradient(135deg, var(--pokemon-red), #cc2512);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 61, 40, 0.4);
+}
+
+.badge-rarity.Légendaire {
+  background: linear-gradient(135deg, var(--pokemon-gold), #ffd700);
+  color: #8b5a00;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+}
 
 /* Grille des bonus */
 .bonus-grid {
