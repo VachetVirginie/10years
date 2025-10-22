@@ -2,20 +2,40 @@ import { ref, computed } from 'vue'
 import { useProgress } from '../store/progress'
 import { useHunt } from './useHunt'
 
+// Imports statiques pour les composants (nécessaires pour Vite)
+// Note: Vite ne peut pas analyser les imports dynamiques avec des variables (import(component.path))
+// Nous utilisons donc des imports statiques avec un mapping pour la compatibilité
+import Step from '../pages/Step.vue'
+import Map from '../pages/Map.vue'
+import TrainerJournal from '../pages/TrainerJournal.vue'
+import PokemonDialog from '../components/PokemonDialog.vue'
+import PokemonHealthBar from '../components/PokemonHealthBar.vue'
+import PokemonBadges from '../components/PokemonBadges.vue'
+
 interface PreloadableComponent {
   name: string
-  path: string
+  component: any
   priority: 'high' | 'medium' | 'low'
+}
+
+// Mapping des composants avec leurs imports statiques
+const componentMap: Record<string, any> = {
+  'Step': Step,
+  'Map': Map,
+  'TrainerJournal': TrainerJournal,
+  'PokemonDialog': PokemonDialog,
+  'PokemonHealthBar': PokemonHealthBar,
+  'PokemonBadges': PokemonBadges
 }
 
 // Liste des composants à précharger avec leurs priorités
 const componentsToPreload: PreloadableComponent[] = [
-  { name: 'Step', path: '../pages/Step.vue', priority: 'high' },
-  { name: 'Map', path: '../pages/Map.vue', priority: 'medium' },
-  { name: 'TrainerJournal', path: '../pages/TrainerJournal.vue', priority: 'low' },
-  { name: 'PokemonDialog', path: '../components/PokemonDialog.vue', priority: 'high' },
-  { name: 'PokemonHealthBar', path: '../components/PokemonHealthBar.vue', priority: 'high' },
-  { name: 'PokemonBadges', path: '../components/PokemonBadges.vue', priority: 'medium' }
+  { name: 'Step', component: Step, priority: 'high' },
+  { name: 'Map', component: Map, priority: 'medium' },
+  { name: 'TrainerJournal', component: TrainerJournal, priority: 'low' },
+  { name: 'PokemonDialog', component: PokemonDialog, priority: 'high' },
+  { name: 'PokemonHealthBar', component: PokemonHealthBar, priority: 'high' },
+  { name: 'PokemonBadges', component: PokemonBadges, priority: 'medium' }
 ]
 
 // Cache des composants déjà préchargés
@@ -46,10 +66,11 @@ export function usePreloader() {
     return components.filter(c => !preloadedComponents.has(c.name))
   })
 
-  // Préchargement intelligent
+  // Préchargement intelligent (simulé car les imports sont déjà statiques)
   const preloadComponent = async (component: PreloadableComponent): Promise<void> => {
     try {
-      await import(component.path)
+      // Simulation du préchargement (les composants sont déjà importés statiquement)
+      await new Promise(resolve => setTimeout(resolve, 10))
       preloadedComponents.add(component.name)
       console.log(`✅ Composant ${component.name} préchargé`)
     } catch (error) {
@@ -94,18 +115,25 @@ export function usePreloader() {
     }
   }
 
+  // Obtenir un composant préchargé
+  const getPreloadedComponent = (componentName: string) => {
+    return componentMap[componentName]
+  }
+
   // Statistiques de préchargement
   const getPreloadStats = () => ({
     totalComponents: componentsToPreload.length,
     preloadedCount: preloadedComponents.size,
     remainingCount: componentsToPreload.length - preloadedComponents.size,
-    isPreloading: isPreloading.value
+    isPreloading: isPreloading.value,
+    availableComponents: Object.keys(componentMap)
   })
 
   return {
     preloadHighPriority,
     preloadForProgression,
     preloadSpecific,
+    getPreloadedComponent,
     getPreloadStats,
     componentsToPreloadNow
   }

@@ -9,9 +9,6 @@ const Map = () => import('../pages/Map.vue')
 const TrainerJournal = () => import('../pages/TrainerJournal.vue')
 const OurStory = () => import('../pages/OurStory.vue')
 
-// Import synchrone pour éviter les problèmes TypeScript
-import { usePreloader } from '../composables/usePreloader'
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -20,38 +17,17 @@ const router = createRouter({
       path: '/step/:id',
       name: 'step',
       component: Step,
-      props: true,
-      // Précharger la carte quand on va vers une étape
-      beforeEnter: async (to) => {
-        const { preloadSpecific } = usePreloader()
-        await preloadSpecific('Map')
-      }
+      props: true
     },
     {
       path: '/map',
       name: 'map',
-      component: Map,
-      // Précharger les composants de progression
-      beforeEnter: async () => {
-        const { preloadSpecific } = usePreloader()
-        await Promise.all([
-          preloadSpecific('PokemonBadges'),
-          preloadSpecific('PokemonHealthBar')
-        ])
-      }
+      component: Map
     },
     {
       path: '/journal',
       name: 'journal',
-      component: TrainerJournal,
-      // Précharger les composants Pokémon
-      beforeEnter: async () => {
-        const { preloadSpecific } = usePreloader()
-        await Promise.all([
-          preloadSpecific('PokemonDialog'),
-          preloadSpecific('PokemonHealthBar')
-        ])
-      }
+      component: TrainerJournal
     },
     { path: '/our-story', name: 'our-story', component: OurStory },
     {

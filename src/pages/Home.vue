@@ -3,6 +3,7 @@ import { useHunt } from '../composables/useHunt'
 import { useGeolocation } from '../composables/useGeolocation'
 import { useProgress } from '../store/progress'
 import { usePreloader } from '../composables/usePreloader'
+import { useAdvancedPreloader } from '../composables/useAdvancedPreloader'
 import { useGameImages } from '../composables/useGameImages'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -19,6 +20,7 @@ useGeolocation()
 const { title, steps } = useHunt()
 const store = useProgress()
 const { preloadHighPriority, preloadForProgression } = usePreloader()
+const { preloadHighPriority: preloadCritical, preloadForProgression: preloadProgressive } = useAdvancedPreloader()
 const { getImageUrl, preloadCriticalImages, preloadImagesForProgress } = useGameImages()
 
 store.load()
@@ -36,8 +38,11 @@ onMounted(async () => {
   // Attendre que les données critiques soient chargées
   await new Promise(resolve => setTimeout(resolve, 100))
 
+  // Précharger les composants critiques en premier
+  await preloadCritical()
+
   // Précharger les composants prioritaires
-  preloadHighPriority()
+  await preloadHighPriority()
 
   // Précharger les images critiques
   await preloadCriticalImages()
@@ -55,7 +60,7 @@ onMounted(async () => {
 
   // Précharger selon la progression avec un petit délai
   await new Promise(resolve => setTimeout(resolve, 500))
-  preloadForProgression()
+  await preloadProgressive()
 })
 
 // Message de bienvenue pour le dialog Pokémon
@@ -73,6 +78,8 @@ const menuItems = [
   { id: 'map', label: 'Voir la carte', icon: '🗺️' },
   { id: 'journal', label: 'Journal de dresseur', icon: '📖' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
+  { id: 'story', label: 'Notre histoire', icon: '💕' },
+  { id: 'summary', label: 'Résumé final', icon: '🎯' },
   { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
 ]
@@ -130,6 +137,10 @@ function handleMenuSelect(item: MenuItem) {
     router.push('/journal')
   } else if (item.id === 'badges') {
     showBadges.value = true
+  } else if (item.id === 'story') {
+    router.push('/our-story')
+  } else if (item.id === 'summary') {
+    router.push('/summary')
   } else if (item.id === 'reset') {
     showResetConfirmation.value = true
   } else if (item.id === 'intro') {

@@ -2,6 +2,7 @@
 import { ref, computed, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProgress } from '../store/progress'
+import { useStepState } from '../composables/useStepState'
 import '../assets/quest-components.css'
 import SuccessPopup from './SuccessPopup.vue'
 import PhotoBonus from './PhotoBonus.vue'
@@ -13,220 +14,148 @@ import trainerRedImg from '../assets/images/aaa.jpg'
 import trainerVillainImg from '../assets/images/woman.jpg'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 
-const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string; photo?:string }, steps?: any[], id?: string }>()
+const props = defineProps<{
+  step: {
+    id: string
+    prompt: string
+    choices: string[]
+    correctIndex: number
+    success?: string
+    hint?: string
+    photo?: string
+  },
+  steps?: any[],
+  id?: string
+}>()
 const emit = defineEmits(['navigate'])
 
-// État du combat Pokémon
-const battleState = ref('intro'); // 'intro', 'active', 'attacking', 'victory', 'defeat'
-const selected = ref<number|null>(null);
-const feedback = ref('');
-const showHint = ref(false);
-const animationInProgress = ref(false);
-const showSuccessPopup = ref(false);
-const showPhotoBonus = ref(false);
-const router = useRouter();
-const store = useProgress(); store.load();
+const router = useRouter()
+const store = useProgress()
+store.load()
 
-// Déterminer si l'étape actuelle a une étape précédente
-const hasPreviousStep = Number(props.step.id) > 1;
+// Utiliser le composable d'état des étapes
+const {
+  currentState,
+  resetState,
+  validateChoice,
+  navigateToNext,
+  navigateToPrevious,
+  handlePhotoBonus,
+  completePhotoBonus,
+  skipPhotoBonus
+} = useStepState()
+
+// État spécifique au combat Pokémon
+const battleState = ref('intro') // 'intro', 'active', 'attacking', 'victory', 'defeat'
+const selected = ref<number | null>(null)
+const animationInProgress = ref(false)
 
 // Récupérer la fonction de navigation du parent
 const navigateToStep = inject('navigateToStep', (stepId: string | number) => {
-  // Fallback si l'injection n'est pas disponible
   console.warn('navigateToStep not provided by parent')
   router.push(`/step/${stepId}`)
-});
+})
 
-// Informations des dresseurs et Pokémon avec images locales
-const playerInfo = {
+// Configuration des dresseurs avec types stricts
+interface Trainer {
+  name: string
+  avatar: string
+  pokemon: string
+  pokemonImage: string
+  hp: number
+  level: number
+}
+
+interface Attack {
+  name: string
+  type: string
+  power: number
+}
+
+const playerInfo: Trainer = {
   name: 'Toi',
   avatar: trainerRedImg,
   pokemon: 'Charizard',
   pokemonImage: charizardImg,
   hp: 100,
   level: 50
-};
+}
 
-const opponentInfo = {
+const opponentInfo: Trainer = {
   name: 'Dresseur Rival',
   avatar: trainerVillainImg,
   pokemon: 'Blastoise',
   pokemonImage: blastoiseImg,
   hp: 100,
   level: 50
-};
+}
 
-// Messages de combat inspirés par le combat traditionnel Pokémon
-const battleMessages = [
+// Messages de combat typés
+const battleMessages: readonly string[] = [
   'C\'est super efficace !',
   'Un coup critique !',
   'L\'adversaire est gravement touché !',
   'Ton attaque a dévasté l\'ennemi !',
   'L\'adversaire est impressionné par ta puissance !'
-];
+] as const
 
-const playerHP = ref(playerInfo.hp);
-const opponentHP = ref(opponentInfo.hp);
-const battleMessage = ref(`Un dresseur rival te défie ! Réponds correctement pour gagner ce combat !`);
+// HP des Pokémon
+const playerHP = ref(playerInfo.hp)
+const opponentHP = ref(opponentInfo.hp)
+const battleMessage = ref(`Un dresseur rival te défie ! Réponds correctement pour gagner ce combat !`)
 
-// Attaques disponibles (les choix de réponse)
-const attacks = computed(() => {
+// Attaques typées
+const attacks = computed<Attack[]>(() => {
   return props.step.choices.map((choice, index) => ({
     name: choice,
     type: index === props.step.correctIndex ? 'Amour' : 'Normal',
     power: index === props.step.correctIndex ? 100 : 0
-  }));
-});
+  }))
+})
 
-// Démarrer le combat
-function startBattle() {
-  battleState.value = 'active';
-  battleMessage.value = 'Choisissez votre attaque !';
-}
+// Déterminer si l'étape actuelle a une étape précédente
+const hasPreviousStep = Number(props.step.id) > 1
 
-// Sélectionner une attaque (choix)
-function selectAttack(index: number) {
-  if (battleState.value !== 'active' || animationInProgress.value) return;
-  
-  selected.value = index;
-}
-
-// Lancer l'attaque sélectionnée
-function useAttack() {
-  if (selected.value === null || battleState.value !== 'active') return;
-  
-  animationInProgress.value = true;
-  battleState.value = 'attacking';
-  
-  const isCorrect = selected.value === props.step.correctIndex;
-  
-  // Animation d'attaque
-  setTimeout(() => {
-    if (isCorrect) {
-      // Attaque correcte
-      opponentHP.value = 0;
-      const randomMessage = battleMessages[Math.floor(Math.random() * battleMessages.length)];
-      battleMessage.value = randomMessage;
-      
-      // Animation de victoire
-      setTimeout(() => {
-        battleState.value = 'victory';
-        feedback.value = props.step.success ?? 'Vous avez gagné ce combat d\'amour ! Votre lien est renforcé !';
-        store.markDone(props.step.id);
-        animationInProgress.value = false;
-        // Afficher le popup de succès après un court délai
-        setTimeout(() => {
-          showSuccessPopup.value = true;
-        }, 1000);
-      }, 1500);
-    } else {
-      // Mauvaise attaque
-      playerHP.value -= 20;
-      battleMessage.value = 'Votre attaque a échoué ! Essayez une autre stratégie !';
-      
-      // Contre-attaque de l'adversaire
-      setTimeout(() => {
-        playerHP.value -= 20;
-        battleMessage.value = 'Le Pokémon adverse contre-attaque !';
-        
-        // Retour à l'état actif
-        setTimeout(() => {
-          battleState.value = 'active';
-          battleMessage.value = 'Choisissez une meilleure attaque !';
-          animationInProgress.value = false;
-          
-          // Game over si HP = 0
-          if (playerHP.value <= 0) {
-            battleState.value = 'defeat';
-            battleMessage.value = 'Vous avez perdu ce combat !';
-          }
-        }, 1000);
-      }, 1000);
-    }
-  }, 1000);
-}
-
-// Réinitialiser le combat
+// Réinitialiser l'état du combat
 function resetBattle() {
-  playerHP.value = playerInfo.hp;
-  opponentHP.value = opponentInfo.hp;
-  selected.value = null;
-  battleState.value = 'intro';
-  battleMessage.value = `Un dresseur rival vous défie ! Répondez correctement pour gagner ce combat d'amour !`;
+  playerHP.value = playerInfo.hp
+  opponentHP.value = opponentInfo.hp
+  selected.value = null
+  battleState.value = 'intro'
+  battleMessage.value = `Un dresseur rival vous défie ! Répondez correctement pour gagner ce combat d'amour !`
+  resetState()
 }
 
 // Fonction pour passer à l'étape suivante
 function goToNextStep() {
-  // Fermer la pop-in avant de naviguer
-  showSuccessPopup.value = false;
-
-  // Petit délai avant la navigation pour permettre à la transition de se terminer
-  setTimeout(() => {
-    const currentId = Number(props.step.id);
-
-    // Vérifier si c'est la dernière étape (id=8) pour afficher l'écran de fin
-    if (currentId === 8) {
-      // Naviguer vers le journal de dresseur pour voir le résumé
-      emit('navigate', 'journal');
-    } else {
-      // Vérifier s'il y a une étape bonus après l'étape actuelle
-      const nextBonusStep = `${currentId}b`;
-
-      // Vérifier si l'étape bonus existe dans les étapes disponibles
-      const bonusStepExists = props.steps?.find(s => s.id === nextBonusStep);
-
-      if (bonusStepExists) {
-        // Il y a une étape bonus, l'afficher
-        emit('navigate', nextBonusStep);
-      } else {
-        // Pas d'étape bonus, passer à l'étape suivante
-        const nextId = currentId + 1;
-        emit('navigate', nextId);
-      }
-    }
-  }, 300);
+  navigateToNext(props.step.id, props.steps || [], props.step.photo)
 }
 
 // Fonction pour afficher le bonus photo
 function displayPhotoBonus() {
-  showSuccessPopup.value = false;
-  showPhotoBonus.value = true;
+  handlePhotoBonus(props.step.photo)
 }
 
 // Fonction appelée lorsque le bonus photo est terminé
 function onPhotoCompleted() {
-  showPhotoBonus.value = false;
-  // Si l'utilisateur a pris une photo, on pourrait la sauvegarder ici
-  // Puis on continue vers l'étape suivante
-  goToNextStep();
+  completePhotoBonus()
+  goToNextStep()
 }
 
 // Fonction appelée lorsque le bonus photo est ignoré
 function onPhotoSkipped() {
-  showPhotoBonus.value = false;
-  goToNextStep();
+  skipPhotoBonus()
+  goToNextStep()
 }
 
 // Fonction pour revenir à l'étape précédente
 function goToPreviousStep() {
-  // Fermer la pop-in avant de naviguer
-  showSuccessPopup.value = false;
-  
-  // Petit délai avant la navigation pour permettre à la transition de se terminer
-  setTimeout(() => {
-    const currentId = Number(props.step.id);
-    if (currentId > 1) {
-      const prevId = currentId - 1;
-      
-      // Utiliser la fonction injectée pour naviguer avec le splash
-      emit('navigate', prevId);
-    }
-  }, 300);
+  navigateToPrevious(props.step.id)
 }
 
 // Afficher/masquer l'indice
 function toggleHint() {
-  showHint.value = !showHint.value;
+  currentState.value.showHint = !currentState.value.showHint
 }
 </script>
 
