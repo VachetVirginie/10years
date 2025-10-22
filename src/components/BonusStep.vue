@@ -6,7 +6,7 @@ import '../assets/quest-components.css'
 import SuccessPopup from './SuccessPopup.vue'
 import PhotoBonus from './PhotoBonus.vue'
 
-const props = defineProps<{ step: { id:string; prompt:string; bonusType:string; targetColor?:string; targetTheme?:string; targetElement?:string; targetMemory?:string; targetAction?:string; targetConcept?:string; success?:string; hint?:string; photo?:string } }>()
+const props = defineProps<{ step: { id:string; prompt:string; bonusType:string; targetColor?:string; targetTheme?:string; targetElement?:string; targetMemory?:string; targetAction?:string; targetConcept?:string; success?:string; hint?:string; photo?:string }, steps?: any[], id?: string }>()
 const emit = defineEmits(['navigate'])
 
 const router = useRouter()
@@ -80,8 +80,15 @@ const getChallengeInstructions = (type: string) => {
 
 // Marquer l'étape bonus comme terminée et passer à l'étape suivante
 function completeBonus() {
+  console.log('Marquage de l\'étape bonus comme terminée:', props.step.id)
+
   // Marquer l'étape bonus comme terminée
   store.markDone(props.step.id)
+
+  console.log('Étape bonus marquée comme terminée. Store actuel:', {
+    done: Array.from(store.done),
+    currentIndex: store.currentIndex
+  })
 
   // Afficher le popup de succès
   showSuccessPopup.value = true

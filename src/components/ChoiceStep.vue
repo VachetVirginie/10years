@@ -13,7 +13,7 @@ import trainerRedImg from '../assets/images/aaa.jpg'
 import trainerVillainImg from '../assets/images/woman.jpg'
 import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 
-const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string; photo?:string } }>()
+const props = defineProps<{ step:{ id:string; prompt:string; choices:string[]; correctIndex:number; success?:string; hint?:string; photo?:string }, steps?: any[], id?: string }>()
 const emit = defineEmits(['navigate'])
 
 // État du combat Pokémon
@@ -159,11 +159,11 @@ function resetBattle() {
 function goToNextStep() {
   // Fermer la pop-in avant de naviguer
   showSuccessPopup.value = false;
-  
+
   // Petit délai avant la navigation pour permettre à la transition de se terminer
   setTimeout(() => {
     const currentId = Number(props.step.id);
-    
+
     // Vérifier si c'est la dernière étape (id=8) pour afficher l'écran de fin
     if (currentId === 8) {
       // Naviguer vers le journal de dresseur pour voir le résumé
@@ -171,10 +171,18 @@ function goToNextStep() {
     } else {
       // Vérifier s'il y a une étape bonus après l'étape actuelle
       const nextBonusStep = `${currentId}b`;
-      // Pour l'instant, on passe directement à l'étape suivante
-      // Le système de bonus sera géré au niveau de l'étape principale
-      const nextId = currentId + 1;
-      emit('navigate', nextId);
+
+      // Vérifier si l'étape bonus existe dans les étapes disponibles
+      const bonusStepExists = props.steps?.find(s => s.id === nextBonusStep);
+
+      if (bonusStepExists) {
+        // Il y a une étape bonus, l'afficher
+        emit('navigate', nextBonusStep);
+      } else {
+        // Pas d'étape bonus, passer à l'étape suivante
+        const nextId = currentId + 1;
+        emit('navigate', nextId);
+      }
     }
   }, 300);
 }

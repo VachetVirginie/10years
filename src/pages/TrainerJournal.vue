@@ -133,9 +133,14 @@
         <p>Cette aventure a été créée avec ❤️ pour toi</p>
         <p class="footer-signature">Ton éternel compagnon d'aventure</p>
       </div>
-      <button @click="exportJournal" class="export-button">
-        📥 Exporter le Journal
-      </button>
+      <div class="footer-actions">
+        <button @click="exportJournal" class="export-button">
+          📥 Exporter le Journal
+        </button>
+        <button @click="debugStore" class="debug-button">
+          🔍 Débogage (Console)
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +153,26 @@ import { useHunt } from '../composables/useHunt'
 // Store et données
 const store = useProgress()
 const { steps } = useHunt()
+
+// Charger les données sauvegardées du store
+store.load()
+
+// Logs de débogage pour diagnostiquer le problème
+console.log('Toutes les étapes disponibles:', steps.map(s => s.id))
+console.log('Étapes complétées dans le store:', Array.from(store.done))
+console.log('Étapes bonus disponibles:', steps.filter(s => s.id.endsWith('b')).map(s => s.id))
+console.log('Étapes bonus complétées:', steps.filter(s => s.id.endsWith('b') && store.done.has(s.id)).map(s => s.id))
+
+// Fonction de débogage pour afficher l'état du store
+function debugStore() {
+  console.log('=== ÉTAT DU STORE (DÉBOGAGE) ===')
+  console.log('Toutes les étapes:', steps.map(s => s.id))
+  console.log('Étapes complétées:', Array.from(store.done))
+  console.log('Étapes bonus disponibles:', steps.filter(s => s.id.endsWith('b')).map(s => s.id))
+  console.log('Étapes bonus complétées:', steps.filter(s => s.id.endsWith('b') && store.done.has(s.id)).map(s => s.id))
+  console.log('Contenu du localStorage:', localStorage.getItem('progress'))
+  alert('Vérifiez la console pour les informations de débogage')
+}
 
 // Données calculées avec vérification des propriétés existantes
 const completedSteps = computed(() => {
@@ -892,9 +917,29 @@ function generateJournalContent(): string {
   box-shadow: 0 4px 15px rgba(255, 61, 40, 0.4);
 }
 
-.export-button:hover {
+.footer-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.debug-button {
+  background: linear-gradient(135deg, #6b73ff, #9c88ff);
+  color: var(--pokemon-white);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 115, 255, 0.4);
+}
+
+.debug-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 61, 40, 0.6);
+  box-shadow: 0 8px 25px rgba(107, 115, 255, 0.6);
 }
 
 /* Responsive */

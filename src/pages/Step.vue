@@ -20,6 +20,11 @@ const { steps } = useHunt()
 const store = useProgress()
 store.load()
 
+// Props pour éviter les warnings d'attributs non hérités
+const props = defineProps<{
+  id?: string
+}>()
+
 // Gestion du splash d'énigme
 const showSplash = ref(true)
 const splashComplete = ref(false)
@@ -323,6 +328,7 @@ function resetHunt() {
                      : step.type==='bonus' ? BonusStep
                      : RiddleStep"
                      :step="step as any"
+                     :steps="steps"
                      @navigate="navigateToStep" />
         </div>
       </v-card>

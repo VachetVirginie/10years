@@ -7,7 +7,7 @@ import pokeballImg from '../assets/images/pokemon/pokeball.svg'
 import SuccessPopup from './SuccessPopup.vue'
 import PhotoBonus from './PhotoBonus.vue'
 
-const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string; photo?:string } }>()
+const props = defineProps<{ step: { id:string; prompt:string; answer:string; success?:string; hint?:string; photo?:string }, steps?: any[], id?: string }>()
 const emit = defineEmits(['navigate'])
 
 const answer = ref('')
@@ -148,10 +148,18 @@ function goToNextStep() {
     } else {
       // Vérifier s'il y a une étape bonus après l'étape actuelle
       const nextBonusStep = `${currentId}b`
-      // Pour l'instant, on passe directement à l'étape suivante
-      // Le système de bonus sera géré au niveau de l'étape principale
-      const nextId = currentId + 1
-      emit('navigate', nextId)
+
+      // Vérifier si l'étape bonus existe dans les étapes disponibles
+      const bonusStepExists = props.steps?.find(s => s.id === nextBonusStep)
+
+      if (bonusStepExists) {
+        // Il y a une étape bonus, l'afficher
+        emit('navigate', nextBonusStep)
+      } else {
+        // Pas d'étape bonus, passer à l'étape suivante
+        const nextId = currentId + 1
+        emit('navigate', nextId)
+      }
     }
   }, 300)
 }
