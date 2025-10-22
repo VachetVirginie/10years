@@ -51,7 +51,6 @@ onMounted(async () => {
   try {
     profAvatarUrl.value = await getImageUrl('prof')
   } catch (error) {
-    console.warn('Image du professeur non disponible:', error)
     profAvatarUrl.value = '/images/prof.jpg' // Fallback
   }
 
@@ -78,8 +77,6 @@ const menuItems = [
   { id: 'map', label: 'Voir la carte', icon: '🗺️' },
   { id: 'journal', label: 'Journal de dresseur', icon: '📖' },
   { id: 'badges', label: 'Voir les badges', icon: '🏆' },
-  { id: 'story', label: 'Notre histoire', icon: '💕' },
-  { id: 'summary', label: 'Résumé final', icon: '🎯' },
   { id: 'intro', label: 'Revoir intro', icon: '🌟' },
   { id: 'reset', label: 'Réinitialiser', icon: '🔄' }
 ]
@@ -114,26 +111,12 @@ function handleMenuSelect(item: MenuItem) {
     // Charger explicitement le store avant d'accéder aux valeurs
     store.load()
 
-    console.log('Débog - État actuel:', { 
-      currentIndex: store.currentIndex,
-      doneSize: store.done.size,
-      doneItems: Array.from(store.done),
-      stepCount: steps.length,
-      resumeIndex: store.resumeIndex,
-      currentStepId: store.currentStepId,
-      nextStepId: store.nextStepId
-    });
-
     if (store.done.size === 0) {
-      // Si aucune étape n'est terminée, commencer à la première étape
-      console.log('Débog - Début nouvelle partie');
       router.push('/step/1')
     } else {
       // Déterminer l'ID de l'étape à laquelle reprendre en fonction de la progression
       const resumeIndex = store.resumeIndex;
       const resumeStepId = steps[resumeIndex]?.id || '1';
-
-      console.log(`Débog - Reprise de l'aventure à l'étape ${resumeStepId} (index ${resumeIndex})`);
       router.push(`/step/${resumeStepId}`)
     }
   } else if (item.id === 'map') {
@@ -142,8 +125,6 @@ function handleMenuSelect(item: MenuItem) {
     router.push('/journal')
   } else if (item.id === 'badges') {
     showBadges.value = true
-  } else if (item.id === 'story') {
-    router.push('/our-story')
   } else if (item.id === 'summary') {
     router.push('/summary')
   } else if (item.id === 'reset') {

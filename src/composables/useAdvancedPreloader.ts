@@ -11,7 +11,6 @@ const loadStepComponent = () => import('../pages/Step.vue')
 const loadMapComponent = () => import('../pages/Map.vue')
 const loadJournalComponent = () => import('../pages/TrainerJournal.vue')
 const loadSummaryComponent = () => import('../pages/Summary.vue')
-const loadOurStoryComponent = () => import('../pages/OurStory.vue')
 
 // Composants UI supplémentaires
 const loadPokemonBadges = () => import('../components/PokemonBadges.vue')
@@ -74,13 +73,6 @@ export function useAdvancedPreloader() {
     ['Summary', {
       name: 'Summary',
       loader: loadSummaryComponent,
-      priority: 'low',
-      loaded: false,
-      loading: false
-    }],
-    ['OurStory', {
-      name: 'OurStory',
-      loader: loadOurStoryComponent,
       priority: 'low',
       loaded: false,
       loading: false
@@ -170,13 +162,11 @@ export function useAdvancedPreloader() {
       componentState.loaded = true
       componentState.loading = false
 
-      console.log(`✅ Composant ${componentName} préchargé avec succès`)
       return component
     } catch (error) {
       componentState.loading = false
       componentState.error = error instanceof Error ? error.message : 'Erreur inconnue'
 
-      console.warn(`⚠️ Échec du préchargement de ${componentName}:`, error)
       throw error
     }
   }
@@ -219,8 +209,7 @@ export function useAdvancedPreloader() {
         // Petit délai entre les chargements
         await new Promise(resolve => setTimeout(resolve, 50))
       } catch (error) {
-        // Ignorer les erreurs de préchargement
-        console.warn(`Préchargement ignoré pour ${component.name}`)
+        throw error
       }
     }
   }

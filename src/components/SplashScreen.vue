@@ -24,7 +24,6 @@ function onVideoEnd() {
 
 // Fonction appelée en cas d'erreur de chargement vidéo
 function onVideoError() {
-  console.warn('Erreur de chargement vidéo, passage au fallback')
   // Utiliser le délai par défaut si la vidéo ne se charge pas
   setTimeout(() => {
     visible.value = false

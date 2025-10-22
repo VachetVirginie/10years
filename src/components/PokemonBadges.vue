@@ -118,7 +118,7 @@ function playBadgeObtainedAnimation() {
     badgeObtainedSound.currentTime = 0;
     badgeObtainedSound.play();
   } catch (err) {
-    console.log('Audio playback error:', err);
+    throw err;
   }
   
   setTimeout(() => {

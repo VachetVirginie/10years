@@ -39,7 +39,7 @@ export function useGeolocation() {
         )
       }
     } catch (e) {
-      console.warn('Erreur lors du chargement du cache géolocalisation:', e)
+      throw e
     }
   }
 
@@ -48,7 +48,7 @@ export function useGeolocation() {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(positionCache.value))
     } catch (e) {
-      console.warn('Erreur lors de la sauvegarde du cache géolocalisation:', e)
+      throw e
     }
   }
 

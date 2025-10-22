@@ -7,7 +7,6 @@ const Step = () => import('../pages/Step.vue')
 const Summary = () => import('../pages/Summary.vue')
 const Map = () => import('../pages/Map.vue')
 const TrainerJournal = () => import('../pages/TrainerJournal.vue')
-const OurStory = () => import('../pages/OurStory.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -29,7 +28,6 @@ const router = createRouter({
       name: 'journal',
       component: TrainerJournal
     },
-    { path: '/our-story', name: 'our-story', component: OurStory },
     {
       path: '/summary',
       name: 'summary',

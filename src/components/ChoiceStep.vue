@@ -52,7 +52,6 @@ const animationInProgress = ref(false)
 
 // Récupérer la fonction de navigation du parent
 const navigateToStep = inject('navigateToStep', (stepId: string | number) => {
-  console.warn('navigateToStep not provided by parent')
   router.push(`/step/${stepId}`)
 })
 

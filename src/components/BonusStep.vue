@@ -20,7 +20,6 @@ const showPhotoBonus = ref(false)
 // Récupérer la fonction de navigation du parent
 const navigateToStep = inject('navigateToStep', (stepId: string | number) => {
   // Fallback si l'injection n'est pas disponible
-  console.warn('navigateToStep not provided by parent')
   router.push(`/step/${stepId}`)
 })
 
@@ -80,16 +79,9 @@ const getChallengeInstructions = (type: string) => {
 
 // Marquer l'étape bonus comme terminée et passer à l'étape suivante
 function completeBonus() {
-  console.log('Marquage de l\'étape bonus comme terminée:', props.step.id)
 
   // Marquer l'étape bonus comme terminée
   store.markDone(props.step.id)
-
-  console.log('Étape bonus marquée comme terminée. Store actuel:', {
-    done: Array.from(store.done),
-    currentIndex: store.currentIndex
-  })
-
   // Afficher le popup de succès
   showSuccessPopup.value = true
 }

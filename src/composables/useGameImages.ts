@@ -145,7 +145,6 @@ export function useGameImages() {
         loadedImages.value.add(imageKey)
         loadingImages.value.delete(imageKey)
 
-        console.log(`✅ Image ${imageKey} chargée en ${loadTime.toFixed(2)}ms`)
         resolve(url)
       }
 
@@ -176,7 +175,7 @@ export function useGameImages() {
         criticalImages.map(preloadImage)
       )
     } catch (error) {
-      console.warn('Erreur lors du préchargement des images critiques:', error)
+      throw error
     }
   }
 

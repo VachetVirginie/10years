@@ -57,7 +57,7 @@ export function useAppOptimization() {
       await preloadImagesForProgress(progress)
 
     } catch (error) {
-      console.warn('Erreur lors de l\'optimisation:', error)
+      throw error
     }
   }
 
@@ -85,7 +85,6 @@ export function useAppOptimization() {
 
     // Log des métriques en développement
     if (import.meta.env.DEV) {
-      console.log('📊 Performance Metrics:', {
         ...performanceMetrics.value,
         imageStats,
         geolocationStats: cacheStats.value,

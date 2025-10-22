@@ -137,9 +137,6 @@
         <button @click="exportJournal" class="export-button">
           📥 Exporter le Journal
         </button>
-        <button @click="debugStore" class="debug-button">
-          🔍 Débogage (Console)
-        </button>
       </div>
     </div>
   </div>
@@ -156,23 +153,6 @@ const { steps } = useHunt()
 
 // Charger les données sauvegardées du store
 store.load()
-
-// Logs de débogage pour diagnostiquer le problème
-console.log('Toutes les étapes disponibles:', steps.map(s => s.id))
-console.log('Étapes complétées dans le store:', Array.from(store.done))
-console.log('Étapes bonus disponibles:', steps.filter(s => s.id.endsWith('b')).map(s => s.id))
-console.log('Étapes bonus complétées:', steps.filter(s => s.id.endsWith('b') && store.done.has(s.id)).map(s => s.id))
-
-// Fonction de débogage pour afficher l'état du store
-function debugStore() {
-  console.log('=== ÉTAT DU STORE (DÉBOGAGE) ===')
-  console.log('Toutes les étapes:', steps.map(s => s.id))
-  console.log('Étapes complétées:', Array.from(store.done))
-  console.log('Étapes bonus disponibles:', steps.filter(s => s.id.endsWith('b')).map(s => s.id))
-  console.log('Étapes bonus complétées:', steps.filter(s => s.id.endsWith('b') && store.done.has(s.id)).map(s => s.id))
-  console.log('Contenu du localStorage:', localStorage.getItem('progress'))
-  alert('Vérifiez la console pour les informations de débogage')
-}
 
 // Données calculées avec vérification des propriétés existantes
 const completedSteps = computed(() => {
@@ -278,7 +258,6 @@ function exportJournal() {
   // Capturer le journal en image avec html2canvas
   const journalElement = document.querySelector('.trainer-journal')
   if (!journalElement) {
-    console.error('Élément journal non trouvé')
     return
   }
 
@@ -325,7 +304,7 @@ function exportJournal() {
         // Télécharger le PDF
         pdf.save(`journal-dresseur-${formatDate(new Date()).replace(/\s+/g, '-')}.pdf`)
       }).catch(error => {
-        console.error('Erreur lors de la génération du PDF:', error)
+throw error
         // Fallback vers l'export HTML
         exportJournalAsHTML()
       })
@@ -337,7 +316,6 @@ function exportJournalAsImage() {
   // Capturer le journal en image avec html2canvas
   const journalElement = document.querySelector('.trainer-journal')
   if (!journalElement) {
-    console.error('Élément journal non trouvé')
     return
   }
 
@@ -360,7 +338,6 @@ function exportJournalAsImage() {
       link.click()
       document.body.removeChild(link)
     }).catch(error => {
-      console.error('Erreur lors de la génération de l\'image:', error)
       // Fallback vers l'export HTML
       exportJournalAsHTML()
     })

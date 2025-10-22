@@ -30,7 +30,6 @@ export default defineConfig({
               if (id.includes('Step.vue')) return 'game-step'
               if (id.includes('Map.vue')) return 'game-map'
               if (id.includes('TrainerJournal.vue')) return 'game-journal'
-              if (id.includes('OurStory.vue')) return 'game-story'
               if (id.includes('Summary.vue')) return 'game-summary'
               return 'game-pages'
             }

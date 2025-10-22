@@ -200,7 +200,7 @@ function resetHunt() {
       
       // Vérifier que hasSeenSplash est bien supprimé
       if (localStorage.getItem('hasSeenSplash')) {
-        console.error("Impossible de supprimer hasSeenSplash!");
+        throw new Error('hasSeenSplash non supprimé');
       }
       
       // Pour s'assurer que tout est supprimé

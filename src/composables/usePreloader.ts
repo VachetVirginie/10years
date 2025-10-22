@@ -72,9 +72,8 @@ export function usePreloader() {
       // Simulation du préchargement (les composants sont déjà importés statiquement)
       await new Promise(resolve => setTimeout(resolve, 10))
       preloadedComponents.add(component.name)
-      console.log(`✅ Composant ${component.name} préchargé`)
     } catch (error) {
-      console.warn(`⚠️ Échec du préchargement de ${component.name}:`, error)
+      throw error
     }
   }
 

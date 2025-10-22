@@ -83,7 +83,6 @@ const closeIntro = () => {
 function onVideoEnd() {
   // Quand la vidéo se termine, on peut ajouter une logique spécifique
   // Par exemple, masquer le conteneur vidéo ou ajouter un effet
-  console.log('Vidéo du professeur terminée')
 }
 </script>
 

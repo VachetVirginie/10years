@@ -85,8 +85,8 @@ export const useProgress = defineStore('progress', {
           this.done = new Set(done || [])
           this.stepValidation = new Map(stepValidation || [])
         } catch (error) {
-          console.warn('Erreur lors du chargement de la progression:', error)
           this.reset()
+          throw error;
         }
       }
     },
@@ -99,7 +99,7 @@ export const useProgress = defineStore('progress', {
           stepValidation: Array.from(this.stepValidation.entries())
         }))
       } catch (error) {
-        console.warn('Erreur lors de la sauvegarde de la progression:', error)
+        throw error
       }
     },
 
@@ -147,7 +147,7 @@ export const useProgress = defineStore('progress', {
       try {
         localStorage.removeItem('progress')
       } catch (error) {
-        console.warn('Erreur lors de la réinitialisation:', error)
+        throw error
       }
       this.save()
     },
